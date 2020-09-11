@@ -4,13 +4,14 @@ title: "Conservation funding does not track drivers of biodiversity loss"
 author: Vijay Ramesh<sup>1*</sup>, Jay Schoen<sup>1</sup>, Michael Levin<sup>1</sup>, Pratik Dubal<sup>2</sup>, Rochelle Thomas<sup>1</sup>, Sebastian Heilpern<sup>1</sup>, Jared Meek<sup>1</sup>, Pooja Choksi<sup>1</sup>, Don J Melnick<sup>1</sup>, Sara Kross<sup>1</sup>"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
-output: bookdown::gitbook
-documentclass: book
-# bibliography: [book.bib, packages.bib]
+output: 
+  bookdown::gitbook:
+    fig_caption: yes
+#bibliography: [refs.bib]
 biblio-style: apalike
 link-citations: yes
 github-repo: vjjan91/conservation-spending
-description: ""
+description: "Conservation funding does not track drivers of biodiversity loss"
 ---
 ```{r include=FALSE, cache=FALSE}
 knitr::opts_knit$set(root.dir = here::here())
@@ -38,7 +39,22 @@ options(dplyr.print_min = 6, dplyr.print_max = 6)
 
 ### Introduction  
 
-This repository contains code and analyses associated with Ramesh et. al. (in review). To view the code and reproduce analyses, please visit the sections outlined in this book. For any questions/concerns, please contact *Vijay Ramesh*. 
+This is the `bookdown` version of a repository that contains code and analyses associated with Ramesh et. al. (in review). 
+
+### Attribution
+
+Please contact the following in case of interest in the project.
+
+- Vijay Ramesh (lead author)
+    - PhD student, Columbia University
+
+### Data access
+
+The data used in this work is available from...
+
+### Data processing
+
+The data processing for this project is described in the following sections. Navigate through them using the links in the sidebar.
 
 ### Affiliations
 

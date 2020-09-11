@@ -1,4 +1,5 @@
 # Data Analysis and Visualization {dataVis}
+
 ```{r include=FALSE}
 library(tidyverse)
 library(scales)
@@ -75,8 +76,8 @@ no_keywords_plot <- ggplot(no_keywords[1:50,],
 no_keywords_plot
 ```
 
-## Data Setup and Subsetting
-### All Grants with Funding
+### All Grants with Funding  
+
 Here we lengthen the data to more properly examine and visualize where the money from each grant is being allocated.
 ```{r}
 data <- filter(data, Keywords != "['-']") %>%

@@ -1,11 +1,13 @@
 # Multi-category Filtering {#multiCatFilter}
 
-The code below governs the way we dealt with multiple, potentially overlapping categories on individual grants. The general format is as follows:
-1. Grants with >2 independent classfications (i.e. habitat_terrestrial, habitat_marine, and habitat_freshwater) are reclassified as "other" within their broader categories (i.e. habitat_other). 
-2. Grants with 2 independent classifications (i.e. habitat_terrestrial and habitat_marine) are classified into a separate, joint classification within their broader categories (i.e. habitat_MarineTerrestrial).
-3. Those grants with shared independent and joint classifications default to the joint category described above.
+The code below governs the way we dealt with multiple, potentially overlapping categories on individual grants. The general format is as follows:  
+
+1. Grants with >2 independent classfications (i.e. habitat_terrestrial, habitat_marine, and habitat_freshwater) are reclassified as "other" within their broader categories (i.e. habitat_other).   
+2. Grants with 2 independent classifications (i.e. habitat_terrestrial and habitat_marine) are classified into a separate, joint classification within their broader categories (i.e. habitat_MarineTerrestrial).  
+3. Those grants with shared independent and joint classifications default to the joint category described above.  
 
 ## Adding Category Sum columns
+
 The above rules are built on dummy variables that take the sum of our binary classification data across the columns of each broader category.
 ```{r}
 dat.1 <- dat.1 %>%
@@ -18,6 +20,7 @@ dat.1 <- dat.1 %>%
 ```
 
 ## Export Multi-category file
+
 The foundation of this multi-category dataset is exported prior to the full multi-category processing to provide a dataset more suited to the network analysis.
 ```{r}
 # Export file before category mutli-category processing for network analysis

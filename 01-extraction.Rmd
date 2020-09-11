@@ -1,19 +1,32 @@
-# Extraction {#extraction}
+---
+title: Conservation funding does not track drivers of biodiversity loss
+output: bookdown::gitbook
+output_dir: "docs"
+css: style.css
+editor_options: 
+  chunk_output_type: console
+---
+
+# Extraction  
 
 ## Grant Acquisition and Preliminary Filtering
+
 We downloaded a total of 94,000 grants from the Foundation Directory Online (now known as Candid, https://candid.org/find-funding?fcref=pg) for the years 2002-2018, using the keywords biodiversity, ecology and climate change. Based on advice from Candid, we excluded grants for the years 2002, 2017 and 2018 as the data were considered to be incomplete. We chose to download data from only the top 500 grantmakers; 95.47% of the total funding granted by the top 1000 grantmakers came from the top 500 grantmakers (\@ref(fig:fig-s1)). Each grant included the following information: Grantmaker, Grantmaker State, Recipient Name, Recipient City, Recipient State/Country, Year authorized, Grant Amount, Support Strategy and Description. 
 
 We converted all grant descriptions and keywords to a lower-case format in order to eliminate format-driven keyword mismatches. We removed all grants with descriptions such as ‘program development’, ‘operations support / general support’ as they lacked explicit information on where the funding was directed or suggested non-conservation related activities. We also removed grants with descriptions that contained any mention of galas, banquets, dinners, etc. Finally, we removed those grants whose descriptions were blank, uninformative, or indecipherable, as they lacked explicit information on where their associated funding was directed. Additional pre-processing steps were taken to remove grants with certain keywords after we began iterating over our classification; see the Pre-Processing Grants sub-category in the Grant Classification methods section below.
 
 
 ## Keyword Development
+
 We combined our taxa keywords list with our ecosystem keyword list, then added those keywords assembled by Mazor et al. 2018. We then identified and compiled the most frequent words within our database of grants and added an additional  1,000 most frequent words to our final keyword list. Several keywords were combined to form an informative n-gram keyword (e.g. ‘forest’ and ‘management’ into ‘forest management’). As such, our keyword database contained several bigram (two terms) and trigram (three terms) keyword phrases. Our final keyword list contained 4,171 terms. We used expert knowledge to assign these final keywords to our predefined categories through an iterative classification analysis. 
 
 ## Categories
 We developed an initial set of broad categories into which we would classify our grants based on the categories of Mazor et al. 2018 and a cursory review of our grant database. These broad categories include: Habitats, Threats, Actions, Biological Level, Zoo/Aquarium, Species/Ecosystem, and Taxa. Our iterative classification process inspired several additional categories to accompany our initial set, including Social Justice, Threat: Energy/Transport, Conservation Finance, and Biodiversity.
 
 ## Pre-Processing grants
+
 Alongside our initial filtering steps, we developed several pre-processing rules to remove grants containing specific keywords from our classification. Several grants contained descriptions that would enable them to be classified into various categories despite being irrelevant to our analysis. In many cases these grants could be detected with specific keywords (i.e. ‘luncheon,’ ‘gala,’ and ‘Chihuly’) and removed from analysis. These pre-processing rules are distinct from our initial filtering steps as they were developed over the various iterations of our classification (details below).
 
 ## Classification
+
 We iteratively applied a text-based classification approach to our filtered grant database. The classification cross-referenced keywords with each grant description in our grants database. Grants with descriptions that contained, verbatim, individual terms, bigrams, or trigrams present in our keyword list were identified and classified according to the category assigned to their respective keywords. A bigram or trigram keyword was only matched with a grant description if each of its components was a direct match. XX number of grants out of the total database contained keyword matches. Here we make a distinction between our broad categories (Threat, Action, Habitat, etc) and their sub-categories (threat_climate, action_area, habitat_terrestrial, etc; Table S4). If a grant description had two keyword matches within two sub-categories of the same category (e.g. threat_climate & threat_energytransport), it was classified into a joint sub-category (threat_climate_energytransport). Grants that were classified into 3 or more sub-categories within a category (e.g. threat_climate & threat_energytransport & threat_pollution) were classified into a sub-category labeled as “other” (e.g. threat_other). This was to ensure that the amount of funding associated with a particular grant was applied to each category only once, avoiding repeat counting of the money for a grant if it were classified into multiple sub-categories. In other words, a grant’s money could only be counted once within a category. If a grant description had multiple keyword matches across several categories, it was classified into each of those categories and the full amount of funding associated with the grant was allocated to each of those categories (see Table S5). In order to test the effect of avoiding counting money multiple times within a broad category, an original dataframe with no dual sub-categories or other sub-categories was maintained (data_multi), such that all classifications performed by the algorithm would be counted. In this data set (when money was counted as many times as grant description keywords were classified), the general trends hold true, though certain categories are affected more than others.

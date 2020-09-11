@@ -1,20 +1,27 @@
 --- 
+knit: "bookdown::render_book"
 title: "Conservation funding does not track drivers of biodiversity loss"
-author: "Vijay Ramesh, Jay Schoen, Michael Levin, Pratik Dubal, Rochelle Thomas, Sebastian Heilpern, Jared Meek, Pooja Choksi, Don J Melnick, Sara Kross"
+author: Vijay Ramesh<sup>1*</sup>, Jay Schoen<sup>1</sup>, Michael Levin<sup>1</sup>, Pratik Dubal<sup>2</sup>, Rochelle Thomas<sup>1</sup>, Sebastian Heilpern<sup>1</sup>, Jared Meek<sup>1</sup>, Pooja Choksi<sup>1</sup>, Don J Melnick<sup>1</sup>, Sara Kross<sup>1</sup>"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
 documentclass: book
-bibliography: [book.bib, packages.bib]
+# bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
-github-repo: rstudio/bookdown-demo
-description: "Funds allocated for conservation are not aligned with threats to biodiversity."
+github-repo: vjjan91/conservation-spending
+description: ""
 ---
 
-```{r include=FALSE}
-# automatically create a bib database for R packages
-knitr::write_bib(c(
-  .packages(), 'bookdown', 'knitr', 'rmarkdown'
-), 'packages.bib')
-```
+# Conservation funding does not track drivers of biodiversity loss
+
+This repository contains code and analyses associated with Ramesh et. al. (in review). To view the code and reproduce analyses, please visit the sections outlined in this book. For any questions/concerns, please contact *Vijay Ramesh*. 
+
+## Affiliations
+
+<sup>1</sup>Department of Ecology, Evolution and Environmental Biology, Columbia University, 1200 Amsterdam Avenue, New York, NY 10027.
+
+<sup>2</sup>Department of Computer Science, Columbia University, New York, NY 10027.
+
+<sup>*</sup>Corresponding author. Email: vr2352@columbia.edu 
+

@@ -57,6 +57,7 @@ names(dat.1)
 ```
 
 ## Filtering Aquarium/Zoo Grants
+
 Any funding from grants classified as Aquarium/Zoo, regardless of other categories it was also associated with, was limited to to the Aquarium/Zoo category. **This is because...**
 
 There was one exception to this: if classified into social justice, the the funding was counted in that category. **This is because...**

@@ -1,3 +1,14 @@
-This is a minimal example of a book based on R Markdown and **bookdown** (https://github.com/rstudio/bookdown). Please see the page "[Get Started](https://bookdown.org/yihui/bookdown/get-started.html)" at https://bookdown.org/yihui/bookdown/ for how to compile this example into HTML. You may generate a copy of the book in `bookdown::pdf_book` format by calling `bookdown::render_book('index.Rmd', 'bookdown::pdf_book')`. More detailed instructions are available here https://bookdown.org/yihui/bookdown/build-the-book.html.
+## Conservation funding does not track drivers of biodiversity loss
 
-You can find the preview of this example at https://bookdown.org/yihui/bookdown-demo/.
+This repository currently contains code and analyses for a publication in review (Ramesh et al.). 
+
+### [Click here to access all analyses](https://vjjan91.github.io/conservation-spending/)
+
+### Attribution
+
+Please contact the following in case of interest in the project.
+
+[Vijay Ramesh (lead author, repo maintainer)](https://evolecol.weebly.com/)  
+PhD student, Columbia University
+
+

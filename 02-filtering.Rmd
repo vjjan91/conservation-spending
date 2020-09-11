@@ -1,0 +1,70 @@
+# Post-Validation Filtering {#filtering}
+
+```{r setup, include=FALSE}
+library(knitr)
+library(tidyverse)
+library(data.table)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+dat <- read_csv("~/Desktop/master_output_data_analysis_v15.csv")
+```
+
+## Fixing algorithm errors discovered post-validation
+Here we hard-coded several specific fixes to the classification that repeatedly cropped up during our validation process. All have been checked to have 0 mis-classifications.
+```{r}
+# Removing grants containing "dinner"
+dat <- dat %>%
+  filter(str_detect(Description, "dinner") == FALSE)
+
+# Classifying "dissemination" as act_edu
+sum(dat$cat_act_edu)
+for(i in 1:nrow(dat)) {
+  if(str_detect(dat$Description[i], "dissemination") == TRUE) {
+    dat$cat_act_edu[i] = 1
+  }
+}
+sum(dat$cat_act_edu)
+
+# Removing threat_energytransport classification for "palm oil"
+sum(dat$cat_threat_energytransport)
+for(i in 1:nrow(dat)) {
+  if(str_detect(dat$Description[i], "palm oil|oil-palm|oil palm") == TRUE) {
+    dat$cat_threat_energytransport[i] = 0
+  }
+}
+sum(dat$cat_threat_energytransport)
+
+# Removing hab_other classification for "aquatic" (will be freshwater/marine)
+sum(dat$cat_habitat_other)
+for(i in 1:nrow(dat)) {
+  if(str_detect(dat$Description[i], "aquatic") == TRUE) {
+    dat$cat_habitat_other[i] = 0
+  }
+}
+sum(dat$cat_habitat_other)
+
+```
+
+## Remove grants with no associated dollar amount
+Those grants with no funding amount recorded contributed nothing to this analysis, and were removed.
+```{r}
+dat.1 <- dat %>% 
+  drop_na(Grant.Amount) %>%
+  dplyr::select(1:42) 
+names(dat.1)
+```
+
+## Filtering Aquarium/Zoo Grants
+Any funding from grants classified as Aquarium/Zoo, regardless of other categories it was also associated with, was limited to to the Aquarium/Zoo category. **This is because...**
+
+There was one exception to this: if classified into social justice, the the funding was counted in that category. **This is because...**
+
+```{r}
+for(i in 1:nrow(dat.1)){
+  if(dat.1$cat_aquarium_zoo[i]==1){
+    dat.1[i,c(11:17, 19:28, 30:42)]=0
+  }
+}
+```

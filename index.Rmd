@@ -13,11 +13,9 @@ github-repo: vjjan91/conservation-spending
 description: ""
 ---
 
-# Conservation funding does not track drivers of biodiversity loss
-
 This repository contains code and analyses associated with Ramesh et. al. (in review). To view the code and reproduce analyses, please visit the sections outlined in this book. For any questions/concerns, please contact *Vijay Ramesh*. 
 
-## Affiliations
+### Affiliations
 
 <sup>1</sup>Department of Ecology, Evolution and Environmental Biology, Columbia University, 1200 Amsterdam Avenue, New York, NY 10027.
 

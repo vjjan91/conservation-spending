@@ -1,0 +1,2479 @@
+--- 
+knit: "bookdown::render_book"
+title: "Conservation funding does not track drivers of biodiversity loss"
+author: Vijay Ramesh<sup>1*</sup>, Jay Schoen<sup>1</sup>, Michael Levin<sup>1</sup>, Pratik Dubal<sup>2</sup>, Rochelle Thomas<sup>1</sup>, Sebastian Heilpern<sup>1</sup>, Jared Meek<sup>1</sup>, Pooja Choksi<sup>1</sup>, Don J Melnick<sup>1</sup>, Sara Kross<sup>1</sup>"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+# bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+github-repo: vjjan91/conservation-spending
+description: ""
+---
+```{r include=FALSE, cache=FALSE}
+knitr::opts_knit$set(root.dir = here::here())
+set.seed(1)
+options(digits = 3)
+
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  cache = FALSE,
+  eval=FALSE,
+  warning = FALSE,
+  error = FALSE,
+  message = FALSE,
+  out.width = "\\textwidth",
+  fig.align = "center",
+  fig.width = 7,
+  fig.asp = 0.618,  # 1 / phi
+  fig.show = "hold",
+  python.reticulate=FALSE
+)
+options(knitr.kable.NA = "")
+options(dplyr.print_min = 6, dplyr.print_max = 6)
+```
+
+### Introduction  
+
+This repository contains code and analyses associated with Ramesh et. al. (in review). To view the code and reproduce analyses, please visit the sections outlined in this book. For any questions/concerns, please contact *Vijay Ramesh*. 
+
+### Affiliations
+
+<sup>1</sup>Department of Ecology, Evolution and Environmental Biology, Columbia University, 1200 Amsterdam Avenue, New York, NY 10027.
+
+<sup>2</sup>Department of Computer Science, Columbia University, New York, NY 10027.
+
+<sup>*</sup>Corresponding author. Email: vr2352@columbia.edu 
+
+
+<!--chapter:end:index.Rmd-->
+
+---
+title: Conservation funding does not track drivers of biodiversity loss
+output: bookdown::gitbook
+output_dir: "docs"
+css: style.css
+editor_options: 
+  chunk_output_type: console
+---
+```{r include=FALSE, cache=FALSE}
+knitr::opts_knit$set(root.dir = here::here())
+set.seed(1)
+options(digits = 3)
+
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  cache = FALSE,
+  eval=FALSE,
+  warning = FALSE,
+  error = FALSE,
+  message = FALSE,
+  out.width = "\\textwidth",
+  fig.align = "center",
+  fig.width = 7,
+  fig.asp = 0.618,  # 1 / phi
+  fig.show = "hold",
+  python.reticulate=FALSE
+)
+options(knitr.kable.NA = "")
+options(dplyr.print_min = 6, dplyr.print_max = 6)
+```
+
+# Extraction  
+
+## Grant Acquisition and Preliminary Filtering
+
+We downloaded a total of 94,000 grants from the Foundation Directory Online (now known as Candid, https://candid.org/find-funding?fcref=pg) for the years 2002-2018, using the keywords biodiversity, ecology and climate change. Based on advice from Candid, we excluded grants for the years 2002, 2017 and 2018 as the data were considered to be incomplete. We chose to download data from only the top 500 grantmakers; 95.47% of the total funding granted by the top 1000 grantmakers came from the top 500 grantmakers (\@ref(fig:fig-s1)). Each grant included the following information: Grantmaker, Grantmaker State, Recipient Name, Recipient City, Recipient State/Country, Year authorized, Grant Amount, Support Strategy and Description. 
+
+We converted all grant descriptions and keywords to a lower-case format in order to eliminate format-driven keyword mismatches. We removed all grants with descriptions such as ‘program development’, ‘operations support / general support’ as they lacked explicit information on where the funding was directed or suggested non-conservation related activities. We also removed grants with descriptions that contained any mention of galas, banquets, dinners, etc. Finally, we removed those grants whose descriptions were blank, uninformative, or indecipherable, as they lacked explicit information on where their associated funding was directed. Additional pre-processing steps were taken to remove grants with certain keywords after we began iterating over our classification; see the Pre-Processing Grants sub-category in the Grant Classification methods section below.
+
+
+## Keyword Development
+
+We combined our taxa keywords list with our ecosystem keyword list, then added those keywords assembled by Mazor et al. 2018. We then identified and compiled the most frequent words within our database of grants and added an additional  1,000 most frequent words to our final keyword list. Several keywords were combined to form an informative n-gram keyword (e.g. ‘forest’ and ‘management’ into ‘forest management’). As such, our keyword database contained several bigram (two terms) and trigram (three terms) keyword phrases. Our final keyword list contained 4,171 terms. We used expert knowledge to assign these final keywords to our predefined categories through an iterative classification analysis. 
+
+## Categories
+We developed an initial set of broad categories into which we would classify our grants based on the categories of Mazor et al. 2018 and a cursory review of our grant database. These broad categories include: Habitats, Threats, Actions, Biological Level, Zoo/Aquarium, Species/Ecosystem, and Taxa. Our iterative classification process inspired several additional categories to accompany our initial set, including Social Justice, Threat: Energy/Transport, Conservation Finance, and Biodiversity.
+
+## Pre-Processing grants
+
+Alongside our initial filtering steps, we developed several pre-processing rules to remove grants containing specific keywords from our classification. Several grants contained descriptions that would enable them to be classified into various categories despite being irrelevant to our analysis. In many cases these grants could be detected with specific keywords (i.e. ‘luncheon,’ ‘gala,’ and ‘Chihuly’) and removed from analysis. These pre-processing rules are distinct from our initial filtering steps as they were developed over the various iterations of our classification (details below).
+
+## Classification
+
+We iteratively applied a text-based classification approach to our filtered grant database. The classification cross-referenced keywords with each grant description in our grants database. Grants with descriptions that contained, verbatim, individual terms, bigrams, or trigrams present in our keyword list were identified and classified according to the category assigned to their respective keywords. A bigram or trigram keyword was only matched with a grant description if each of its components was a direct match. XX number of grants out of the total database contained keyword matches. Here we make a distinction between our broad categories (Threat, Action, Habitat, etc) and their sub-categories (threat_climate, action_area, habitat_terrestrial, etc; Table S4). If a grant description had two keyword matches within two sub-categories of the same category (e.g. threat_climate & threat_energytransport), it was classified into a joint sub-category (threat_climate_energytransport). Grants that were classified into 3 or more sub-categories within a category (e.g. threat_climate & threat_energytransport & threat_pollution) were classified into a sub-category labeled as “other” (e.g. threat_other). This was to ensure that the amount of funding associated with a particular grant was applied to each category only once, avoiding repeat counting of the money for a grant if it were classified into multiple sub-categories. In other words, a grant’s money could only be counted once within a category. If a grant description had multiple keyword matches across several categories, it was classified into each of those categories and the full amount of funding associated with the grant was allocated to each of those categories (see Table S5). In order to test the effect of avoiding counting money multiple times within a broad category, an original dataframe with no dual sub-categories or other sub-categories was maintained (data_multi), such that all classifications performed by the algorithm would be counted. In this data set (when money was counted as many times as grant description keywords were classified), the general trends hold true, though certain categories are affected more than others.
+
+<!--chapter:end:01-extraction.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_knit$set(root.dir = here::here())
+set.seed(1)
+options(digits = 3)
+
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  cache = FALSE,
+  eval=FALSE,
+  warning = FALSE,
+  error = FALSE,
+  message = FALSE,
+  out.width = "\\textwidth",
+  fig.align = "center",
+  fig.width = 7,
+  fig.asp = 0.618,  # 1 / phi
+  fig.show = "hold",
+  python.reticulate=FALSE
+)
+options(knitr.kable.NA = "")
+options(dplyr.print_min = 6, dplyr.print_max = 6)
+```
+# Post-Validation Filtering {#filtering}
+
+```{r setup, include=FALSE}
+library(knitr)
+library(tidyverse)
+library(data.table)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+dat <- read_csv("~/Desktop/master_output_data_analysis_v15.csv")
+```
+
+## Fixing algorithm errors discovered post-validation
+Here we hard-coded several specific fixes to the classification that repeatedly cropped up during our validation process. All have been checked to have 0 mis-classifications.
+```{r}
+# Removing grants containing "dinner"
+dat <- dat %>%
+  filter(str_detect(Description, "dinner") == FALSE)
+
+# Classifying "dissemination" as act_edu
+sum(dat$cat_act_edu)
+for(i in 1:nrow(dat)) {
+  if(str_detect(dat$Description[i], "dissemination") == TRUE) {
+    dat$cat_act_edu[i] = 1
+  }
+}
+sum(dat$cat_act_edu)
+
+# Removing threat_energytransport classification for "palm oil"
+sum(dat$cat_threat_energytransport)
+for(i in 1:nrow(dat)) {
+  if(str_detect(dat$Description[i], "palm oil|oil-palm|oil palm") == TRUE) {
+    dat$cat_threat_energytransport[i] = 0
+  }
+}
+sum(dat$cat_threat_energytransport)
+
+# Removing hab_other classification for "aquatic" (will be freshwater/marine)
+sum(dat$cat_habitat_other)
+for(i in 1:nrow(dat)) {
+  if(str_detect(dat$Description[i], "aquatic") == TRUE) {
+    dat$cat_habitat_other[i] = 0
+  }
+}
+sum(dat$cat_habitat_other)
+
+```
+
+## Remove grants with no associated dollar amount
+Those grants with no funding amount recorded contributed nothing to this analysis, and were removed.
+```{r}
+dat.1 <- dat %>% 
+  drop_na(Grant.Amount) %>%
+  dplyr::select(1:42) 
+names(dat.1)
+```
+
+## Filtering Aquarium/Zoo Grants
+
+Any funding from grants classified as Aquarium/Zoo, regardless of other categories it was also associated with, was limited to to the Aquarium/Zoo category. **This is because...**
+
+There was one exception to this: if classified into social justice, the the funding was counted in that category. **This is because...**
+
+```{r}
+for(i in 1:nrow(dat.1)){
+  if(dat.1$cat_aquarium_zoo[i]==1){
+    dat.1[i,c(11:17, 19:28, 30:42)]=0
+  }
+}
+```
+
+<!--chapter:end:02-filtering.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_knit$set(root.dir = here::here())
+set.seed(1)
+options(digits = 3)
+
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  cache = FALSE,
+  eval=FALSE,
+  warning = FALSE,
+  error = FALSE,
+  message = FALSE,
+  out.width = "\\textwidth",
+  fig.align = "center",
+  fig.width = 7,
+  fig.asp = 0.618,  # 1 / phi
+  fig.show = "hold",
+  python.reticulate=FALSE
+)
+options(knitr.kable.NA = "")
+options(dplyr.print_min = 6, dplyr.print_max = 6)
+```
+# Multi-category Filtering {#multiCatFilter}
+
+The code below governs the way we dealt with multiple, potentially overlapping categories on individual grants. The general format is as follows:  
+
+1. Grants with >2 independent classfications (i.e. habitat_terrestrial, habitat_marine, and habitat_freshwater) are reclassified as "other" within their broader categories (i.e. habitat_other).   
+2. Grants with 2 independent classifications (i.e. habitat_terrestrial and habitat_marine) are classified into a separate, joint classification within their broader categories (i.e. habitat_MarineTerrestrial).  
+3. Those grants with shared independent and joint classifications default to the joint category described above.  
+
+## Adding Category Sum columns
+
+The above rules are built on dummy variables that take the sum of our binary classification data across the columns of each broader category.
+```{r}
+dat.1 <- dat.1 %>%
+  mutate(Num.Class = rowSums(.[,11:length(.)])) %>%
+  mutate(Num.Thr = rowSums(.[37:42])) %>%
+  mutate(Num.Act = rowSums(.[11:17])) %>%
+  mutate(Num.Hab = rowSums(.[c(25,26,28)])) %>%
+  mutate(Num.Tax = rowSums(.[30:36])) %>%
+  mutate(Num.Bio = rowSums(.[19:20]))
+```
+
+## Export Multi-category file
+
+The foundation of this multi-category dataset is exported prior to the full multi-category processing to provide a dataset more suited to the network analysis.
+```{r}
+# Export file before category mutli-category processing for network analysis
+dat.1.multi <- dat.1
+write_csv(dat.1.multi, "~/Desktop/master_output_data_analysis_v15_mutlicategories.csv")
+```
+
+### Multi-category Filtering: Habitat Categories
+```{r}
+hab <- dat.1[,c(1:10,22:28)]
+
+# Marine-Terrestrial
+for(i in 1:nrow(hab)){
+  if(hab$cat_habitat_marine[i]==1 & hab$cat_habitat_terrestrial[i]==1) {
+    hab$cat_habitat_MarineTerrestrial[i]=1}
+  if(hab$cat_habitat_MarineTerrestrial[i] == 1) {
+    hab$cat_habitat_marine[i]=0
+    hab$cat_habitat_terrestrial[i]=0
+  }
+}
+
+# Marine-Freshwater
+for(i in 1:nrow(hab)){
+  if(hab$cat_habitat_marine[i]==1 & hab$cat_habitat_freshwater[i]==1) {
+    hab$cat_habitat_FreshwaterMarine[i]=1}
+  if(hab$cat_habitat_FreshwaterMarine[i] == 1) {
+    hab$cat_habitat_marine[i]=0
+    hab$cat_habitat_freshwater[i]=0
+  }
+}
+
+# Freshwater-Terrestrial  
+for(i in 1:nrow(hab)){
+  if(hab$cat_habitat_terrestrial[i]==1 & hab$cat_habitat_freshwater[i]==1) {
+    hab$cat_habitat_FreshwaterTerrestrial[i]=1}
+  if(hab$cat_habitat_FreshwaterTerrestrial[i] == 1) {
+    hab$cat_habitat_terrestrial[i]=0
+    hab$cat_habitat_freshwater[i]=0
+  }
+}
+
+## Check
+sum(hab$cat_habitat_other)
+sum(hab$cat_habitat_terrestrial)
+
+# Habitat other (>2 categories)
+for(i in 1:nrow(hab)){
+  if(sum(hab[i,c(11:15,17)]) > 1){
+    hab$cat_habitat_other[i] = 1
+    hab[i, c(11:15,17)] = 0
+  }
+}
+
+## Check
+sum(hab$cat_habitat_other)
+sum(hab$cat_habitat_terrestrial)
+
+
+# If hab_other, no other habitat classification
+for(i in 1:nrow(hab)){
+  if(hab$cat_habitat_other[i]==1) {
+    hab[i,c(11:15,17)] = 0
+  }
+}  
+
+## Check
+sum(hab$cat_habitat_other)
+sum(hab$cat_habitat_terrestrial)
+sum(dat.1$cat_habitat_freshwater)
+sum(hab$cat_habitat_freshwater) # Huge change in freshwater number here, showing freshwater classified with other categories a lot
+
+
+### Join filtered habitat columns with original data
+data.final <- dat.1 
+names(data.final)
+data.final[,22:28] <- hab[,11:17]
+
+# Check
+sum(dat.1$cat_habitat_freshwater)
+sum(data.final$cat_habitat_freshwater)
+```
+
+### Multi-category Filtering: Bio Categories
+```{r}
+data.final <- data.final %>%
+  mutate(cat_bio_ecosys_species = 0)
+
+## Filling cells
+
+#test
+sum(data.final$cat_bio_ecosys)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_bio_ecosys[i]==1 & data.final$cat_bio_species[i]==1) {
+    data.final$cat_bio_ecosys_species[i]=1
+    data.final$cat_bio_ecosys[i]=0
+    data.final$cat_bio_species[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_bio_ecosys)
+sum(data.final$cat_bio_ecosys_species)
+```
+
+### Multi-category Filtering: Action Categories
+```{r}
+act <- data.final[,c(1:17)]
+
+act <- act %>% 
+  mutate(sumAcross = cat_act_area + cat_act_community + cat_act_edu + cat_act_funding + 
+           cat_act_policy + cat_act_research + cat_act_restor) %>%
+  filter(sumAcross > 0)
+
+# Checking number of grants/money for multiple action category grants
+tot_act <- sum(act$Grant.Amount) # total = 
+
+act5 <- act %>%
+  filter(sumAcross <= 5)
+nrow(act5)/nrow(act)
+sum(act5$Grant.Amount)/tot_act
+# Retained 99.95% of grants, 99.98% of money
+
+act4 <- act %>%
+  filter(sumAcross <= 4)
+nrow(act4)/nrow(act)
+sum(act4$Grant.Amount)/tot_act
+# Retained 99.46% of grants, 99.70% of money
+
+act3 <- act %>%
+  filter(sumAcross <= 3)
+nrow(act3)/nrow(act)
+sum(act3$Grant.Amount)/tot_act
+# Retained 97.63% of grants, 98.64% of money
+
+act2 <- act %>%
+  filter(sumAcross <= 2)
+nrow(act2)/nrow(act)
+sum(act2$Grant.Amount)/tot_act
+# Retained 90.97% of grants, 91.96% of money
+
+act1 <- act %>%
+  filter(sumAcross <= 1)
+nrow(act1)/nrow(act)
+sum(act1$Grant.Amount)/tot_act
+# Retained 67.42% of grants, 67.28% of money
+
+
+n_actions <- 1:5
+n_act_grants <- c(nrow(act1), 
+              nrow(act2) - nrow(act1), 
+              nrow(act3) - nrow(act2),
+              nrow(act4) - nrow(act3),
+              nrow(act5) - nrow(act4))
+
+actions <- data.frame(n_actions, n_act_grants)
+ggplot(actions, aes(x = n_actions, y = n_act_grants)) +
+  geom_line() +
+  labs(title = "# Grants in Multiple Action Categories")
+
+
+## >2 category grants into (act_other)
+
+act_other <- data.final %>% 
+  mutate(sum_act = cat_act_area + cat_act_community + cat_act_edu + cat_act_funding + 
+           cat_act_policy + cat_act_research + cat_act_restor) %>%
+  filter(sum_act >2)
+
+
+## Adding 2-action categories and other
+data.final <- data.final %>%
+  mutate(cat_act_area_comm = 0,
+         cat_act_area_edu = 0,
+         cat_act_area_funding = 0,
+         cat_act_area_policy = 0,
+         cat_act_area_research = 0,
+         cat_act_area_restor = 0,
+         cat_act_community_edu = 0,
+         cat_act_community_funding = 0,
+         cat_act_community_policy = 0,
+         cat_act_community_research = 0,
+         cat_act_community_restor = 0,
+         cat_act_edu_funding = 0,
+         cat_act_edu_policy = 0,
+         cat_act_edu_research = 0,
+         cat_act_edu_restor = 0,
+         cat_act_funding_policy = 0,
+         cat_act_funding_research = 0,
+         cat_act_funding_restor = 0,
+         cat_act_policy_research = 0,
+         cat_act_policy_restor = 0,
+         cat_act_research_restor = 0,
+         cat_act_other = 0)
+
+
+#### Filling Multiple Action cells ####
+
+## Other Actions (>2 classifications)
+#test
+sum(data.final$cat_act_research)
+
+for(i in 1:nrow(data.final)) {
+  if(sum(data.final[i,11:17]) > 2) {
+    data.final$cat_act_other[i] = 1
+    data.final[i,11:17] = 0
+  }
+}
+
+#retest
+sum(data.final$cat_act_research)
+sum(data.final$cat_act_other) # matches nrow of act_other DF
+
+
+## Area + Community
+#test
+sum(data.final$cat_act_area)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_act_area[i]==1 & data.final$cat_act_community[i]==1) {
+    data.final$cat_act_area_comm[i]=1}
+  if(data.final$cat_act_area_comm[i]==1) {
+    data.final$cat_act_area[i]=0
+    data.final$cat_act_community[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_act_area)
+sum(data.final$cat_act_area_comm)
+
+
+## Area + Education
+#test
+sum(data.final$cat_act_area)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_act_area[i]==1 & data.final$cat_act_edu[i]==1) {
+    data.final$cat_act_area_edu[i]=1}
+  if(data.final$cat_act_area_edu[i]==1) {
+    data.final$cat_act_area[i]=0
+    data.final$cat_act_edu[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_act_area)
+sum(data.final$cat_act_area_edu)
+
+
+## Area + Funding
+#test
+sum(data.final$cat_act_area)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_act_area[i]==1 & data.final$cat_act_funding[i]==1) {
+    data.final$cat_act_area_funding[i]=1}
+  if(data.final$cat_act_area_funding[i]==1) {
+    data.final$cat_act_area[i]=0
+    data.final$cat_act_funding[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_act_area)
+sum(data.final$cat_act_area_funding)
+
+
+## Area + Policy
+#test
+sum(data.final$cat_act_area)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_act_area[i]==1 & data.final$cat_act_policy[i]==1) {
+    data.final$cat_act_area_policy[i]=1}
+  if(data.final$cat_act_area_policy[i]==1) {
+    data.final$cat_act_area[i]=0
+    data.final$cat_act_policy[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_act_area)
+sum(data.final$cat_act_area_policy)
+
+
+## Area + Research
+#test
+sum(data.final$cat_act_area)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_act_area[i]==1 & data.final$cat_act_research[i]==1) {
+    data.final$cat_act_area_research[i]=1}
+  if(data.final$cat_act_area_research[i]==1) {
+    data.final$cat_act_area[i]=0
+    data.final$cat_act_research[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_act_area)
+sum(data.final$cat_act_area_research)
+
+
+## Area + Restoration
+#test
+sum(data.final$cat_act_area)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_act_area[i]==1 & data.final$cat_act_restor[i]==1) {
+    data.final$cat_act_area_restor[i]=1}
+  if(data.final$cat_act_area_restor[i]==1) {
+    data.final$cat_act_area[i]=0
+    data.final$cat_act_restor[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_act_area)
+sum(data.final$cat_act_area_restor)
+
+
+## Community + Education
+#test
+sum(data.final$cat_act_community)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_act_community[i]==1 & data.final$cat_act_edu[i]==1) {
+    data.final$cat_act_community_edu[i]=1}
+  if(data.final$cat_act_community_edu[i]==1) {
+    data.final$cat_act_community[i]=0
+    data.final$cat_act_edu[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_act_community)
+sum(data.final$cat_act_community_edu)
+
+
+## Community + Funding
+#test
+sum(data.final$cat_act_community)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_act_community[i]==1 & data.final$cat_act_funding[i]==1) {
+    data.final$cat_act_community_funding[i]=1}
+  if(data.final$cat_act_community_funding[i]==1) {
+    data.final$cat_act_community[i]=0
+    data.final$cat_act_funding[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_act_community)
+sum(data.final$cat_act_community_funding)
+
+
+## Community + Policy
+#test
+sum(data.final$cat_act_community)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_act_community[i]==1 & data.final$cat_act_policy[i]==1) {
+    data.final$cat_act_community_policy[i]=1}
+  if(data.final$cat_act_community_policy[i]==1) {
+    data.final$cat_act_community[i]=0
+    data.final$cat_act_policy[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_act_community)
+sum(data.final$cat_act_community_policy)
+
+
+## Community + Research
+#test
+sum(data.final$cat_act_community)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_act_community[i]==1 & data.final$cat_act_research[i]==1) {
+    data.final$cat_act_community_research[i]=1}
+  if(data.final$cat_act_community_research[i]==1) {
+    data.final$cat_act_community[i]=0
+    data.final$cat_act_research[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_act_community)
+sum(data.final$cat_act_community_research)
+
+
+## Community + Restoration
+#test
+sum(data.final$cat_act_community)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_act_community[i]==1 & data.final$cat_act_restor[i]==1) {
+    data.final$cat_act_community_restor[i]=1}
+  if(data.final$cat_act_community_restor[i]==1) {
+    data.final$cat_act_community[i]=0
+    data.final$cat_act_restor[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_act_community)
+sum(data.final$cat_act_community_restor)
+
+
+## Education + Funding
+#test
+sum(data.final$cat_act_edu)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_act_edu[i]==1 & data.final$cat_act_funding[i]==1) {
+    data.final$cat_act_edu_funding[i]=1}
+  if(data.final$cat_act_edu_funding[i]==1) {
+    data.final$cat_act_edu[i]=0
+    data.final$cat_act_funding[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_act_edu)
+sum(data.final$cat_act_edu_funding)
+
+
+## Education + Policy
+#test
+sum(data.final$cat_act_edu)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_act_edu[i]==1 & data.final$cat_act_policy[i]==1) {
+    data.final$cat_act_edu_policy[i]=1}
+  if(data.final$cat_act_edu_policy[i]==1) {
+    data.final$cat_act_edu[i]=0
+    data.final$cat_act_policy[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_act_edu)
+sum(data.final$cat_act_edu_policy)
+
+
+## Education + Research
+#test
+sum(data.final$cat_act_edu)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_act_edu[i]==1 & data.final$cat_act_research[i]==1) {
+    data.final$cat_act_edu_research[i]=1}
+  if(data.final$cat_act_edu_research[i]==1) {
+    data.final$cat_act_edu[i]=0
+    data.final$cat_act_research[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_act_edu)
+sum(data.final$cat_act_edu_research)
+
+
+## Education + Restoration
+#test
+sum(data.final$cat_act_edu)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_act_edu[i]==1 & data.final$cat_act_restor[i]==1) {
+    data.final$cat_act_edu_restor[i]=1}
+  if(data.final$cat_act_edu_restor[i]==1) {
+    data.final$cat_act_edu[i]=0
+    data.final$cat_act_restor[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_act_edu)
+sum(data.final$cat_act_edu_restor)
+
+
+## Funding + Policy
+#test
+sum(data.final$cat_act_funding)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_act_funding[i]==1 & data.final$cat_act_policy[i]==1) {
+    data.final$cat_act_funding_policy[i]=1}
+  if(data.final$cat_act_funding_policy[i]==1) {
+    data.final$cat_act_funding[i]=0
+    data.final$cat_act_policy[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_act_funding)
+sum(data.final$cat_act_funding_policy)
+
+
+## Funding + Research
+#test
+sum(data.final$cat_act_funding)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_act_funding[i]==1 & data.final$cat_act_research[i]==1) {
+    data.final$cat_act_funding_research[i]=1}
+  if(data.final$cat_act_funding_research[i]==1) {
+    data.final$cat_act_funding[i]=0
+    data.final$cat_act_research[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_act_funding)
+sum(data.final$cat_act_funding_research)
+
+
+## Funding + Restoration
+#test
+sum(data.final$cat_act_funding)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_act_funding[i]==1 & data.final$cat_act_restor[i]==1) {
+    data.final$cat_act_funding_restor[i]=1}
+  if(data.final$cat_act_funding_restor[i]==1) {
+    data.final$cat_act_funding[i]=0
+    data.final$cat_act_restor[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_act_funding)
+sum(data.final$cat_act_funding_restor)
+
+
+## Policy + Research
+#test
+sum(data.final$cat_act_policy)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_act_policy[i]==1 & data.final$cat_act_research[i]==1) {
+    data.final$cat_act_policy_research[i]=1}
+  if(data.final$cat_act_policy_research[i]==1) {
+    data.final$cat_act_policy[i]=0
+    data.final$cat_act_research[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_act_policy)
+sum(data.final$cat_act_policy_research)
+
+
+## Policy + Restoration
+#test
+sum(data.final$cat_act_policy)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_act_policy[i]==1 & data.final$cat_act_restor[i]==1) {
+    data.final$cat_act_policy_restor[i]=1}
+  if(data.final$cat_act_policy_restor[i]==1) {
+    data.final$cat_act_policy[i]=0
+    data.final$cat_act_restor[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_act_policy)
+sum(data.final$cat_act_policy_restor)
+
+
+## Research + Restoration
+#test
+sum(data.final$cat_act_research)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_act_research[i]==1 & data.final$cat_act_restor[i]==1) {
+    data.final$cat_act_research_restor[i]=1}
+  if(data.final$cat_act_research_restor[i]==1) {
+    data.final$cat_act_research[i]=0
+    data.final$cat_act_restor[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_act_research)
+sum(data.final$cat_act_research_restor)
+```
+
+### Multi-category Filtering: Threat Categories
+```{r}
+threat <- data.final[,c(1:10, 37:42)]
+
+threat <- threat %>% 
+  mutate(sumAcross = cat_threat_climate + cat_threat_energytransport + 
+           cat_threat_habitat + cat_threat_inv_spec + cat_threat_overexp + 
+           cat_threat_pollution) %>%
+  filter(sumAcross > 0)
+
+# Checking number of grants/money for multiple threation category grants
+tot_threat <- sum(threat$Grant.Amount) # total = 
+
+threat4 <- threat %>%
+  filter(sumAcross <= 4)
+nrow(threat4)/nrow(threat)
+sum(threat4$Grant.Amount)/tot_threat
+# Retained all grants
+
+threat3 <- threat %>%
+  filter(sumAcross <= 3)
+nrow(threat3)/nrow(threat)
+sum(threat3$Grant.Amount)/tot_threat
+# Retained 99.75% of grants, 99.21% of money
+
+threat2 <- threat %>%
+  filter(sumAcross <= 2)
+nrow(threat2)/nrow(threat)
+sum(threat2$Grant.Amount)/tot_threat
+# Retained 96.95% of grants, 95.39% of money
+
+threat1 <- threat %>%
+  filter(sumAcross <= 1)
+nrow(threat1)/nrow(threat)
+sum(threat1$Grant.Amount)/tot_threat
+# Retained 77.55% of grants, 72.19% of money
+
+n_threats <- 1:4
+n_threat_grants <- c(nrow(threat1), 
+                  nrow(threat2) - nrow(threat1), 
+                  nrow(threat3) - nrow(threat2),
+                  nrow(threat4) - nrow(threat3))
+
+threats <- data.frame(n_threats, n_threat_grants)
+ggplot(threats, aes(x = n_threats, y = n_threat_grants)) +
+  geom_line() +
+  labs(title = "# Grants in Multiple Threat Categories")
+
+#### >2 category grants (threat_other)
+
+threat_other <- data.final %>% 
+  mutate(sum_threat = cat_threat_climate + cat_threat_energytransport + 
+           cat_threat_habitat + cat_threat_inv_spec + cat_threat_overexp + 
+           cat_threat_pollution) %>%
+  filter(sum_threat >2)
+
+#### Adding 2-threat categories
+
+data.final <- data.final %>%
+  mutate(cat_threat_climate_energytransport = 0,
+         cat_threat_climate_habitat = 0,
+         cat_threat_climate_inv_spec = 0,
+         cat_threat_climate_overexp = 0,
+         cat_threat_climate_pollution = 0,
+         cat_threat_energytransport_habitat = 0,
+         cat_threat_energytransport_inv_spec = 0,
+         cat_threat_energytransport_overexp = 0,
+         cat_threat_energytransport_pollution = 0,
+         cat_threat_habitat_inv_spec = 0,
+         cat_threat_habitat_overexp = 0,
+         cat_threat_habitat_pollution = 0,
+         cat_threat_inv_spec_overexp = 0,
+         cat_threat_inv_spec_pollution = 0,
+         cat_threat_overexp_pollution = 0,
+         cat_threat_other = 0)
+
+
+
+#### Filling Mulitple Threat cells ####
+
+## Other Threats (>2 Categories)
+#test
+sum(data.final$cat_threat_overexp)
+
+for(i in 1:nrow(data.final)){
+  if(sum(data.final[i,37:42]) > 2) {
+    data.final$cat_threat_other[i] = 1
+    data.final[i, 37:42] = 0
+  }
+}
+
+#retest
+sum(data.final$cat_threat_overexp)
+sum(data.final$cat_threat_other) # matches nrow of threats_other DF
+
+
+## Climate + Energy/Transportation
+#test
+sum(data.final$cat_threat_climate)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_threat_climate[i]==1 & data.final$cat_threat_energytransport[i]==1) {
+    data.final$cat_threat_climate_energytransport[i]=1}
+  if(data.final$cat_threat_climate_energytransport[i]==1) {
+    data.final$cat_threat_climate[i]=0
+    data.final$cat_threat_energytransport[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_threat_climate)
+sum(data.final$cat_threat_climate_energytransport)
+
+
+## Climate + Habitat
+#test
+sum(data.final$cat_threat_climate)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_threat_climate[i]==1 & data.final$cat_threat_habitat[i]==1) {
+    data.final$cat_threat_climate_habitat[i]=1}
+  if(data.final$cat_threat_climate_habitat[i]==1) {
+    data.final$cat_threat_climate[i]=0
+    data.final$cat_threat_habitat[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_threat_climate)
+sum(data.final$cat_threat_climate_habitat)
+
+
+## Climate + Invasive Species
+#test
+sum(data.final$cat_threat_climate)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_threat_climate[i]==1 & data.final$cat_threat_inv_spec[i]==1) {
+    data.final$cat_threat_climate_inv_spec[i]=1}
+  if(data.final$cat_threat_climate_inv_spec[i]==1) {
+    data.final$cat_threat_climate[i]=0
+    data.final$cat_threat_inv_spec[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_threat_climate)
+sum(data.final$cat_threat_climate_inv_spec)
+
+
+## Climate + Overexploitation
+#test
+sum(data.final$cat_threat_climate)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_threat_climate[i]==1 & data.final$cat_threat_overexp[i]==1) {
+    data.final$cat_threat_climate_overexp[i]=1}
+  if(data.final$cat_threat_climate_overexp[i]==1) {
+    data.final$cat_threat_climate[i]=0
+    data.final$cat_threat_overexp[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_threat_climate)
+sum(data.final$cat_threat_climate_overexp)
+
+
+## Climate + Pollution
+#test
+sum(data.final$cat_threat_climate)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_threat_climate[i]==1 & data.final$cat_threat_pollution[i]==1) {
+    data.final$cat_threat_climate_pollution[i]=1}
+  if(data.final$cat_threat_climate_pollution[i]==1) {
+    data.final$cat_threat_climate[i]=0
+    data.final$cat_threat_pollution[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_threat_climate)
+sum(data.final$cat_threat_climate_pollution)
+
+
+## Energy/Transportation + Habitat
+#test
+sum(data.final$cat_threat_energytransport)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_threat_energytransport[i]==1 & data.final$cat_threat_habitat[i]==1) {
+    data.final$cat_threat_energytransport_habitat[i]=1}
+  if(data.final$cat_threat_energytransport_habitat[i]==1) {
+    data.final$cat_threat_energytransport[i]=0
+    data.final$cat_threat_habitat[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_threat_energytransport)
+sum(data.final$cat_threat_energytransport_habitat)
+
+
+## Energy/Transportation + Invasive Species
+#test
+sum(data.final$cat_threat_energytransport)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_threat_energytransport[i]==1 & data.final$cat_threat_inv_spec[i]==1) {
+    data.final$cat_threat_energytransport_inv_spec[i]=1}
+  if(data.final$cat_threat_energytransport_inv_spec[i]==1) {
+    data.final$cat_threat_energytransport[i]=0
+    data.final$cat_threat_inv_spec[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_threat_energytransport)
+sum(data.final$cat_threat_energytransport_inv_spec)
+
+
+## Energy/Transportation + Overexploitation
+#test
+sum(data.final$cat_threat_energytransport)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_threat_energytransport[i]==1 & data.final$cat_threat_overexp[i]==1) {
+    data.final$cat_threat_energytransport_overexp[i]=1}
+  if(data.final$cat_threat_energytransport_overexp[i]==1) {
+    data.final$cat_threat_energytransport[i]=0
+    data.final$cat_threat_overexp[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_threat_energytransport)
+sum(data.final$cat_threat_energytransport_overexp)
+
+
+## Energy/Transportation + Pollution
+#test
+sum(data.final$cat_threat_energytransport)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_threat_energytransport[i]==1 & data.final$cat_threat_pollution[i]==1) {
+    data.final$cat_threat_energytransport_pollution[i]=1}
+  if(data.final$cat_threat_energytransport_pollution[i]==1) {
+    data.final$cat_threat_energytransport[i]=0
+    data.final$cat_threat_pollution[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_threat_energytransport)
+sum(data.final$cat_threat_energytransport_pollution)
+
+
+## Habitat + Invasive Species
+#test
+sum(data.final$cat_threat_habitat)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_threat_habitat[i]==1 & data.final$cat_threat_inv_spec[i]==1) {
+    data.final$cat_threat_habitat_inv_spec[i]=1}
+  if(data.final$cat_threat_habitat_inv_spec[i]==1) {
+    data.final$cat_threat_habitat[i]=0
+    data.final$cat_threat_inv_spec[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_threat_habitat)
+sum(data.final$cat_threat_habitat_inv_spec)
+
+
+## Habitat + Overexploitation
+#test
+sum(data.final$cat_threat_habitat)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_threat_habitat[i]==1 & data.final$cat_threat_overexp[i]==1) {
+    data.final$cat_threat_habitat_overexp[i]=1}
+  if(data.final$cat_threat_habitat_overexp[i]==1) {
+    data.final$cat_threat_habitat[i]=0
+    data.final$cat_threat_overexp[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_threat_habitat)
+sum(data.final$cat_threat_habitat_overexp)
+
+
+## Habitat + Pollution
+#test
+sum(data.final$cat_threat_habitat)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_threat_habitat[i]==1 & data.final$cat_threat_pollution[i]==1) {
+    data.final$cat_threat_habitat_pollution[i]=1}
+  if(data.final$cat_threat_habitat_pollution[i]==1) {
+    data.final$cat_threat_habitat[i]=0
+    data.final$cat_threat_pollution[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_threat_habitat)
+sum(data.final$cat_threat_habitat_pollution)
+
+
+## Invasive Species + Overexploitation
+#test
+sum(data.final$cat_threat_inv_spec)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_threat_inv_spec[i]==1 & data.final$cat_threat_overexp[i]==1) {
+    data.final$cat_threat_inv_spec_overexp[i]=1}
+  if(data.final$cat_threat_inv_spec_overexp[i]==1) {
+    data.final$cat_threat_inv_spec[i]=0
+    data.final$cat_threat_overexp[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_threat_inv_spec)
+sum(data.final$cat_threat_inv_spec_overexp)
+
+
+## Invasive Species + Pollution
+#test
+sum(data.final$cat_threat_inv_spec)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_threat_inv_spec[i]==1 & data.final$cat_threat_pollution[i]==1) {
+    data.final$cat_threat_inv_spec_pollution[i]=1}
+  if(data.final$cat_threat_inv_spec_pollution[i]==1) {
+    data.final$cat_threat_inv_spec[i]=0
+    data.final$cat_threat_pollution[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_threat_inv_spec)
+sum(data.final$cat_threat_inv_spec_pollution)
+
+
+## Overexploitation + Pollution
+#test
+sum(data.final$cat_threat_overexp)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_threat_overexp[i]==1 & data.final$cat_threat_pollution[i]==1) {
+    data.final$cat_threat_overexp_pollution[i]=1}
+  if(data.final$cat_threat_overexp_pollution[i]==1) {
+    data.final$cat_threat_overexp[i]=0
+    data.final$cat_threat_pollution[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_threat_overexp)
+sum(data.final$cat_threat_overexp_pollution)
+```
+
+### Multi-category Filtering: Taxa Category
+```{r}
+taxa <- data.final[,c(1:10, 30:36)]
+
+taxa_other <- data.final %>% 
+  mutate(sum_taxa = rowSums(.[30:36])) %>%
+  filter(sum_taxa > 2)
+
+
+## Adding 2-taxa categories and other
+data.final <- data.final %>%
+  mutate(cat_taxa_amphibian_bird = 0,
+         cat_taxa_amphibian_fish = 0,
+         cat_taxa_amphibian_invertebrate = 0,
+         cat_taxa_amphibian_mammal = 0,
+         cat_taxa_amphibian_plant = 0,
+         cat_taxa_amphibian_reptile = 0,
+         cat_taxa_bird_fish = 0,
+         cat_taxa_bird_invertebrate = 0,
+         cat_taxa_bird_mammal = 0,
+         cat_taxa_bird_plant = 0,
+         cat_taxa_bird_reptile = 0,
+         cat_taxa_fish_invertebrate = 0,
+         cat_taxa_fish_mammal = 0,
+         cat_taxa_fish_plant = 0,
+         cat_taxa_fish_reptile = 0,
+         cat_taxa_invertebrate_mammal = 0,
+         cat_taxa_invertebrate_plant = 0,
+         cat_taxa_invertebrate_reptile = 0,
+         cat_taxa_mammal_plant = 0,
+         cat_taxa_mammal_reptile = 0,
+         cat_taxa_plant_reptile = 0,
+         cat_taxa_other = 0)
+
+#### Filling Multiple Taxa cells ####
+
+## Other Taxa (>2 classifications)
+#test
+sum(data.final$cat_taxa_plant)
+
+for(i in 1:nrow(data.final)) {
+  if(sum(data.final[i,30:36]) > 2) {
+    data.final$cat_taxa_other[i] = 1
+    data.final[i,30:36] = 0
+  }
+}
+
+#retest
+sum(data.final$cat_taxa_plant)
+sum(data.final$cat_taxa_other) # matches nrow of taxa_other DF
+
+
+## amphibian + bird
+#test
+sum(data.final$cat_taxa_amphibian)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_taxa_amphibian[i]==1 & data.final$cat_taxa_bird[i]==1) {
+    data.final$cat_taxa_amphibian_bird[i]=1}
+  if(data.final$cat_taxa_amphibian_bird[i]==1) {
+    data.final$cat_taxa_amphibian[i]=0
+    data.final$cat_taxa_bird[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_taxa_amphibian)
+sum(data.final$cat_taxa_amphibian_bird)
+
+
+## amphibian + fish
+#test
+sum(data.final$cat_taxa_amphibian)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_taxa_amphibian[i]==1 & data.final$cat_taxa_fish[i]==1) {
+    data.final$cat_taxa_amphibian_fish[i]=1}
+  if(data.final$cat_taxa_amphibian_fish[i]==1) {
+    data.final$cat_taxa_amphibian[i]=0
+    data.final$cat_taxa_fish[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_taxa_amphibian)
+sum(data.final$cat_taxa_amphibian_fish)
+
+
+## amphibian + invertebrate
+#test
+sum(data.final$cat_taxa_amphibian)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_taxa_amphibian[i]==1 & data.final$cat_taxa_invertebrate[i]==1) {
+    data.final$cat_taxa_amphibian_invertebrate[i]=1}
+  if(data.final$cat_taxa_amphibian_invertebrate[i]==1) {
+    data.final$cat_taxa_amphibian[i]=0
+    data.final$cat_taxa_invertebrate[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_taxa_amphibian)
+sum(data.final$cat_taxa_amphibian_invertebrate)
+
+
+## amphibian + mammal
+#test
+sum(data.final$cat_taxa_amphibian)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_taxa_amphibian[i]==1 & data.final$cat_taxa_mammal[i]==1) {
+    data.final$cat_taxa_amphibian_mammal[i]=1}
+  if(data.final$cat_taxa_amphibian_mammal[i]==1) {
+    data.final$cat_taxa_amphibian[i]=0
+    data.final$cat_taxa_mammal[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_taxa_amphibian)
+sum(data.final$cat_taxa_amphibian_mammal)
+
+
+## amphibian + plant
+#test
+sum(data.final$cat_taxa_amphibian)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_taxa_amphibian[i]==1 & data.final$cat_taxa_plant[i]==1) {
+    data.final$cat_taxa_amphibian_plant[i]=1}
+  if(data.final$cat_taxa_amphibian_plant[i]==1) {
+    data.final$cat_taxa_amphibian[i]=0
+    data.final$cat_taxa_plant[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_taxa_amphibian)
+sum(data.final$cat_taxa_amphibian_plant)
+
+
+## amphibian + reptile
+#test
+sum(data.final$cat_taxa_amphibian)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_taxa_amphibian[i]==1 & data.final$cat_taxa_reptile[i]==1) {
+    data.final$cat_taxa_amphibian_reptile[i]=1}
+  if(data.final$cat_taxa_amphibian_reptile[i]==1) {
+    data.final$cat_taxa_amphibian[i]=0
+    data.final$cat_taxa_reptile[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_taxa_amphibian)
+sum(data.final$cat_taxa_amphibian_reptile)
+
+
+## bird + fish
+#test
+sum(data.final$cat_taxa_bird)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_taxa_bird[i]==1 & data.final$cat_taxa_fish[i]==1) {
+    data.final$cat_taxa_bird_fish[i]=1}
+  if(data.final$cat_taxa_bird_fish[i]==1) {
+    data.final$cat_taxa_bird[i]=0
+    data.final$cat_taxa_fish[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_taxa_bird)
+sum(data.final$cat_taxa_bird_fish)
+
+
+## bird + invertebrate
+#test
+sum(data.final$cat_taxa_bird)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_taxa_bird[i]==1 & data.final$cat_taxa_invertebrate[i]==1) {
+    data.final$cat_taxa_bird_invertebrate[i]=1}
+  if(data.final$cat_taxa_bird_invertebrate[i]==1) {
+    data.final$cat_taxa_bird[i]=0
+    data.final$cat_taxa_invertebrate[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_taxa_bird)
+sum(data.final$cat_taxa_bird_invertebrate)
+
+
+## bird + mammal
+#test
+sum(data.final$cat_taxa_bird)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_taxa_bird[i]==1 & data.final$cat_taxa_mammal[i]==1) {
+    data.final$cat_taxa_bird_mammal[i]=1}
+  if(data.final$cat_taxa_bird_mammal[i]==1) {
+    data.final$cat_taxa_bird[i]=0
+    data.final$cat_taxa_mammal[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_taxa_bird)
+sum(data.final$cat_taxa_bird_mammal)
+
+
+## bird + plant
+#test
+sum(data.final$cat_taxa_bird)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_taxa_bird[i]==1 & data.final$cat_taxa_plant[i]==1) {
+    data.final$cat_taxa_bird_plant[i]=1}
+  if(data.final$cat_taxa_bird_plant[i]==1) {
+    data.final$cat_taxa_bird[i]=0
+    data.final$cat_taxa_plant[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_taxa_bird)
+sum(data.final$cat_taxa_bird_plant)
+
+
+## bird + reptile
+#test
+sum(data.final$cat_taxa_bird)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_taxa_bird[i]==1 & data.final$cat_taxa_reptile[i]==1) {
+    data.final$cat_taxa_bird_reptile[i]=1}
+  if(data.final$cat_taxa_bird_reptile[i]==1) {
+    data.final$cat_taxa_bird[i]=0
+    data.final$cat_taxa_reptile[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_taxa_bird)
+sum(data.final$cat_taxa_bird_reptile)
+
+
+## fish + invertebrate
+#test
+sum(data.final$cat_taxa_fish)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_taxa_fish[i]==1 & data.final$cat_taxa_invertebrate[i]==1) {
+    data.final$cat_taxa_fish_invertebrate[i]=1}
+  if(data.final$cat_taxa_fish_invertebrate[i]==1) {
+    data.final$cat_taxa_fish[i]=0
+    data.final$cat_taxa_invertebrate[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_taxa_fish)
+sum(data.final$cat_taxa_fish_invertebrate)
+
+
+## fish + mammal
+#test
+sum(data.final$cat_taxa_fish)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_taxa_fish[i]==1 & data.final$cat_taxa_mammal[i]==1) {
+    data.final$cat_taxa_fish_mammal[i]=1}
+  if(data.final$cat_taxa_fish_mammal[i]==1) {
+    data.final$cat_taxa_fish[i]=0
+    data.final$cat_taxa_mammal[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_taxa_fish)
+sum(data.final$cat_taxa_fish_mammal)
+
+
+## fish + plant
+#test
+sum(data.final$cat_taxa_fish)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_taxa_fish[i]==1 & data.final$cat_taxa_plant[i]==1) {
+    data.final$cat_taxa_fish_plant[i]=1}
+  if(data.final$cat_taxa_fish_plant[i]==1) {
+    data.final$cat_taxa_fish[i]=0
+    data.final$cat_taxa_plant[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_taxa_fish)
+sum(data.final$cat_taxa_fish_plant)
+
+
+## fish + reptile
+#test
+sum(data.final$cat_taxa_fish)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_taxa_fish[i]==1 & data.final$cat_taxa_reptile[i]==1) {
+    data.final$cat_taxa_fish_reptile[i]=1}
+  if(data.final$cat_taxa_fish_reptile[i]==1) {
+    data.final$cat_taxa_fish[i]=0
+    data.final$cat_taxa_reptile[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_taxa_fish)
+sum(data.final$cat_taxa_fish_reptile)
+
+
+## invertebrate + mammal
+#test
+sum(data.final$cat_taxa_invertebrate)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_taxa_invertebrate[i]==1 & data.final$cat_taxa_mammal[i]==1) {
+    data.final$cat_taxa_invertebrate_mammal[i]=1}
+  if(data.final$cat_taxa_invertebrate_mammal[i]==1) {
+    data.final$cat_taxa_invertebrate[i]=0
+    data.final$cat_taxa_mammal[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_taxa_invertebrate)
+sum(data.final$cat_taxa_invertebrate_mammal)
+
+
+## invertebrate + plant
+#test
+sum(data.final$cat_taxa_invertebrate)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_taxa_invertebrate[i]==1 & data.final$cat_taxa_plant[i]==1) {
+    data.final$cat_taxa_invertebrate_plant[i]=1}
+  if(data.final$cat_taxa_invertebrate_plant[i]==1) {
+    data.final$cat_taxa_invertebrate[i]=0
+    data.final$cat_taxa_plant[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_taxa_invertebrate)
+sum(data.final$cat_taxa_invertebrate_plant)
+
+
+## invertebrate + reptile
+#test
+sum(data.final$cat_taxa_invertebrate)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_taxa_invertebrate[i]==1 & data.final$cat_taxa_reptile[i]==1) {
+    data.final$cat_taxa_invertebrate_reptile[i]=1}
+  if(data.final$cat_taxa_invertebrate_reptile[i]==1) {
+    data.final$cat_taxa_invertebrate[i]=0
+    data.final$cat_taxa_reptile[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_taxa_invertebrate)
+sum(data.final$cat_taxa_invertebrate_reptile)
+
+
+## mammal + plant
+#test
+sum(data.final$cat_taxa_mammal)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_taxa_mammal[i]==1 & data.final$cat_taxa_plant[i]==1) {
+    data.final$cat_taxa_mammal_plant[i]=1}
+  if(data.final$cat_taxa_mammal_plant[i]==1) {
+    data.final$cat_taxa_mammal[i]=0
+    data.final$cat_taxa_plant[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_taxa_mammal)
+sum(data.final$cat_taxa_mammal_plant)
+
+
+## mammal + reptile
+#test
+sum(data.final$cat_taxa_mammal)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_taxa_mammal[i]==1 & data.final$cat_taxa_reptile[i]==1) {
+    data.final$cat_taxa_mammal_reptile[i]=1}
+  if(data.final$cat_taxa_mammal_reptile[i]==1) {
+    data.final$cat_taxa_mammal[i]=0
+    data.final$cat_taxa_reptile[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_taxa_mammal)
+sum(data.final$cat_taxa_mammal_reptile)
+
+
+## plant + reptile
+#test
+sum(data.final$cat_taxa_plant)
+
+for(i in 1:nrow(data.final)){
+  if(data.final$cat_taxa_plant[i]==1 & data.final$cat_taxa_reptile[i]==1) {
+    data.final$cat_taxa_plant_reptile[i]=1}
+  if(data.final$cat_taxa_plant_reptile[i]==1) {
+    data.final$cat_taxa_plant[i]=0
+    data.final$cat_taxa_reptile[i]=0
+  }
+}
+
+#retest
+sum(data.final$cat_taxa_plant)
+sum(data.final$cat_taxa_plant_reptile)
+```
+
+### Export Multi-Category Data for Analysis and Visualization
+```{r, eval=FALSE}
+write_csv(data.final, "~/Desktop/master_output_data_analysis_v15_filtered.csv")
+```
+
+<!--chapter:end:03-multiCatFilter.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_knit$set(root.dir = here::here())
+set.seed(1)
+options(digits = 3)
+
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  cache = FALSE,
+  eval=FALSE,
+  warning = FALSE,
+  error = FALSE,
+  message = FALSE,
+  out.width = "\\textwidth",
+  fig.align = "center",
+  fig.width = 7,
+  fig.asp = 0.618,  # 1 / phi
+  fig.show = "hold",
+  python.reticulate=FALSE
+)
+options(knitr.kable.NA = "")
+options(dplyr.print_min = 6, dplyr.print_max = 6)
+```
+# Data Analysis and Visualization {dataVis}
+
+```{r include=FALSE}
+library(tidyverse)
+library(scales)
+library(ggsci)
+```
+```{r, echo = FALSE}
+# Data Import/Prep
+data <- read_csv("~/Desktop/master_output_data_analysis_v15_filtered.csv") %>%
+   as.data.frame() %>%
+   dplyr::select(c(1:42, 49:109, 43:48))
+
+data.multi <- read_csv("~/Desktop/master_output_data_analysis_v15_mutlicategories.csv") %>%
+   as.data.frame()
+
+maxwell <- read_csv("~/Desktop/Conservation Lab//Maxwell et al table S2.csv") %>%
+  as.data.frame()
+```
+```{r, echo = FALSE}
+## Category Lists
+clim.energy_cat <- names(data)[c(37,38,66:74,81)]         # climate/energy/combos/other
+
+biodiv.bio.taxa.hab_cat <- names(data)[c(19:28,43, 30:36, 82:103)]
+biodiv.bio.taxa.hab_cat_multi <- names(data.multi)[c(19:28,30:36)]
+
+u.threat_cat <- names(data)[37:42]
+u.taxa_cat <- names(data)[30:36]
+
+all.threat_cat <- append(u.threat_cat, names(data)[66:81])
+all.taxa_cat <- append(u.taxa_cat, names(data)[82:103])
+
+u.threat_list <- c("Climate Change", 
+                   "Energy & Transportation",
+                   "Habitat Loss",
+                   "Invasive Species",
+                   "Overexploitation",
+                   "Pollution")
+u.taxa_list <- c("Amphibians",
+                 "Birds",
+                 "Fish",
+                 "Invertebrates",
+                 "Mammals",
+                 "Plants",
+                 "Reptiles")
+```
+```{r, echo = FALSE}
+## Colors
+cat_colors22 <- c("#990000", "#BF1E1E", "#993399", "#4C0099", "#000099",
+                  "#2E10C3", "#3685B3", "#1AB3B3", "#8FC04F", "#09A256", 
+                  "#006400", "#FFF928", "#C6C600", "#FFA200", "#CE8300", 
+                  "#D0471E", "#9F8109", "#835506", "#317575", "#808080",
+                  "black", "white")
+barplot(1:22, col = cat_colors22, names.arg = 1:22)
+
+cat_colors7 <- cat_colors22[c(1, 5, 20, 7, 18, 11, 19)]
+barplot(1:7, col = cat_colors7)
+```
+
+## Exploratory Visuals
+### Grants with No Keywords
+This is a plot featuring the 50 largest grants that have no keywords associated with them.
+```{r noKeywordPlot, fig.cap='Large grants with no keywords', fig.asp=.75, fig.align='center'}
+no_keywords <- data %>% 
+  filter(Keywords =="['-']") %>%
+  arrange(desc(Grant.Amount))
+no_keywords_plot <- ggplot(no_keywords[1:50,],
+                            aes(x = factor(row.names(no_keywords[1:50,]), levels = 1:50),
+                                y = Grant.Amount)) + 
+  geom_col() +
+  theme_minimal() +
+  labs(title = "No Keyword Biggest Grants (50)",
+       x = "Rank",
+       y = "Money ($US)") +
+  scale_y_continuous(labels = scales::comma)
+no_keywords_plot
+```
+
+### All Grants with Funding  
+
+Here we lengthen the data to more properly examine and visualize where the money from each grant is being allocated.
+```{r}
+data <- filter(data, Keywords != "['-']") %>%
+  filter(Year.Authorized < 2017) %>%
+  filter(Year.Authorized != 2002)
+data.multi <- filter(data.multi, Keywords != "['-']") %>%
+  filter(Year.Authorized < 2017) %>%
+  filter(Year.Authorized != 2002)
+
+money.data <- data[,11:(length(data)-6)]*data[,7]
+money.data <- mutate(money.data, Year.Authorized = data$Year.Authorized)
+
+by.year.money <- money.data %>%
+  group_by(Year.Authorized) %>%
+  summarize_at(vars(cat_act_area:cat_taxa_other), sum, na.rm = TRUE) %>%
+  pivot_longer(-Year.Authorized, names_to = "Category", values_to = "Amount") %>%
+  group_by(Category) %>%
+  mutate(percent = Amount/sum(Amount))
+```
+
+### Bio Subset
+Here we remove those climate/energy grants that do not contain biodiversity conservation keywords.
+```{r}
+# Single Category Data
+data_bio.1 <- data %>%
+  filter_at(vars(biodiv.bio.taxa.hab_cat), any_vars(.> 0)) 
+data_non.bio.1 <- data %>%
+  filter_at(vars(biodiv.bio.taxa.hab_cat), all_vars(. == 0))
+
+data_bio.2 <- data_non.bio.1 %>%
+  filter_at(vars(clim.energy_cat), all_vars(.==0))
+data_non.bio.2 <- data_non.bio.1 %>%
+  filter_at(vars(clim.energy_cat), any_vars(.>0))
+
+data_bio <- bind_rows(data_bio.1, data_bio.2)
+data_non.bio <- data_non.bio.2
+
+# Multi-category Data
+data.multi_bio.1 <- data.multi %>%
+  filter_at(vars(biodiv.bio.taxa.hab_cat_multi), any_vars(.> 0)) 
+data.multi_non.bio.1 <- data.multi %>%
+  filter_at(vars(biodiv.bio.taxa.hab_cat_multi), all_vars(. == 0))
+
+data.multi_bio.2 <- data.multi_non.bio.1 %>%
+  filter_at(vars(cat_threat_climate, cat_threat_energytransport),
+            all_vars(.==0))
+data.multi_non.bio.2 <- data.multi_non.bio.1 %>%
+  filter_at(vars(cat_threat_climate, cat_threat_energytransport),
+            any_vars(.>0))
+
+data.multi_bio <- bind_rows(data.multi_bio.1, data.multi_bio.2)
+data.multi_non.bio <- data.multi_non.bio.2
+```
+
+### Money Data
+Here we further subset the lengthened dataset featuring all grants that have associated funding and break them down at an annual resolution Those subsets include the amount of money allocated to each category per year, the amount of non-biodiversity funding by year, and the amount of money across multi-category grants per year.
+```{r}
+# Single Category Data
+money.data_bio <- data_bio[,11:(length(data_bio)-6)]*data_bio[,7]
+money.data_bio <- mutate(money.data_bio,
+                         Year.Authorized = data_bio$Year.Authorized,
+                         Num.Thr = data_bio$Num.Thr)
+
+by.year.money_bio <- money.data_bio %>%
+  group_by(Year.Authorized) %>%
+  summarize_at(vars(cat_act_area:cat_taxa_other), sum, na.rm = TRUE) %>%
+  pivot_longer(-Year.Authorized, names_to = "Category", values_to = "Amount") %>%
+  group_by(Year.Authorized) %>%
+  mutate(ann.percent = Amount/sum(Amount)) %>%
+  group_by(Category) %>%
+  mutate(percent = Amount/sum(Amount))
+
+money.data_non.bio <- data_non.bio[,11:(length(data_non.bio)-6)]*data_non.bio[,7]
+money.data_non.bio <- mutate(money.data_non.bio, 
+                             Year.Authorized = data_non.bio$Year.Authorized,
+                             Num.Thr = data_non.bio$Num.Thr)
+
+by.year.money_non.bio <- money.data_non.bio %>%
+  group_by(Year.Authorized) %>%
+  summarize_at(vars(cat_act_area:cat_threat_overexp_pollution), sum, na.rm = TRUE) %>%
+  pivot_longer(-Year.Authorized, names_to = "Category", values_to = "Amount") %>%
+  group_by(Category) %>%
+  mutate(percent = Amount/sum(Amount))
+
+# Multi-category Data
+money.data.multi_bio <- data.multi_bio[,11:(length(data.multi_bio)-6)]*data.multi_bio[,7]
+money.data.multi_bio <- mutate(money.data.multi_bio, 
+                               Year.Authorized = data.multi_bio$Year.Authorized,
+                               Num.Thr = data.multi_bio$Num.Thr)
+
+by.year.money.multi_bio <- money.data.multi_bio %>%
+  group_by(Year.Authorized) %>%
+  summarize_at(vars(cat_act_area:cat_threat_pollution), sum, na.rm = TRUE) %>%
+  pivot_longer(-Year.Authorized, names_to = "Category", values_to = "Amount") %>%
+  group_by(Category) %>%
+  mutate(percent = Amount/sum(Amount))
+```
+
+## Manuscript Figures
+### Figure 1: Proportion of Money vs. Species Threatened
+**INSERT FIGURE CAPTION FROM MANUSCRIPT**
+```{r fig-1, fig.cap='Figure 1: Proportion of Money vs. Species Threatened', fig.asp=.75, fig.align='center'}
+fig.1.money_bio <- by.year.money_bio %>%
+  filter(Category %in% u.threat_cat) %>%
+  group_by(Category) %>%
+  summarise(Total = sum(Amount))
+
+fig.1.species <- maxwell %>% 
+  dplyr::select(Category, n_species_threatened) %>%
+  group_by(Category) %>%
+  summarise(Total = sum(n_species_threatened)) 
+
+rawFrame <- left_join(fig.1.money_bio, fig.1.species, by = "Category") %>%
+  mutate(rawMoney = Total.x) %>%   # Total Money
+  mutate(rawSpecies = Total.y) %>% # Total Species
+  dplyr::select(Category, rawMoney, rawSpecies)
+
+fig.1.data_bio <- left_join(fig.1.money_bio, fig.1.species, by = "Category") %>%
+  mutate(Money = (Total.x/sum(Total.x))*100) %>%   # Percentage of Total Money
+  mutate(Species = (Total.y/sum(Total.y))*100) %>% # Percentage of Total Species
+  dplyr::select(Category, Money, Species) %>%
+  pivot_longer(c(Money, Species), names_to = "is.Money", values_to = "Amount") %>%
+  left_join(rawFrame, by = "Category") %>%
+  mutate(rawMoney = ifelse(is.Money == "Species", NA, rawMoney)) %>%
+  mutate(rawSpecies= ifelse(is.Money == "Money", NA, rawSpecies)) %>%
+  replace_na(list(rawMoney = "", rawSpecies = "")) %>%
+  unite("rawValue", rawMoney:rawSpecies, sep = "", remove = FALSE) %>%
+  mutate(rawValue = as.numeric(rawValue),
+         rawLabels = comma(rawValue))
+fig.1.data_bio$rawLabels[c(seq(1,11,2))] <- str_glue("${round(rawFrame$rawMoney/1e6)}m")
+# fig.1.data_bio$rawLabels[c(seq(2,12,2))] <- rawFrame$rawSpecies
+
+fig.1.plot_bio <- ggplot(fig.1.data_bio, 
+                      aes(fill=is.Money, 
+                          y=Amount, 
+                          x=Category)) + 
+  geom_col(position="dodge") +
+  labs(x="Threat Category", 
+       y="Percentage") + 
+       # title="% Money Allocated vs. % Species Threatened (IUCN) by Unique Threats") +
+  scale_x_discrete(labels=u.threat_list) +
+  scale_fill_manual(# values = c("#556B2F", "#8f3c36"),
+                    values = alpha(c("darkgreen", "orangered4"), 0.9),
+                    # values = c("#556B2F", "#708090"),
+                    labels = c("Money ($USD Million)", "# Threatened Species")) +
+  geom_text(position = position_dodge(width= 1), 
+            aes(label = rawLabels, hjust = 0.5, vjust = -0.5), angle=0, size=6) +
+  ylim(0, 50) +
+  theme_minimal() +
+  theme(axis.title = element_text(size = 16, face = "bold"), 
+        axis.ticks.length.x = unit(.5, "cm"),
+        axis.text = element_text(size = 14),
+        legend.title = element_blank(),
+        legend.key.size = unit(1,"cm"),
+        legend.text = element_text(size = 12))
+
+# ggsave(fig.1.plot_bio, filename = "~/Columbia E3B/Conservation Group/Output V15.2/Figures/money_species_comparison.png", width=15, height=7,dpi = 300)
+
+fig.1.plot_bio
+```
+
+### Figure 2: Amount of Money Allocated Across Unique Threat Categories per Year
+**INSERT FIGURE CAPTION FROM MANUSCRIPT**
+```{r fig-2, fig.cap='Figure 2: Amount of Money Allocated Across Unique Threat Categories per Year', fig.asp=.75, fig.align='center'}
+threat_temporal.data <- by.year.money_bio %>%
+  filter(Category %in% u.threat_cat)
+
+threat_temporal.plot <- ggplot(threat_temporal.data, 
+                aes(y = Amount, 
+                    x = Year.Authorized,
+                    color = Category)) +
+  #geom_point() +
+  geom_line(size = 2, linetype = 1) +
+  # geom_smooth(size = 1, aes(fill = Category), show.legend = FALSE) +
+  theme_minimal() +
+  scale_color_manual(values = cat_colors22[c(1,13,11,20,5,18)],
+                     name="Threat Category",
+                     labels=u.threat_list) +
+  scale_fill_manual(values = cat_colors7) +
+  labs(x="Year", 
+       y="Money ($US Million)", 
+       title="Amount of Money Allocated Across Unique Threat Categories per Year") +
+  scale_y_continuous(#labels = waiver(),
+                     breaks = c(0,50e6,10e7),
+                     labels = c("0","50","100"),
+                     position = "right") +
+  theme(axis.text = element_text(size = 14),
+        axis.title = element_text(size = 16, face = "bold"),
+        legend.title = element_text(size = 14),
+        legend.text = element_text(size = 12),
+        legend.key.width = unit(1,"cm"),
+        # legend.box.spacing = unit(1,"cm"),
+        legend.spacing.x = unit(1,"cm"),
+        legend.position = "bottom")
+        # legend.background = element_rect(color = "black", size = 1.2, fill = NA))
+
+# ggsave(threat_temporal.plot, filename = "~/Columbia E3B/Conservation Group/Output V15.2/Figures/threat_temporal.png", width=12, height=7,dpi = 300)
+
+
+threat_temporal.plot
+```
+
+### Figure 3: Taxa/Threat Maxwell Comparison
+**INSERT FIGURE CAPTION FROM MANUSCRIPT**
+#### Coercing Maxwell's species designations to merge with ours
+We are merging the various taxa catgories used by Maxwell et al. to examine the amount of funding disbursed to various taxa. Maxwell et al.'s taxonic designations are at a higher resolution than the what we need, so we are altering them to fit the taxonomic scale we're operating at.
+```{r}
+maxwell.s4 <- read_csv("~/Columbia E3B/Conservation Group/Maxwell et al table S4.csv")
+names(maxwell.s4)
+
+# Our species: Amphibians, Birds, Fish, Invertebrates, Mammals, Plants, Reptiles
+
+our.species <- maxwell.s4 %>%
+  slice(1:10) %>%
+  mutate(Amphibians = Amphibia,
+         Birds = Aves,
+         Fish = Actinopterygii + Chondrichthyes,
+         Invertebrates = Anthozoa + Gastropoda + Hydrozoa + Malacostraca + Myxini,
+         Mammals = Mammalia,
+         Plants = Cycadopsida + Liliopsida + Magnoliopsida + Pinopsida,
+         Reptiles = Reptilia) %>%
+  dplyr::select(c(2,3, 19:ncol(.), 18))
+our.species
+```
+
+#### Figure 3
+```{r}
+# Preparing maxwell data
+fig.3.maxwell_data <- our.species %>% 
+  dplyr::select(2:11) %>%
+  group_by(Category) %>%
+  summarise_at(vars(Total:Reptiles), sum) %>%
+  dplyr::select(3:length(.)) %>%
+  mutate(Total.maxwell = rowSums(.)) %>%
+  dplyr::select(8,1:7) %>%
+  transmute_at(vars(-Total.maxwell), ~ (./Total.maxwell)*100) %>%
+  mutate(Threat = u.threat_list) %>%
+  dplyr::select(8,1:7) %>%
+  pivot_longer(Amphibians:Reptiles, names_to = "Taxa", values_to = "Percent") %>%
+  mutate(Source = "IUCN", direction = -1, alpha = 0.9)
+
+
+# Preparing money data
+taxa_climate <- money.data_bio %>%
+  filter(cat_threat_climate > 0) %>%
+  dplyr::select(cat_taxa_amphibian:cat_taxa_reptile) %>%
+  pivot_longer(cat_taxa_amphibian:cat_taxa_reptile, 
+               names_to = "Category", values_to = "Money") %>%
+  group_by(Category) %>%
+  summarize(totalAmount = sum(Money)) %>%
+  mutate(perc = totalAmount/sum(totalAmount)) %>%
+  dplyr::select(perc) %>%
+  t() %>%
+  as.data.frame(row.names = "cat_threat_climate") %>%
+  `colnames<-` (u.taxa_list)
+
+taxa_energy <- money.data_bio %>%
+  filter(cat_threat_energytransport > 0) %>%
+  dplyr::select(cat_taxa_amphibian:cat_taxa_reptile) %>%
+  pivot_longer(cat_taxa_amphibian:cat_taxa_reptile, 
+               names_to = "Category", values_to = "Money") %>%
+  group_by(Category) %>%
+  summarize(totalAmount = sum(Money)) %>%
+  mutate(perc = totalAmount/sum(totalAmount)) %>%
+  dplyr::select(perc) %>%
+  t() %>%
+  as.data.frame(row.names = "cat_threat_energytransport") %>%
+  `colnames<-` (u.taxa_list)
+
+taxa_habitat <- money.data_bio %>%
+  filter(cat_threat_habitat > 0) %>%
+  dplyr::select(cat_taxa_amphibian:cat_taxa_reptile) %>%
+  pivot_longer(cat_taxa_amphibian:cat_taxa_reptile, 
+               names_to = "Category", values_to = "Money") %>%
+  group_by(Category) %>%
+  summarize(totalAmount = sum(Money)) %>%
+  mutate(perc = totalAmount/sum(totalAmount)) %>%
+  dplyr::select(perc) %>%
+  t() %>%
+  as.data.frame(row.names = "cat_threat_habitat") %>%
+  `colnames<-` (u.taxa_list)
+
+taxa_inv <- money.data_bio %>%
+  filter(cat_threat_inv_spec > 0) %>%
+  dplyr::select(cat_taxa_amphibian:cat_taxa_reptile) %>%
+  pivot_longer(cat_taxa_amphibian:cat_taxa_reptile, 
+               names_to = "Category", values_to = "Money") %>%
+  group_by(Category) %>%
+  summarize(totalAmount = sum(Money)) %>%
+  mutate(perc = totalAmount/sum(totalAmount)) %>%
+  dplyr::select(perc) %>%
+  t() %>%
+  as.data.frame(row.names = "cat_threat_inv_spec") %>%
+  `colnames<-` (u.taxa_list)
+
+taxa_overexp <- money.data_bio %>%
+  filter(cat_threat_overexp > 0) %>%
+  dplyr::select(cat_taxa_amphibian:cat_taxa_reptile) %>%
+  pivot_longer(cat_taxa_amphibian:cat_taxa_reptile, 
+               names_to = "Category", values_to = "Money") %>%
+  group_by(Category) %>%
+  summarize(totalAmount = sum(Money)) %>%
+  mutate(perc = totalAmount/sum(totalAmount)) %>%
+  dplyr::select(perc) %>%
+  t() %>%
+  as.data.frame(row.names = "cat_threat_overexp") %>%
+  `colnames<-` (u.taxa_list)
+
+taxa_pollution <- money.data_bio %>%
+  filter(cat_threat_pollution > 0) %>%
+  dplyr::select(cat_taxa_amphibian:cat_taxa_reptile) %>%
+  pivot_longer(cat_taxa_amphibian:cat_taxa_reptile, 
+               names_to = "Category", values_to = "Money") %>%
+  group_by(Category) %>%
+  summarize(totalAmount = sum(Money)) %>%
+  mutate(perc = totalAmount/sum(totalAmount)) %>%
+  dplyr::select(perc) %>%
+  t() %>%
+  as.data.frame(row.names = "cat_threat_pollution") %>%
+  `colnames<-` (u.taxa_list)
+
+fig.3.money_data <- bind_rows(taxa_climate, taxa_energy, taxa_habitat, 
+                         taxa_inv, taxa_overexp, taxa_pollution) %>%
+  transmute_all(~.*100) %>%
+  mutate(Threat = u.threat_list) %>%
+  dplyr::select(8, 1:7) %>%
+  pivot_longer(Amphibians:Reptiles, names_to = "Taxa", values_to = "Percent") %>%
+  mutate(Source = "Money", direction = 1, alpha = 1)
+
+### 1 plot
+fig.3.data <- bind_rows(fig.3.money_data, fig.3.maxwell_data) %>%
+  mutate(Percent = Percent * direction,
+         Taxa = factor(Taxa, 
+                       levels = c("Reptiles", "Amphibians", "Invertebrates", 
+                                  "Birds", "Mammals", "Fish", "Plants"),
+                       ordered = TRUE),
+         Threat = factor(Threat,
+                         levels = c("Climate Change", "Overexploitation",
+                                    "Habitat Loss", "Energy & Transportation",
+                                    "Pollution", "Invasive Species"),
+                         ordered = TRUE)
+  )
+
+fig.3 <- ggplot(fig.3.data %>% filter(Taxa != "Reptiles"),
+                aes(x = Taxa, y = Percent, fill = Taxa)) + 
+  geom_col(show.legend = F , color = "black") +
+  geom_hline(yintercept = 0, size = 1.2) +
+  scale_fill_manual(values = cat_colors22[c(9,20,19,15,7,11)],
+                    name = "Taxa",
+                    labels = u.taxa_list) +
+  facet_wrap(~Threat) +
+  theme_bw() +
+  theme(axis.ticks.y= element_blank(),
+        # axis.text.y = element_text(size = 10, face = "bold"),
+        axis.text.x = element_blank(),
+        # axis.text.y = element_text(size = 12),
+        # axis.title = element_text(size = 16, face = "bold"),
+        axis.ticks.x=element_line(color=NA),
+        strip.background = element_rect(fill = "black"),
+        strip.text = element_text(size = 12, color = "white", face = "bold")) +
+  ylim(-90,90) +
+  ggtitle("Percent of Taxa Threatened (IUCN) by vs. Funded for Unique Threats") +
+  ylab("% Taxa Threatened   |    % Funding to Taxa") +
+  coord_flip()
+
+# ggsave(fig.3, filename = "~/Columbia E3B/Conservation Group/Output V15.2/Figures/taxa_threat_comparison.png", width=12, height=7,dpi = 300)
+
+fig.3
+```
+
+### Figure 4: Network Analysis
+# Figure 4: Threats Network Analysis
+The code presented here for Figure 4 generates the pie charts for each threat category that can be seen in the full network analysis figure. The actual network analysis was conducted separately, in **WHERE WAS THIS CONDUCTED?**.
+
+## Threat Category Overlap
+```{r, include=FALSE}
+threat.net1 <- data.multi_bio %>%
+  filter(Year.Authorized < 2017) %>%
+  filter(Year.Authorized != 2002) %>%
+  dplyr::select(cat_threat_climate:cat_threat_pollution)
+threat.net1 <- map2_df(threat.net1, colnames(threat.net1), ~  c(NA, .y)[.x +1]) # Change the binary 1 values into the column heaers
+threat.net2 <- data.multi_bio %>%
+  filter(Year.Authorized < 2017) %>%
+  filter(Year.Authorized != 2002) %>%
+  dplyr::select(Grant.Amount, Num.Thr)
+threat.net3 <- bind_cols(threat.net2, threat.net1) # Join the column-header data with the grant amount/number of threats per grant
+
+threat.net3 <- threat.net3 %>%
+  filter(Num.Thr != 0 & Num.Thr <= 2) %>%
+  unite("z", sep = ",", cat_threat_climate:cat_threat_pollution, na.rm = TRUE, remove = FALSE) %>% # Bring together all columns into a single column, separate contents by a comma
+  dplyr::select(Grant.Amount, Num.Thr, z) %>%
+  separate(z, sep = ",", c("A", "B")) %>% # Break united column into two
+  mutate(B = if_else(is.na(B), A, B)) %>% # Have all NA's = Column A
+  mutate(A = case_when(
+      A == "cat_threat_climate" ~ "Climate Change",
+      A == "cat_threat_energytransport" ~ "Energy & Transportation",
+      A == "cat_threat_habitat" ~ "Habitat Loss",
+      A == "cat_threat_inv_spec" ~ "Invasive Species",
+      A == "cat_threat_overexp" ~ "Overexploitation",
+      A == "cat_threat_pollution" ~ "Pollution")) %>%
+  mutate(B = case_when(
+      B == "cat_threat_climate" ~ "Climate Change",
+      B == "cat_threat_energytransport" ~ "Energy & Transportation",
+      B == "cat_threat_habitat" ~ "Habitat Loss",
+      B == "cat_threat_inv_spec" ~ "Invasive Species",
+      B == "cat_threat_overexp" ~ "Overexploitation",
+      B == "cat_threat_pollution" ~ "Pollution")) %>%
+  group_by(A, B) %>% # group by the combinations between column A and column B, which contain one or two threats
+  summarize(n = sum(Grant.Amount)) %>%
+  filter(A != B) %>%
+  ungroup() %>%
+  mutate(p = n/sum(n))
+
+# write_csv(threat.net3, "~/Columbia E3B/Conservation Group/Output V15.2/Tables/threat_overlap_bio.csv")
+
+threat.net.fig <- threat.net3 %>%
+  ggplot(aes(x = A, y = B)) +
+  geom_tile(aes(fill = log10(n)), color = "black") +
+  geom_text(aes(label = n, fontface = "bold"), color = "white") +
+  scale_fill_gradient(low = "lightgray", high = "black") +
+  theme_bw() +
+  labs(x="",
+       y = "",
+       title = "Amount of Money ($USD) in Single and Paired Threat Categories") +
+  theme(legend.position = "none",
+        panel.grid.major = element_blank())
+
+threat.net.fig
+```
+
+## Pie Charts
+```{r}
+blank_theme <- theme_minimal() +
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        panel.border = element_blank(),
+        panel.grid = element_blank(),
+        axis.ticks = element_blank(),
+        plot.title=element_text(size=14, face="bold"))
+```
+
+### # of Threats within Threat categories (number of grants, not $)
+#### Climate
+```{r}
+pie.Nthreats_climate <- money.data.multi_bio %>%
+  filter(cat_threat_climate > 0) %>%
+  dplyr::select(Num.Thr) %>%
+  mutate(Num.Thr = as.factor(Num.Thr)) %>%
+  mutate(Count = 1) %>%
+  group_by(Num.Thr) %>%
+  summarize(totalCount = sum(Count)) %>%
+  mutate(perc = totalCount/sum(totalCount),
+         alpha = seq(0.2,1,0.2))
+
+plot.pie.Nthreats_climate <- ggplot(pie.Nthreats_climate,
+                       aes(y = perc, 
+                           x = "",
+                           fill = Num.Thr)) +
+  geom_bar(stat = "identity", color = "white") +
+  theme_minimal() +
+  scale_fill_manual(values = seq_gradient_pal(cat_colors22[1], "white",
+                                              "Lab")(seq(0,1, length.out = 5))) +
+  # scale_fill_manual(values = c("#a50f15","#de2d26","#fb6a4a","#fcae91","#fee5d9")) +
+  # scale_fill_viridis_d(name = "Number of Threats", option = "D") +
+  labs(title="Proportion of Climate Change Grants Classified into Multiple Threats") +
+  coord_polar("y", start=0, direction = -1) +
+  blank_theme +
+  theme(axis.text.x = element_blank()) +
+  geom_text(aes(x = c(rep(1.55,4), 1.65),
+                label = paste0(round(perc*100,1), "%")),
+            position = position_stack(vjust = 0.5),
+            size = 3,
+            col = "black")
+
+# ggsave(plot.pie.Nthreats_climate, filename = "~/Columbia E3B/Conservation Group/Output V15.2/Figures/pie_Nthreats_climate.png", width=12, height=7,dpi = 300)
+
+plot.pie.Nthreats_climate
+```
+
+
+#### Energy/Transportation
+```{r}
+pie.Nthreats_energytransport <- money.data.multi_bio %>%
+  filter(cat_threat_energytransport > 0) %>%
+  dplyr::select(Num.Thr) %>%
+  mutate(Num.Thr = as.factor(Num.Thr)) %>%
+  mutate(Count = 1) %>%
+  group_by(Num.Thr) %>%
+  summarize(totalCount = sum(Count)) %>%
+  mutate(perc = totalCount/sum(totalCount))
+
+plot.pie.Nthreats_energytransport <- ggplot(pie.Nthreats_energytransport,
+                       aes(y = perc, 
+                           x = "",
+                           fill = Num.Thr)) +
+  geom_bar(stat = "identity", color = "black") +
+  theme_minimal() +
+  scale_fill_manual(values = seq_gradient_pal(cat_colors22[13], "white",
+                                              "Lab")(seq(0,1, length.out = 5))) +
+  # scale_fill_viridis_d(name = "Number of Threats") +
+  labs(title="Proportion of Energy/Transportation Grants Classified into Multiple Threats") +
+  coord_polar("y", start=0, direction = -1) +
+  blank_theme +
+  theme(axis.text.x = element_blank()) +
+  geom_text(aes(x = c(rep(1.55,4), 1.65),
+                label = paste0(round(perc*100,1), "%")),
+            position = position_stack(vjust = 0.5),
+            size = 3,
+            col = "black")
+
+# ggsave(plot.pie.Nthreats_energytransport, filename = "~/Columbia E3B/Conservation Group/Output V15.2/Figures/pie_Nthreats_energytransport.png", width=12, height=7,dpi = 300)
+
+plot.pie.Nthreats_energytransport
+```
+
+
+#### Habitat Loss
+```{r}
+pie.Nthreats_habitat <- money.data.multi_bio %>%
+  filter(cat_threat_habitat > 0) %>%
+  dplyr::select(Num.Thr) %>%
+  mutate(Num.Thr = as.factor(Num.Thr)) %>%
+  mutate(Count = 1) %>%
+  group_by(Num.Thr) %>%
+  summarize(totalCount = sum(Count)) %>%
+  mutate(perc = totalCount/sum(totalCount))
+
+plot.pie.Nthreats_habitat <- ggplot(pie.Nthreats_habitat,
+                       aes(y = perc, 
+                           x = "",
+                           fill = Num.Thr)) +
+  geom_bar(stat = "identity", color = "white") +
+  theme_minimal() +
+    scale_fill_manual(values = seq_gradient_pal(cat_colors22[11], "white",
+                                              "Lab")(seq(0,1, length.out = 5))) +
+  # scale_fill_viridis_d(name = "Number of Threats", end = 0.8) +
+  labs(title="Proportion of Habitat Loss Grants Classified into Multiple Threats") +
+  coord_polar("y", start=0, direction = -1) +
+  blank_theme +
+  theme(axis.text.x = element_blank()) +
+  geom_text(aes(x = c(rep(1.55,4)),
+                label = paste0(round(perc*100,1), "%")),
+            position = position_stack(vjust = 0.5),
+            size = 3,
+            col = "black")
+
+ggsave(plot.pie.Nthreats_habitat, filename = "~/Columbia E3B/Conservation Group/Output V15.2/Figures/pie_Nthreats_habitat.png", width=12, height=7,dpi = 300)
+
+plot.pie.Nthreats_habitat
+```
+
+
+#### Invasive Species
+```{r}
+pie.Nthreats_inv_spec <- money.data.multi_bio %>%
+  filter(cat_threat_inv_spec > 0) %>%
+  dplyr::select(Num.Thr) %>%
+  mutate(Num.Thr = as.factor(Num.Thr)) %>%
+  mutate(Count = 1) %>%
+  group_by(Num.Thr) %>%
+  summarize(totalCount = sum(Count)) %>%
+  mutate(perc = totalCount/sum(totalCount))
+
+plot.pie.Nthreats_inv_spec <- ggplot(pie.Nthreats_inv_spec,
+                       aes(y = perc, 
+                           x = "",
+                           fill = Num.Thr)) +
+  geom_bar(stat = "identity", color = "black") +
+  theme_minimal() +
+  scale_fill_manual(values = seq_gradient_pal(cat_colors22[20], "white",
+                                              "Lab")(seq(0,1, length.out = 5))) +
+  # scale_fill_viridis_d(name = "Number of Threats") +
+  labs(title="Proportion of Invasive Species Grants Classified into Multiple Threats") +
+  coord_polar("y", start=0, direction = -1) +
+  blank_theme +
+  theme(axis.text.x = element_blank()) +
+  geom_text(aes(x = c(rep(1.55,4), 1.65),
+                label = paste0(round(perc*100,1), "%")),
+            position = position_stack(vjust = 0.5),
+            size = 3,
+            col = "black")
+
+ggsave(plot.pie.Nthreats_inv_spec, filename = "~/Columbia E3B/Conservation Group/Output V15.2/Figures/pie_Nthreats_inv_spec.png", width=12, height=7,dpi = 300)
+
+plot.pie.Nthreats_inv_spec
+```
+
+#### Overexploitation
+```{r}
+pie.Nthreats_overexp <- money.data.multi_bio %>%
+  filter(cat_threat_overexp > 0) %>%
+  dplyr::select(Num.Thr) %>%
+  mutate(Num.Thr = as.factor(Num.Thr)) %>%
+  mutate(Count = 1) %>%
+  group_by(Num.Thr) %>%
+  summarize(totalCount = sum(Count)) %>%
+  mutate(perc = totalCount/sum(totalCount))
+
+plot.pie.Nthreats_overexp <- ggplot(pie.Nthreats_overexp,
+                       aes(y = perc, 
+                           x = "",
+                           fill = Num.Thr)) +
+  geom_bar(stat = "identity", color = "white") +
+  theme_minimal() +
+  scale_fill_manual(values = seq_gradient_pal(cat_colors22[5], "white",
+                                              "Lab")(seq(0,1, length.out = 5))) +
+  # scale_fill_viridis_d(name = "Number of Threats") +
+  labs(title="Proportion of Overexploitation Grants Classified into Multiple Threats") +
+  coord_polar("y", start=0, direction = -1) +
+  blank_theme +
+  theme(axis.text.x = element_blank()) +
+  geom_text(aes(x = c(rep(1.55,4), 1.65),
+                # label = paste0(round(perc*100,1), "%")),
+                label = str_glue("{round(perc*100,1)}% ({totalCount})")),
+            position = position_stack(vjust = 0.5),
+            size = 3,
+            col = "black")
+
+ggsave(plot.pie.Nthreats_overexp, filename = "~/Columbia E3B/Conservation Group/Output V15.2/Figures/pie_Nthreats_overexp.png", width=12, height=7,dpi = 300)
+
+plot.pie.Nthreats_overexp
+```
+
+##### Prop Overxploitation funding
+```{r}
+pie.threats_overexp <- money.data.multi_bio %>%
+  filter(cat_threat_overexp > 0) %>%
+  dplyr::select(Num.Thr, cat_threat_overexp) %>%
+  group_by(Num.Thr) %>%
+  summarize(total = sum(cat_threat_overexp)) %>%
+  mutate(perc = total/sum(total))
+```
+
+
+#### Pollution
+```{r}
+pie.Nthreats_pollution <- money.data.multi_bio %>%
+  filter(cat_threat_pollution > 0) %>%
+  dplyr::select(Num.Thr) %>%
+  mutate(Num.Thr = as.factor(Num.Thr)) %>%
+  mutate(Count = 1) %>%
+  group_by(Num.Thr) %>%
+  summarize(totalCount = sum(Count)) %>%
+  mutate(perc = totalCount/sum(totalCount))
+
+plot.pie.Nthreats_pollution <- ggplot(pie.Nthreats_pollution,
+                       aes(y = perc, 
+                           x = "",
+                           fill = Num.Thr)) +
+  geom_bar(stat = "identity", color = "white") +
+  theme_minimal() +
+  scale_fill_manual(values = seq_gradient_pal(cat_colors22[18], "white",
+                                              "Lab")(seq(0,1, length.out = 5))) +
+  # scale_fill_viridis_d(name = "Number of Threats") +
+  labs(title="Proportion of Pollution Funding Classified into Multiple Threats") +
+  coord_polar("y", start=0, direction = -1) +
+  blank_theme +
+  theme(axis.text.x = element_blank()) +
+  geom_text(aes(x = c(rep(1.55,4), 1.65),
+                label = paste0(round(perc*100,1), "%")),
+            position = position_stack(vjust = 0.5),
+            size = 3,
+            col = "black")
+
+ggsave(plot.pie.Nthreats_pollution, filename = "~/Columbia E3B/Conservation Group/Output V15.2/Figures/pie_Nthreats_pollution.png", width=12, height=7,dpi = 300)
+
+plot.pie.Nthreats_pollution
+```
+
+## Supplemental Figures
+### Figure S1: Total Biodiversity/Climate Change Grantmaking by Top 1000 Grantmakers
+```{r fig-s1, fig.cap='Figure S1: Grant Funding by Top 1,000 Grantmakers', fig.asp=.75, fig.align='center'}
+donor_Rank <- c(" ", "Top 50", "Top 100", "Top 200", "Top 300", "Top 400", "Top 500", "Top 600", "Top 700", "Top 800", "Top 900", "Top 1000")
+sum <- c(0, 14396513202, 16440571398, 18171144637, 18975986509, 19490663536, 19851261916, 20128241008, 20348022885, 20525790876, 20670921174, 20793224389)
+sum_mildiv <- sum/1000000
+axis_Order <- c(1:12)
+
+sum.data <- data.frame(donor_Rank, sum, sum_mildiv, axis_Order)
+
+sum_graph <- ggplot(data = sum.data,
+                    mapping = aes(x = axis_Order,
+                                  y =  sum_mildiv,
+                                  group = 1)
+) +
+  geom_line() +
+  geom_point() +
+  geom_area(aes(y=ifelse(sum_mildiv>=0 & sum_mildiv< 19851.26, sum_mildiv, 19851.26)), fill="#696969", alpha = .4) +
+  ylim(0, 21500) +
+  theme_minimal() +
+  xlab("Grantmaker Group") +
+  ylab("Sum ($1,000,000USD)") + 
+  scale_x_discrete(limits=c(" ", "Top 50", "Top 100", "Top 200", "Top 300", "Top 400", "Top 500", "Top 600", 
+                                      "Top 700", "Top 800", "Top 900", "Top 1000"))
+
+sum_graph
+```
+
+<!--chapter:end:04-dataVis.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_knit$set(root.dir = here::here())
+set.seed(1)
+options(digits = 3)
+
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  cache = FALSE,
+  eval=FALSE,
+  warning = FALSE,
+  error = FALSE,
+  message = FALSE,
+  out.width = "\\textwidth",
+  fig.align = "center",
+  fig.width = 7,
+  fig.asp = 0.618,  # 1 / phi
+  fig.show = "hold",
+  python.reticulate=FALSE
+)
+options(knitr.kable.NA = "")
+options(dplyr.print_min = 6, dplyr.print_max = 6)
+```
+# Rule Based Classification {#rbc}
+
+Pending, from Pratik
+
+<!--chapter:end:05-ruleBasedClassification.Rmd-->
+

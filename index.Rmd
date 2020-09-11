@@ -18,22 +18,22 @@ description: "Conservation funding does not track drivers of biodiversity loss"
 
 This is the `bookdown` version of a repository that contains code and analyses associated with Ramesh et. al. (in review). 
 
-### Attribution
+## Attribution
 
 Please contact the following in case of interest in the project.
 
 - Vijay Ramesh (lead author)
     - PhD student, Columbia University
 
-### Data access
+## Data access
 
 The data used in this work is available from...
 
-### Data processing
+## Data processing
 
 The data processing for this project is described in the following sections. Navigate through them using the links in the sidebar.
 
-### Affiliations
+## Affiliations
 
 <sup>1</sup>Department of Ecology, Evolution and Environmental Biology, Columbia University, 1200 Amsterdam Avenue, New York, NY 10027.
 

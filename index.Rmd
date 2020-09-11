@@ -14,7 +14,7 @@ github-repo: vjjan91/conservation-spending
 description: "Conservation funding does not track drivers of biodiversity loss"
 ---
 
-### Introduction  
+# Introduction  
 
 This is the `bookdown` version of a repository that contains code and analyses associated with Ramesh et. al. (in review). 
 

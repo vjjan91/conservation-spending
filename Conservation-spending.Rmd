@@ -52,7 +52,7 @@ This repository contains code and analyses associated with Ramesh et. al. (in re
 <!--chapter:end:index.Rmd-->
 
 ---
-title: Conservation funding does not track drivers of biodiversity loss
+title: 
 output: bookdown::gitbook
 output_dir: "docs"
 css: style.css

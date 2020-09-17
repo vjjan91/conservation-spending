@@ -3,7 +3,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-#### Post-processing of grants following validation
+# Post-processing of grants following validation
 
 Here we remove and filter those grants that may have been erroneously classified, following the process of validation
 ```{r setup, include=FALSE}

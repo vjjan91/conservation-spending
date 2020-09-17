@@ -3,7 +3,9 @@ editor_options:
   chunk_output_type: console
 ---
 
-Threat-mismatch calculations: We estimate if the amount of funding to drivers of biodiversity loss tracks the number of species threatened by each of these drivers
+# Threat-mismatch calculations 
+
+We estimate if the amount of funding to drivers of biodiversity loss tracks the number of species threatened by each of these drivers
 
 ```{r eval=TRUE}
 # Load libraries
@@ -67,9 +69,8 @@ cat_colors7 <- cat_colors22[c(1, 5, 20, 7, 18, 11, 19)]
 barplot(1:7, col = cat_colors7)
 ```
 
-## Manuscript Figures
-### Figure 1: Proportion of Money vs. Species Threatened
-**INSERT FIGURE CAPTION FROM MANUSCRIPT**
+
+Figure 1: Proportion of Money vs. Species Threatened
 ```{r fig-1, fig.cap='Figure 1: Proportion of Money vs. Species Threatened', fig.asp=.75, fig.align='center'}
 fig.1.money_bio <- by.year.money_bio %>%
   filter(Category %in% u.threat_cat) %>%

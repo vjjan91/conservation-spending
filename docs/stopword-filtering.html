@@ -4,21 +4,21 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Conservation funding does not track drivers of biodiversity loss</title>
-  <meta name="description" content="Conservation funding does not track drivers of biodiversity loss" />
+  <title>Section 3 Stopword filtering | Conservation funding does not track drivers of biodiversity loss</title>
+  <meta name="description" content="Section 3 Stopword filtering | Conservation funding does not track drivers of biodiversity loss" />
   <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Conservation funding does not track drivers of biodiversity loss" />
+  <meta property="og:title" content="Section 3 Stopword filtering | Conservation funding does not track drivers of biodiversity loss" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="Conservation funding does not track drivers of biodiversity loss" />
+  <meta property="og:description" content="Section 3 Stopword filtering | Conservation funding does not track drivers of biodiversity loss" />
   <meta name="github-repo" content="vjjan91/conservation-spending" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Conservation funding does not track drivers of biodiversity loss" />
+  <meta name="twitter:title" content="Section 3 Stopword filtering | Conservation funding does not track drivers of biodiversity loss" />
   
-  <meta name="twitter:description" content="Conservation funding does not track drivers of biodiversity loss" />
+  <meta name="twitter:description" content="Section 3 Stopword filtering | Conservation funding does not track drivers of biodiversity loss" />
   
 
 <meta name="author" content="Vijay Ramesh1*, Jay Schoen1, Michael Levin1, Pratik Dubal2, Rochelle Thomas1, Sebastian Heilpern1, Jared Meek1, Pooja Choksi1, Don J Melnick1, Sara Kross1&quot;" />
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-<link rel="next" href="pre-processing-and-filtering-of-grants.html"/>
+<link rel="prev" href="pre-processing-and-filtering-of-grants.html"/>
+<link rel="next" href="preparation-of-a-final-dataframe-of-classified-grants.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -162,53 +162,65 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">Conservation funding does not track drivers of biodiversity loss</h1>
-<p class="author"><em>Vijay Ramesh<sup>1*</sup>, Jay Schoen<sup>1</sup>, Michael Levin<sup>1</sup>, Pratik Dubal<sup>2</sup>, Rochelle Thomas<sup>1</sup>, Sebastian Heilpern<sup>1</sup>, Jared Meek<sup>1</sup>, Pooja Choksi<sup>1</sup>, Don J Melnick<sup>1</sup>, Sara Kross<sup>1</sup>"</em></p>
-<p class="date"><em>2020-09-17</em></p>
-</div>
-<div id="introduction" class="section level1">
-<h1><span class="header-section-number">Section 1</span> Introduction</h1>
-<p>This is the <code>bookdown</code> version of a repository that contains code and analyses associated with Ramesh et. al. (in review).</p>
-<div id="attribution" class="section level2">
-<h2><span class="header-section-number">1.1</span> Attribution</h2>
-<p>Please contact the following in case of interest in the project.</p>
-<ul>
-<li>Vijay Ramesh (lead author)
-<ul>
-<li>PhD student, Columbia University</li>
-</ul></li>
-</ul>
-</div>
-<div id="data-access" class="section level2">
-<h2><span class="header-section-number">1.2</span> Data access</h2>
-<p>The following files are required to reproduce our analysis.</p>
-<ul>
-<li>all-grants.csv: A sheet containing all grant data.</li>
-<li>list-of-preprocessing-phrases.csv: A sheet containing phrases which need to removed before classification.</li>
-<li>list-of-keywords.csv: A sheet containing keywords which will be used to perform the rule-based classification.</li>
-<li>list-of-stopwords.csv: A sheet containing stopwords, which need to be used to post-process and filter the classification results.</li>
-</ul>
-</div>
-<div id="data-processing" class="section level2">
-<h2><span class="header-section-number">1.3</span> Data processing</h2>
-<p>The data processing for this project is described in the following sections. Navigate through them using the links in the sidebar.</p>
-</div>
-<div id="affiliations" class="section level2">
-<h2><span class="header-section-number">1.4</span> Affiliations</h2>
-<p><sup>1</sup>Department of Ecology, Evolution and Environmental Biology, Columbia University, 1200 Amsterdam Avenue, New York, NY 10027.</p>
-<p><sup>2</sup>Department of Computer Science, Columbia University, New York, NY 10027.</p>
-<p><sup>*</sup>Corresponding author. Email: <a href="mailto:vr2352@columbia.edu" class="email">vr2352@columbia.edu</a></p>
+<div id="stopword-filtering" class="section level1">
+<h1><span class="header-section-number">Section 3</span> Stopword filtering</h1>
+<p>Here, we will use a list of stopwords to further refine our output from our classification</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb3-1" title="1"><span class="im">import</span> re</a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="im">import</span> csv</a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="im">import</span> tqdm</a>
+<a class="sourceLine" id="cb3-4" title="4"><span class="im">import</span> numpy <span class="im">as</span> np</a>
+<a class="sourceLine" id="cb3-5" title="5"><span class="im">import</span> pandas <span class="im">as</span> pd</a>
+<a class="sourceLine" id="cb3-6" title="6"></a>
+<a class="sourceLine" id="cb3-7" title="7"><span class="kw">def</span> string_found(string1, string2):</a>
+<a class="sourceLine" id="cb3-8" title="8">    <span class="cf">if</span> re.search(<span class="vs">r&quot;\b&quot;</span> <span class="op">+</span> re.escape(string1) <span class="op">+</span> <span class="vs">r&quot;\b&quot;</span>, string2):</a>
+<a class="sourceLine" id="cb3-9" title="9">        <span class="cf">return</span> <span class="va">True</span></a>
+<a class="sourceLine" id="cb3-10" title="10">    <span class="cf">return</span> <span class="va">False</span></a>
+<a class="sourceLine" id="cb3-11" title="11"></a>
+<a class="sourceLine" id="cb3-12" title="12">output_grants <span class="op">=</span> <span class="st">&#39;data</span><span class="ch">\\</span><span class="st">output-grants.csv&#39;</span></a>
+<a class="sourceLine" id="cb3-13" title="13">stopwords_csv <span class="op">=</span> <span class="st">&#39;data</span><span class="ch">\\</span><span class="st">list-of-stopwords.csv&#39;</span></a>
+<a class="sourceLine" id="cb3-14" title="14">output_filtered <span class="op">=</span> <span class="st">&#39;data</span><span class="ch">\\</span><span class="st">output-grants-filtered.csv.csv&#39;</span></a>
+<a class="sourceLine" id="cb3-15" title="15"></a>
+<a class="sourceLine" id="cb3-16" title="16">output_data <span class="op">=</span> pd.read_csv(output_grants)</a>
+<a class="sourceLine" id="cb3-17" title="17">output_data[<span class="st">&#39;Stopwords&#39;</span>] <span class="op">=</span> <span class="st">&quot;-&quot;</span></a>
+<a class="sourceLine" id="cb3-18" title="18">output_data[<span class="st">&#39;Filtered_Categories&#39;</span>] <span class="op">=</span> <span class="st">&quot;-&quot;</span></a>
+<a class="sourceLine" id="cb3-19" title="19"></a>
+<a class="sourceLine" id="cb3-20" title="20">stopwords_df <span class="op">=</span> pd.read_csv(stopwords_csv)</a>
+<a class="sourceLine" id="cb3-21" title="21">stopwords_dict <span class="op">=</span> <span class="bu">dict</span>()</a>
+<a class="sourceLine" id="cb3-22" title="22"><span class="cf">for</span> cat <span class="kw">in</span> [x.strip() <span class="cf">for</span> x <span class="kw">in</span> <span class="bu">list</span>(stopwords_df)]:</a>
+<a class="sourceLine" id="cb3-23" title="23">    temp <span class="op">=</span> <span class="bu">list</span>(<span class="bu">set</span>(stopwords_df[cat].dropna()))</a>
+<a class="sourceLine" id="cb3-24" title="24">    temp <span class="op">=</span> [x.lower() <span class="cf">for</span> x <span class="kw">in</span> temp]</a>
+<a class="sourceLine" id="cb3-25" title="25">    stopwords_dict[cat] <span class="op">=</span> temp</a>
+<a class="sourceLine" id="cb3-26" title="26">pbar <span class="op">=</span> tqdm.tqdm(total<span class="op">=</span><span class="bu">len</span>(output_data))</a>
+<a class="sourceLine" id="cb3-27" title="27"></a>
+<a class="sourceLine" id="cb3-28" title="28"><span class="cf">for</span> idx <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(output_data)):</a>
+<a class="sourceLine" id="cb3-29" title="29">    class_cats <span class="op">=</span> <span class="bu">list</span>(output_data.iloc[idx][<span class="st">&#39;Categories&#39;</span>].split(<span class="st">&#39;|&#39;</span>))</a>
+<a class="sourceLine" id="cb3-30" title="30">    stop_added <span class="op">=</span> []</a>
+<a class="sourceLine" id="cb3-31" title="31">    flag <span class="op">=</span> <span class="va">False</span></a>
+<a class="sourceLine" id="cb3-32" title="32"></a>
+<a class="sourceLine" id="cb3-33" title="33">    <span class="cf">for</span> stop_cat <span class="kw">in</span> stopwords_dict.keys():</a>
+<a class="sourceLine" id="cb3-34" title="34">        <span class="cf">if</span> stop_cat <span class="kw">in</span> class_cats:</a>
+<a class="sourceLine" id="cb3-35" title="35">            <span class="cf">for</span> stopword <span class="kw">in</span> stopwords_dict[stop_cat]:</a>
+<a class="sourceLine" id="cb3-36" title="36">                <span class="cf">if</span> string_found(stopword,</a>
+<a class="sourceLine" id="cb3-37" title="37">                                output_data.iloc[idx][<span class="st">&#39;Description&#39;</span>].lower()):</a>
+<a class="sourceLine" id="cb3-38" title="38">                    class_cats.remove(stop_cat)</a>
+<a class="sourceLine" id="cb3-39" title="39">                    stop_added.append(stopword)</a>
+<a class="sourceLine" id="cb3-40" title="40">                    <span class="cf">break</span></a>
+<a class="sourceLine" id="cb3-41" title="41">    output_data.loc[idx,<span class="st">&#39;Filtered_Categories&#39;</span>] <span class="op">=</span> <span class="st">&#39;|&#39;</span>.join(<span class="bu">list</span>(<span class="bu">set</span>(class_cats)))</a>
+<a class="sourceLine" id="cb3-42" title="42">    <span class="cf">if</span> <span class="bu">len</span>(stop_added) <span class="op">&gt;</span> <span class="dv">0</span>:</a>
+<a class="sourceLine" id="cb3-43" title="43">        output_data.loc[idx, <span class="st">&#39;Stopwords&#39;</span>] <span class="op">=</span> <span class="st">&#39;|&#39;</span>.join(<span class="bu">list</span>(<span class="bu">set</span>(stop_added)))</a>
+<a class="sourceLine" id="cb3-44" title="44">    pbar.update(<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb3-45" title="45">pbar.close()</a>
+<a class="sourceLine" id="cb3-46" title="46">output_data[output_data.Stopwords <span class="op">!=</span> <span class="st">&#39;-&#39;</span>]</a>
+<a class="sourceLine" id="cb3-47" title="47">output_data.to_csv(output_filtered, index<span class="op">=</span><span class="va">False</span>)</a></code></pre></div>
 
-</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-<a href="pre-processing-and-filtering-of-grants.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="pre-processing-and-filtering-of-grants.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="preparation-of-a-final-dataframe-of-classified-grants.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -230,7 +242,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/vjjan91/conservation-spending/edit/master/index.Rmd",
+"link": "https://github.com/vjjan91/conservation-spending/edit/master/02_stopwords-filtering.Rmd",
 "text": "Edit"
 },
 "history": {

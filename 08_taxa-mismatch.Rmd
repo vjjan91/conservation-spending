@@ -3,10 +3,11 @@ editor_options:
   chunk_output_type: console
 ---
 
+# Taxononmic groups/Threats mismatch
 
-### Figure 3: Taxa/Threat Maxwell Comparison
-**INSERT FIGURE CAPTION FROM MANUSCRIPT**
-#### Coercing Maxwell's species designations to merge with ours
+Figure 3: Taxa/Threat Maxwell Comparison
+
+Coercing Maxwell's species designations to merge with ours
 We are merging the various taxa catgories used by Maxwell et al. to examine the amount of funding disbursed to various taxa. Maxwell et al.'s taxonic designations are at a higher resolution than the what we need, so we are altering them to fit the taxonomic scale we're operating at.
 ```{r}
 maxwell.s4 <- read_csv("~/Columbia E3B/Conservation Group/Maxwell et al table S4.csv")

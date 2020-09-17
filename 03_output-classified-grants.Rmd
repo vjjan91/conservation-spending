@@ -3,8 +3,9 @@ editor_options:
   chunk_output_type: console
 ---
 
-#### Preparing a final datafame for analysis of threats, taxonomic groups and proportion of funding
+# Preparation of a final dataframe of classified grants
 
+Here we prepare a final datafame for analysis of threats, taxonomic groups and proportion of funding
 ```{python eval=FALSE}
 import pandas as pd
 import numpy as np

@@ -4,11 +4,12 @@ editor_options:
 ---
 
 
-### Figure 4: Network Analysis
-# Figure 4: Threats Network Analysis
+# Network Analysis
+
+Figure 4: Threats Network Analysis
 The code presented here for Figure 4 generates the pie charts for each threat category that can be seen in the full network analysis figure. The actual network analysis was conducted separately, in **WHERE WAS THIS CONDUCTED?**.
 
-## Threat Category Overlap
+Threat Category Overlap
 ```{r, include=FALSE}
 threat.net1 <- data.multi_bio %>%
   filter(Year.Authorized < 2017) %>%

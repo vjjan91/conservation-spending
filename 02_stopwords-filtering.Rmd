@@ -3,6 +3,8 @@ editor_options:
   chunk_output_type: console
 ---
 
+# Stopword filtering
+
 Here, we will use a list of stopwords to further refine our output from our classification
 ```{python eval=FALSE}
 import re

@@ -3,7 +3,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-#### Pre-processing and filtering of grants
+# Pre-processing and filtering of grants
 
 Here, we will filter our list our grants using our pre-processing phrases and use our list of keywords to carry out our rule-based classification
 ```{python prepare_py_libs, eval=FALSE}

@@ -3,6 +3,8 @@ editor_options:
   chunk_output_type: console
 ---
 
+# Exploratory data analysis
+
 Here, we will carry out exploratory data analysis of grants to obtain a sense of how money has been allocated across threat and taxonomic groups.
 
 1. Dealing with grants that were classified into multiple categories

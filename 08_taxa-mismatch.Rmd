@@ -1,0 +1,173 @@
+---
+editor_options: 
+  chunk_output_type: console
+---
+
+
+### Figure 3: Taxa/Threat Maxwell Comparison
+**INSERT FIGURE CAPTION FROM MANUSCRIPT**
+#### Coercing Maxwell's species designations to merge with ours
+We are merging the various taxa catgories used by Maxwell et al. to examine the amount of funding disbursed to various taxa. Maxwell et al.'s taxonic designations are at a higher resolution than the what we need, so we are altering them to fit the taxonomic scale we're operating at.
+```{r}
+maxwell.s4 <- read_csv("~/Columbia E3B/Conservation Group/Maxwell et al table S4.csv")
+names(maxwell.s4)
+
+# Our species: Amphibians, Birds, Fish, Invertebrates, Mammals, Plants, Reptiles
+
+our.species <- maxwell.s4 %>%
+  slice(1:10) %>%
+  mutate(Amphibians = Amphibia,
+         Birds = Aves,
+         Fish = Actinopterygii + Chondrichthyes,
+         Invertebrates = Anthozoa + Gastropoda + Hydrozoa + Malacostraca + Myxini,
+         Mammals = Mammalia,
+         Plants = Cycadopsida + Liliopsida + Magnoliopsida + Pinopsida,
+         Reptiles = Reptilia) %>%
+  dplyr::select(c(2,3, 19:ncol(.), 18))
+our.species
+```
+
+#### Figure 3
+```{r}
+# Preparing maxwell data
+fig.3.maxwell_data <- our.species %>% 
+  dplyr::select(2:11) %>%
+  group_by(Category) %>%
+  summarise_at(vars(Total:Reptiles), sum) %>%
+  dplyr::select(3:length(.)) %>%
+  mutate(Total.maxwell = rowSums(.)) %>%
+  dplyr::select(8,1:7) %>%
+  transmute_at(vars(-Total.maxwell), ~ (./Total.maxwell)*100) %>%
+  mutate(Threat = u.threat_list) %>%
+  dplyr::select(8,1:7) %>%
+  pivot_longer(Amphibians:Reptiles, names_to = "Taxa", values_to = "Percent") %>%
+  mutate(Source = "IUCN", direction = -1, alpha = 0.9)
+
+
+# Preparing money data
+taxa_climate <- money.data_bio %>%
+  filter(cat_threat_climate > 0) %>%
+  dplyr::select(cat_taxa_amphibian:cat_taxa_reptile) %>%
+  pivot_longer(cat_taxa_amphibian:cat_taxa_reptile, 
+               names_to = "Category", values_to = "Money") %>%
+  group_by(Category) %>%
+  summarize(totalAmount = sum(Money)) %>%
+  mutate(perc = totalAmount/sum(totalAmount)) %>%
+  dplyr::select(perc) %>%
+  t() %>%
+  as.data.frame(row.names = "cat_threat_climate") %>%
+  `colnames<-` (u.taxa_list)
+
+taxa_energy <- money.data_bio %>%
+  filter(cat_threat_energytransport > 0) %>%
+  dplyr::select(cat_taxa_amphibian:cat_taxa_reptile) %>%
+  pivot_longer(cat_taxa_amphibian:cat_taxa_reptile, 
+               names_to = "Category", values_to = "Money") %>%
+  group_by(Category) %>%
+  summarize(totalAmount = sum(Money)) %>%
+  mutate(perc = totalAmount/sum(totalAmount)) %>%
+  dplyr::select(perc) %>%
+  t() %>%
+  as.data.frame(row.names = "cat_threat_energytransport") %>%
+  `colnames<-` (u.taxa_list)
+
+taxa_habitat <- money.data_bio %>%
+  filter(cat_threat_habitat > 0) %>%
+  dplyr::select(cat_taxa_amphibian:cat_taxa_reptile) %>%
+  pivot_longer(cat_taxa_amphibian:cat_taxa_reptile, 
+               names_to = "Category", values_to = "Money") %>%
+  group_by(Category) %>%
+  summarize(totalAmount = sum(Money)) %>%
+  mutate(perc = totalAmount/sum(totalAmount)) %>%
+  dplyr::select(perc) %>%
+  t() %>%
+  as.data.frame(row.names = "cat_threat_habitat") %>%
+  `colnames<-` (u.taxa_list)
+
+taxa_inv <- money.data_bio %>%
+  filter(cat_threat_inv_spec > 0) %>%
+  dplyr::select(cat_taxa_amphibian:cat_taxa_reptile) %>%
+  pivot_longer(cat_taxa_amphibian:cat_taxa_reptile, 
+               names_to = "Category", values_to = "Money") %>%
+  group_by(Category) %>%
+  summarize(totalAmount = sum(Money)) %>%
+  mutate(perc = totalAmount/sum(totalAmount)) %>%
+  dplyr::select(perc) %>%
+  t() %>%
+  as.data.frame(row.names = "cat_threat_inv_spec") %>%
+  `colnames<-` (u.taxa_list)
+
+taxa_overexp <- money.data_bio %>%
+  filter(cat_threat_overexp > 0) %>%
+  dplyr::select(cat_taxa_amphibian:cat_taxa_reptile) %>%
+  pivot_longer(cat_taxa_amphibian:cat_taxa_reptile, 
+               names_to = "Category", values_to = "Money") %>%
+  group_by(Category) %>%
+  summarize(totalAmount = sum(Money)) %>%
+  mutate(perc = totalAmount/sum(totalAmount)) %>%
+  dplyr::select(perc) %>%
+  t() %>%
+  as.data.frame(row.names = "cat_threat_overexp") %>%
+  `colnames<-` (u.taxa_list)
+
+taxa_pollution <- money.data_bio %>%
+  filter(cat_threat_pollution > 0) %>%
+  dplyr::select(cat_taxa_amphibian:cat_taxa_reptile) %>%
+  pivot_longer(cat_taxa_amphibian:cat_taxa_reptile, 
+               names_to = "Category", values_to = "Money") %>%
+  group_by(Category) %>%
+  summarize(totalAmount = sum(Money)) %>%
+  mutate(perc = totalAmount/sum(totalAmount)) %>%
+  dplyr::select(perc) %>%
+  t() %>%
+  as.data.frame(row.names = "cat_threat_pollution") %>%
+  `colnames<-` (u.taxa_list)
+
+fig.3.money_data <- bind_rows(taxa_climate, taxa_energy, taxa_habitat, 
+                         taxa_inv, taxa_overexp, taxa_pollution) %>%
+  transmute_all(~.*100) %>%
+  mutate(Threat = u.threat_list) %>%
+  dplyr::select(8, 1:7) %>%
+  pivot_longer(Amphibians:Reptiles, names_to = "Taxa", values_to = "Percent") %>%
+  mutate(Source = "Money", direction = 1, alpha = 1)
+
+### 1 plot
+fig.3.data <- bind_rows(fig.3.money_data, fig.3.maxwell_data) %>%
+  mutate(Percent = Percent * direction,
+         Taxa = factor(Taxa, 
+                       levels = c("Reptiles", "Amphibians", "Invertebrates", 
+                                  "Birds", "Mammals", "Fish", "Plants"),
+                       ordered = TRUE),
+         Threat = factor(Threat,
+                         levels = c("Climate Change", "Overexploitation",
+                                    "Habitat Loss", "Energy & Transportation",
+                                    "Pollution", "Invasive Species"),
+                         ordered = TRUE)
+  )
+
+fig.3 <- ggplot(fig.3.data %>% filter(Taxa != "Reptiles"),
+                aes(x = Taxa, y = Percent, fill = Taxa)) + 
+  geom_col(show.legend = F , color = "black") +
+  geom_hline(yintercept = 0, size = 1.2) +
+  scale_fill_manual(values = cat_colors22[c(9,20,19,15,7,11)],
+                    name = "Taxa",
+                    labels = u.taxa_list) +
+  facet_wrap(~Threat) +
+  theme_bw() +
+  theme(axis.ticks.y= element_blank(),
+        # axis.text.y = element_text(size = 10, face = "bold"),
+        axis.text.x = element_blank(),
+        # axis.text.y = element_text(size = 12),
+        # axis.title = element_text(size = 16, face = "bold"),
+        axis.ticks.x=element_line(color=NA),
+        strip.background = element_rect(fill = "black"),
+        strip.text = element_text(size = 12, color = "white", face = "bold")) +
+  ylim(-90,90) +
+  ggtitle("Percent of Taxa Threatened (IUCN) by vs. Funded for Unique Threats") +
+  ylab("% Taxa Threatened   |    % Funding to Taxa") +
+  coord_flip()
+
+# ggsave(fig.3, filename = "~/Columbia E3B/Conservation Group/Output V15.2/Figures/taxa_threat_comparison.png", width=12, height=7,dpi = 300)
+
+fig.3
+```

@@ -1,0 +1,52 @@
+---
+editor_options: 
+  chunk_output_type: console
+---
+
+
+### Figure 2: Amount of Money Allocated Across Unique Threat Categories per Year
+**INSERT FIGURE CAPTION FROM MANUSCRIPT**
+```{r fig-2, fig.cap='Figure 2: Amount of Money Allocated Across Unique Threat Categories per Year', fig.asp=.75, fig.align='center'}
+threat_temporal.data <- by.year.money_bio %>%
+  filter(Category %in% u.threat_cat)
+
+threat_temporal.plot <- ggplot(threat_temporal.data, 
+                aes(y = Amount, 
+                    x = Year.Authorized,
+                    color = Category)) +
+  #geom_point() +
+  geom_line(size = 2, linetype = 1) +
+  # geom_smooth(size = 1, aes(fill = Category), show.legend = FALSE) +
+  theme_minimal() +
+  scale_color_manual(values = cat_colors22[c(1,13,11,20,5,18)],
+                     name="Threat Category",
+                     labels=u.threat_list) +
+  scale_fill_manual(values = cat_colors7) +
+  labs(x="Year", 
+       y="Money ($US Million)", 
+       title="Amount of Money Allocated Across Unique Threat Categories per Year") +
+  scale_y_continuous(#labels = waiver(),
+                     breaks = c(0,50e6,10e7),
+                     labels = c("0","50","100"),
+                     position = "right") +
+  theme(axis.text = element_text(size = 14),
+        axis.title = element_text(size = 16, face = "bold"),
+        legend.title = element_text(size = 14),
+        legend.text = element_text(size = 12),
+        legend.key.width = unit(1,"cm"),
+        # legend.box.spacing = unit(1,"cm"),
+        legend.spacing.x = unit(1,"cm"),
+        legend.position = "bottom")
+        # legend.background = element_rect(color = "black", size = 1.2, fill = NA))
+
+# ggsave(threat_temporal.plot, filename = "~/Columbia E3B/Conservation Group/Output V15.2/Figures/threat_temporal.png", width=12, height=7,dpi = 300)
+
+
+threat_temporal.plot
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.

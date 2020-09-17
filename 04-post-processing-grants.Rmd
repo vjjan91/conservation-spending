@@ -1,0 +1,74 @@
+---
+editor_options: 
+  chunk_output_type: console
+---
+
+#### Post-processing of grants following validation
+
+Here we remove and filter those grants that may have been erroneously classified, following the process of validation
+```{r setup, include=FALSE}
+# Load libraries
+library(knitr)
+library(tidyverse)
+library(data.table)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+dat <- read_csv("data\\classified-grants-for-analysis.csv")
+```
+
+Here we hard-coded several specific fixes to the classification that repeatedly cropped up during our validation process. All have been checked to have 0 mis-classifications.
+```{r}
+# Removing grants containing "dinner"
+dat <- dat %>%
+  filter(str_detect(Description, "dinner") == FALSE)
+
+# Classifying "dissemination" as act_edu
+sum(dat$cat_act_edu)
+for(i in 1:nrow(dat)) {
+  if(str_detect(dat$Description[i], "dissemination") == TRUE) {
+    dat$cat_act_edu[i] = 1
+  }
+}
+sum(dat$cat_act_edu)
+
+# Removing threat_energytransport classification for "palm oil"
+sum(dat$cat_threat_energytransport)
+for(i in 1:nrow(dat)) {
+  if(str_detect(dat$Description[i], "palm oil|oil-palm|oil palm") == TRUE) {
+    dat$cat_threat_energytransport[i] = 0
+  }
+}
+sum(dat$cat_threat_energytransport)
+
+# Removing hab_other classification for "aquatic" (will be freshwater/marine)
+sum(dat$cat_habitat_other)
+for(i in 1:nrow(dat)) {
+  if(str_detect(dat$Description[i], "aquatic") == TRUE) {
+    dat$cat_habitat_other[i] = 0
+  }
+}
+sum(dat$cat_habitat_other)
+
+```
+
+Those grants with no funding amount recorded contributed nothing to this analysis, and were removed.
+```{r}
+dat.1 <- dat %>% 
+  drop_na(Grant.Amount) %>%
+  dplyr::select(1:42) 
+names(dat.1)
+```
+
+We ensured that our study focused on in situ conservation grants by eliminating grants that were directed toward captive management (aquarium/zoo category)
+
+```{r}
+for(i in 1:nrow(dat.1)){
+  if(dat.1$cat_aquarium_zoo[i]==1){
+    dat.1[i,c(11:17, 19:28, 30:42)]=0
+  }
+}
+
+write_csv(dat,"data\\post-processed-grants-for-analysis.csv")
+```

@@ -3,25 +3,22 @@ editor_options:
   chunk_output_type: console
 ---
 
-## Here, we will use a list of stopwords to further refine our output from our classification 
-
+Here, we will use a list of stopwords to further refine our output from our classification
 ```{python eval=FALSE}
-
 import re
 import csv
 import tqdm
 import numpy as np
 import pandas as pd
 
-
 def string_found(string1, string2):
     if re.search(r"\b" + re.escape(string1) + r"\b", string2):
         return True
     return False
 
-output_grants = '~data/output-grants.csv'
-stopwords_csv = '~data/list-of-stopwords.csv'
-output_filtered = '~data/output-grants-filtered.csv.csv'
+output_grants = 'data\\output-grants.csv'
+stopwords_csv = 'data\\list-of-stopwords.csv'
+output_filtered = 'data\\output-grants-filtered.csv.csv'
 
 output_data = pd.read_csv(output_grants)
 output_data['Stopwords'] = "-"
@@ -55,6 +52,5 @@ for idx in range(len(output_data)):
 pbar.close()
 output_data[output_data.Stopwords != '-']
 output_data.to_csv(output_filtered, index=False)
-
 ```
 

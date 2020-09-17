@@ -3,12 +3,10 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Pre-processing and filtering of grants
+#### Pre-processing and filtering of grants
 
-## Here, we will filter our list our grants using our pre-processing phrases and use our list of keywords to carry out our rule-based classification
-
+Here, we will filter our list our grants using our pre-processing phrases and use our list of keywords to carry out our rule-based classification
 ```{python prepare_py_libs, eval=FALSE}
-
 import re
 import csv
 import tqdm
@@ -19,15 +17,12 @@ def string_found(string1, string2):
     if re.search(r"\b" + re.escape(string1) + r"\b", string2):
         return True
     return False
-
 ```
 
-## Preprocessing to remove grants which are empty, operating support, etc.
-
+Preprocessing to remove grants which are empty, operating support, etc.
 ```{python eval=FALSE}
-
-data = pd.read_csv('~/data/all-grants.csv')
-preproc_ph = pd.read_csv('~data/list-of-preprocessing-phrases.csv')
+data = pd.read_csv('data\\all-grants.csv')
+preproc_ph = pd.read_csv('data\\list-of-preprocessing-phrases.csv')
 preproc_phrases = list(preproc_ph.Phrases)
 data = data.drop([ele for ele in data.columns.to_list()
                   if ele not in ['Description']], axis=1)
@@ -80,7 +75,7 @@ for idx in range(len(data_sentences)):
     pbar.update(1)
 pbar.close()
 
-with open("~data/output-grants.csv", "w", newline="") as f:
+with open("data\\output-grants.csv", "w", newline="") as f:
     writer = csv.writer(f)
     writer.writerow(['Description', 'Keywords', 'Categories'])
     writer.writerows(output_grants)

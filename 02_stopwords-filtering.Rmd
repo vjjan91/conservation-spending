@@ -1,3 +1,12 @@
+---
+editor_options: 
+  chunk_output_type: console
+---
+
+## Here, we will use a list of stopwords to further refine our output from our classification 
+
+```{python eval=FALSE}
+
 import re
 import csv
 import tqdm
@@ -10,10 +19,9 @@ def string_found(string1, string2):
         return True
     return False
 
-
-output_grants = '/home/psd2120/research/Data/Output/output_grants_v15.csv'
-stopwords_csv = '/home/psd2120/research/Data/Stopwords/Stopwords_Alphabetized_v9.csv'
-output_filtered = '/home/psd2120/research/Data/Output/output_grants_v15_filtered.csv'
+output_grants = '~data/output-grants.csv'
+stopwords_csv = '~data/list-of-stopwords.csv'
+output_filtered = '~data/output-grants-filtered.csv.csv'
 
 output_data = pd.read_csv(output_grants)
 output_data['Stopwords'] = "-"
@@ -47,3 +55,6 @@ for idx in range(len(output_data)):
 pbar.close()
 output_data[output_data.Stopwords != '-']
 output_data.to_csv(output_filtered, index=False)
+
+```
+

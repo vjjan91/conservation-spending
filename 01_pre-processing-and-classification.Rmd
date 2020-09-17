@@ -1,19 +1,33 @@
+---
+editor_options: 
+  chunk_output_type: console
+---
+
+# Pre-processing and filtering of grants
+
+## Here, we will filter our list our grants using our pre-processing phrases and use our list of keywords to carry out our rule-based classification
+
+```{python prepare_py_libs, eval=FALSE}
+
 import re
 import csv
 import tqdm
 import numpy as np
 import pandas as pd
 
-
 def string_found(string1, string2):
     if re.search(r"\b" + re.escape(string1) + r"\b", string2):
         return True
     return False
 
+```
 
-# Preprocessing to remove grants which are empty, operating support, etc.
-data = pd.read_csv('./data/AllData - AllData.csv')
-preproc_ph = pd.read_csv('./data/Preprocessing/Preprocessing_Phrases_v5.csv')
+## Preprocessing to remove grants which are empty, operating support, etc.
+
+```{python eval=FALSE}
+
+data = pd.read_csv('~/data/all-grants.csv')
+preproc_ph = pd.read_csv('~data/list-of-preprocessing-phrases.csv')
 preproc_phrases = list(preproc_ph.Phrases)
 data = data.drop([ele for ele in data.columns.to_list()
                   if ele not in ['Description']], axis=1)
@@ -29,7 +43,7 @@ data_sentences = data.Description.values.tolist()
 data_sentences = [x.lower() for x in data_sentences]
 
 # Bigrams/Keywords to be searched as substrings in description
-keywords_df = pd.read_csv('./data/Keywords/keywords_alphabetized_v15.csv')
+keywords_df = pd.read_csv('~data/list-of-keywords.csv')
 category_names = [x.strip() for x in list(keywords_df)]
 keywords = []
 
@@ -66,7 +80,8 @@ for idx in range(len(data_sentences)):
     pbar.update(1)
 pbar.close()
 
-with open("./data/Output/output_grants_v15.csv", "w", newline="") as f:
+with open("~data/output-grants.csv", "w", newline="") as f:
     writer = csv.writer(f)
     writer.writerow(['Description', 'Keywords', 'Categories'])
     writer.writerows(output_grants)
+```

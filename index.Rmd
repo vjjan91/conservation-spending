@@ -27,7 +27,12 @@ Please contact the following in case of interest in the project.
 
 ## Data access
 
-The data used in this work is available from...
+The following files are required to reproduce our analysis.
+
+- all-grants.csv: A sheet containing all grant data.
+- list-of-preprocessing-phrases.csv: A sheet containing phrases which need to removed before classification.
+- list-of-keywords.csv: A sheet containing keywords which will be used to perform the rule-based classification.
+- list-of-stopwords.csv: A sheet containing stopwords, which need to be used to post-process and filter the classification results.
 
 ## Data processing
 

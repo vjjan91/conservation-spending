@@ -24,7 +24,7 @@
 <meta name="author" content="Vijay Ramesh1*, Jay Schoen1, Michael Levin1, Pratik Dubal2, Rochelle Thomas1, Sebastian Heilpern1, Jared Meek1, Pooja Choksi1, Don J Melnick1, Sara Kross1&quot;" />
 
 
-<meta name="date" content="2020-09-11" />
+<meta name="date" content="2020-09-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 
-<link rel="next" href="extraction.html"/>
+<link rel="next" href="pre-processing-and-filtering-of-grants.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -134,17 +134,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#data-processing"><i class="fa fa-check"></i><b>1.3</b> Data processing</a></li>
 <li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#affiliations"><i class="fa fa-check"></i><b>1.4</b> Affiliations</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="extraction.html"><a href="extraction.html"><i class="fa fa-check"></i><b>2</b> Extraction</a><ul>
-<li class="chapter" data-level="2.1" data-path="extraction.html"><a href="extraction.html#grant-acquisition-and-preliminary-filtering"><i class="fa fa-check"></i><b>2.1</b> Grant Acquisition and Preliminary Filtering</a></li>
-<li class="chapter" data-level="2.2" data-path="extraction.html"><a href="extraction.html#keyword-development"><i class="fa fa-check"></i><b>2.2</b> Keyword Development</a></li>
-<li class="chapter" data-level="2.3" data-path="extraction.html"><a href="extraction.html#categories"><i class="fa fa-check"></i><b>2.3</b> Categories</a></li>
-<li class="chapter" data-level="2.4" data-path="extraction.html"><a href="extraction.html#pre-processing-grants"><i class="fa fa-check"></i><b>2.4</b> Pre-Processing grants</a></li>
-<li class="chapter" data-level="2.5" data-path="extraction.html"><a href="extraction.html#classification"><i class="fa fa-check"></i><b>2.5</b> Classification</a></li>
+<li class="chapter" data-level="2" data-path="pre-processing-and-filtering-of-grants.html"><a href="pre-processing-and-filtering-of-grants.html"><i class="fa fa-check"></i><b>2</b> Pre-processing and filtering of grants</a><ul>
+<li class="chapter" data-level="2.1" data-path="pre-processing-and-filtering-of-grants.html"><a href="pre-processing-and-filtering-of-grants.html#here-we-will-filter-our-list-our-grants-using-our-pre-processing-phrases-and-use-our-list-of-keywords-to-carry-out-our-rule-based-classification"><i class="fa fa-check"></i><b>2.1</b> Here, we will filter our list our grants using our pre-processing phrases and use our list of keywords to carry out our rule-based classification</a></li>
+<li class="chapter" data-level="2.2" data-path="pre-processing-and-filtering-of-grants.html"><a href="pre-processing-and-filtering-of-grants.html#preprocessing-to-remove-grants-which-are-empty-operating-support-etc."><i class="fa fa-check"></i><b>2.2</b> Preprocessing to remove grants which are empty, operating support, etc.</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="filtering.html"><a href="filtering.html"><i class="fa fa-check"></i><b>3</b> Post-Validation Filtering</a><ul>
 <li class="chapter" data-level="3.1" data-path="filtering.html"><a href="filtering.html#fixing-algorithm-errors-discovered-post-validation"><i class="fa fa-check"></i><b>3.1</b> Fixing algorithm errors discovered post-validation</a></li>
 <li class="chapter" data-level="3.2" data-path="filtering.html"><a href="filtering.html#remove-grants-with-no-associated-dollar-amount"><i class="fa fa-check"></i><b>3.2</b> Remove grants with no associated dollar amount</a></li>
 <li class="chapter" data-level="3.3" data-path="filtering.html"><a href="filtering.html#filtering-aquariumzoo-grants"><i class="fa fa-check"></i><b>3.3</b> Filtering Aquarium/Zoo Grants</a></li>
+<li class="chapter" data-level="3.4" data-path="filtering.html"><a href="filtering.html#here-we-will-use-a-list-of-stopwords-to-further-refine-our-output-from-our-classification"><i class="fa fa-check"></i><b>3.4</b> Here, we will use a list of stopwords to further refine our output from our classification</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="multiCatFilter.html"><a href="multiCatFilter.html"><i class="fa fa-check"></i><b>4</b> Multi-category Filtering</a><ul>
 <li class="chapter" data-level="4.1" data-path="multiCatFilter.html"><a href="multiCatFilter.html#adding-category-sum-columns"><i class="fa fa-check"></i><b>4.1</b> Adding Category Sum columns</a></li>
@@ -156,6 +154,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.2.5" data-path="multiCatFilter.html"><a href="multiCatFilter.html#multi-category-filtering-taxa-category"><i class="fa fa-check"></i><b>4.2.5</b> Multi-category Filtering: Taxa Category</a></li>
 <li class="chapter" data-level="4.2.6" data-path="multiCatFilter.html"><a href="multiCatFilter.html#export-multi-category-data-for-analysis-and-visualization"><i class="fa fa-check"></i><b>4.2.6</b> Export Multi-Category Data for Analysis and Visualization</a></li>
 </ul></li>
+<li class="chapter" data-level="4.3" data-path="multiCatFilter.html"><a href="multiCatFilter.html#preparing-a-final-datafame-for-analysis-of-threats-taxonomic-groups-and-proportion-of-funding"><i class="fa fa-check"></i><b>4.3</b> Preparing a final datafame for analysis of threats, taxonomic groups and proportion of funding</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="data-analysis-and-visualization-datavis.html"><a href="data-analysis-and-visualization-datavis.html"><i class="fa fa-check"></i><b>5</b> Data Analysis and Visualization {dataVis}</a><ul>
 <li class="chapter" data-level="5.1" data-path="data-analysis-and-visualization-datavis.html"><a href="data-analysis-and-visualization-datavis.html#exploratory-visuals"><i class="fa fa-check"></i><b>5.1</b> Exploratory Visuals</a><ul>
@@ -180,7 +179,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.3.1" data-path="figure-4-threats-network-analysis.html"><a href="figure-4-threats-network-analysis.html#figure-s1-total-biodiversityclimate-change-grantmaking-by-top-1000-grantmakers"><i class="fa fa-check"></i><b>6.3.1</b> Figure S1: Total Biodiversity/Climate Change Grantmaking by Top 1000 Grantmakers</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="rbc.html"><a href="rbc.html"><i class="fa fa-check"></i><b>7</b> Rule Based Classification</a></li>
 </ul>
 
       </nav>
@@ -201,7 +199,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">Conservation funding does not track drivers of biodiversity loss</h1>
 <p class="author"><em>Vijay Ramesh<sup>1*</sup>, Jay Schoen<sup>1</sup>, Michael Levin<sup>1</sup>, Pratik Dubal<sup>2</sup>, Rochelle Thomas<sup>1</sup>, Sebastian Heilpern<sup>1</sup>, Jared Meek<sup>1</sup>, Pooja Choksi<sup>1</sup>, Don J Melnick<sup>1</sup>, Sara Kross<sup>1</sup>"</em></p>
-<p class="date"><em>2020-09-11</em></p>
+<p class="date"><em>2020-09-17</em></p>
 </div>
 <div id="introduction" class="section level1">
 <h1><span class="header-section-number">Section 1</span> Introduction</h1>
@@ -218,7 +216,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="data-access" class="section level2">
 <h2><span class="header-section-number">1.2</span> Data access</h2>
-<p>The data used in this work is available from…</p>
+<p>The following files are required to reproduce our analysis.</p>
+<ul>
+<li>all-grants.csv: A sheet containing all grant data.</li>
+<li>list-of-preprocessing-phrases.csv: A sheet containing phrases which need to removed before classification.</li>
+<li>list-of-keywords.csv: A sheet containing keywords which will be used to perform the rule-based classification.</li>
+<li>list-of-stopwords.csv: A sheet containing stopwords, which need to be used to post-process and filter the classification results.</li>
+</ul>
 </div>
 <div id="data-processing" class="section level2">
 <h2><span class="header-section-number">1.3</span> Data processing</h2>
@@ -238,7 +242,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
         </div>
       </div>
 
-<a href="extraction.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="pre-processing-and-filtering-of-grants.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

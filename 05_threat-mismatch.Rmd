@@ -1,0 +1,132 @@
+---
+editor_options: 
+  chunk_output_type: console
+---
+
+# Mismatch between conservation funding and drivers of biodiversity loss
+
+We estimate if the amount of funding to drivers of biodiversity loss tracks the number of species threatened by each of these drivers
+```{r eval=TRUE}
+# Load libraries
+library(tidyverse)
+library(scales)
+library(ggsci)
+```
+
+Importing data
+```{r, eval=TRUE}
+# Read in data of post-processed grants
+data <- read_csv("data\\post-processed-grants-for-analysis-unique.csv") %>%
+   as.data.frame() %>%
+   dplyr::select(c(1:42, 49:109, 43:48))
+
+# Read in data on the number of species threatened (Maxwell et al. 2016)
+maxwell.tab.s2 <- read_csv("data\\maxwell-tab-s2.csv") %>%
+  as.data.frame()
+```
+
+Preparing data to match our list of threat categories
+```{r}
+maxwell.tab.s2$Abbreviated_clasfication
+
+# Our threat categories: Climate Change, Habitat Loss, Overexploitation, Energy/Transportation, Pollution, Invasive Species
+
+maxwell.data_threats <- maxwell.tab.s2 %>%
+  dplyr::select(3:4) %>%
+  group_by(Category) %>%
+  summarise(Total = sum(n_species_threatened)) %>%
+  mutate(Total.adjusted = replace(Total, Total %in% c(2132,11509), c(1910,7406)),
+         adj.prop = Total.adjusted/Total,
+         prop.total = Total.adjusted/sum(Total.adjusted))
+
+# Habitat Loss and Energy/Transportation adjusted for compilation of multiple threats from Maxwell et al 2016. To do so, we looked at the number of species shared between threats and derived a conservative estimate accounting for overlap (species threatened by multiple threats).
+```
+
+Data on funding
+```{r}
+# Single Category Data
+money.data <- data[,11:(length(data)-6)]*data[,7]
+money.data <- mutate(money.data,
+                         Year.Authorized = data$Year.Authorized,
+                         Num.Thr = data$Num.Thr,
+                         Num.Tax = data$Num.Tax)
+
+by.year.money <- money.data %>%
+  group_by(Year.Authorized) %>%
+  summarize_at(vars(cat_act_area:cat_taxa_other), sum, na.rm = TRUE) %>%
+  pivot_longer(-Year.Authorized, names_to = "Category", values_to = "Amount") %>%
+  group_by(Year.Authorized) %>%
+  mutate(ann.percent = Amount/sum(Amount)) %>%
+  group_by(Category) %>%
+  mutate(percent = Amount/sum(Amount))
+```
+
+Categories used for analysis
+```{r, echo = FALSE}
+u.threat_cat <- names(data)[37:42]
+
+u.threat_list <- c("Climate Change", 
+                   "Energy/Transportation",
+                   "Habitat Loss",
+                   "Invasive Species",
+                   "Overexploitation",
+                   "Pollution")
+```
+
+Fig. 1: Mismatch between conservation funding and threats to biodiversity
+```{r Fig.1}
+fig.1.money <- by.year.money %>%
+  filter(Category %in% u.threat_cat) %>%
+  group_by(Category) %>%
+  summarise(Total = sum(Amount))
+
+rawFrame <- left_join(fig.1.money, maxwell.data_threats, by = "Category") %>%
+  mutate(rawMoney = Total.x) %>%   # Total Money
+  mutate(rawSpecies = Total.adjusted) %>% # Total Species
+  dplyr::select(Category, rawMoney, rawSpecies)
+
+fig.1.data <- left_join(fig.1.money, maxwell.data_threats, by = "Category") %>%
+  mutate(Money = (Total.x/sum(Total.x))*100) %>%   # Percentage of Total Money
+  mutate(Species = (Total.adjusted/sum(Total.adjusted))*100) %>% # Percentage of Total Species
+  dplyr::select(Category, Money, Species) %>%
+  pivot_longer(c(Money, Species), names_to = "is.Money", values_to = "Amount") %>%
+  left_join(rawFrame, by = "Category") %>%
+  mutate(rawMoney = ifelse(is.Money == "Species", NA, rawMoney)) %>%
+  mutate(rawSpecies= ifelse(is.Money == "Money", NA, rawSpecies)) %>%
+  replace_na(list(rawMoney = "", rawSpecies = "")) %>%
+  unite("rawValue", rawMoney:rawSpecies, sep = "", remove = FALSE) %>%
+  mutate(rawValue = as.numeric(rawValue),
+         rawLabels = comma(rawValue))
+fig.1.data$rawLabels[c(seq(1,11,2))] <- str_glue("${round(rawFrame$rawMoney/1e6)}mil")
+fig.1.data$rawLabels[c(seq(2,12,2))] <- str_glue("n = {rawFrame$rawSpecies}")
+
+fig_threats_funding<- ggplot(fig.1.data, 
+                      aes(fill=is.Money, 
+                          y=Amount, 
+                          x=Category)) + 
+  geom_col(position="dodge") +
+  labs(x="Threat Category", 
+       y="Proportion") + 
+  scale_x_discrete(labels=u.threat_list) +
+  scale_fill_manual(values = c("slategray4", alpha("orangered4",.9)),
+                    labels = c("Money (USD Million)", "No. of Threatened Species")) +
+  geom_text(position = position_dodge(width= 1), 
+            aes(label = rawLabels, hjust = 0.55, vjust = -0.5), angle=0, size=5) +
+  ylim(0, 40) +
+  theme_minimal() +
+  theme(axis.title = element_text(size = 16, face = "bold"), 
+        axis.ticks.length.x = unit(.5, "cm"),
+        axis.text = element_text(size = 14),
+        legend.title = element_blank(),
+        legend.key.size = unit(1,"cm"),
+        legend.text = element_text(size = 12))
+
+ggsave(fig_threats_funding, filename = "figs\\Fig.1.png", width=17, height=7,dpi = 300,
+       units="in")
+```
+
+```{r, fig.cap='Fig. 1: Mismatch between conservation funding and drivers of biodiversity loss.', fig.align='center'}
+# show exported image
+knitr::include_graphics("figs/Fig.1.png")
+```
+

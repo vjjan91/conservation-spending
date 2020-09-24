@@ -21,10 +21,10 @@
   <meta name="twitter:description" content="Section 2 Pre-processing and filtering of grants | Conservation funding does not track drivers of biodiversity loss" />
   
 
-<meta name="author" content="Vijay Ramesh1*, Jay Schoen1, Michael Levin1, Pratik Dubal2, Rochelle Thomas1, Sebastian Heilpern1, Jared Meek1, Pooja Choksi1, Don J Melnick1, Sara Kross1&quot;" />
+<meta name="author" content="Vijay Ramesh1*, Jay Schoen1, Michael Levin1, Pratik Dubal2, Sebastian Heilpern1, Pooja Choksi1, Jared Meek1, Rochelle Thomas1, Don J Melnick1, Sara Kross1&quot;" />
 
 
-<meta name="date" content="2020-09-17" />
+<meta name="date" content="2020-09-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="index.html"/>
-<link rel="next" href="stopword-filtering.html"/>
+<link rel="next" href="filtering-of-grants-using-stopwords.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -135,16 +135,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#affiliations"><i class="fa fa-check"></i><b>1.4</b> Affiliations</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="pre-processing-and-filtering-of-grants.html"><a href="pre-processing-and-filtering-of-grants.html"><i class="fa fa-check"></i><b>2</b> Pre-processing and filtering of grants</a></li>
-<li class="chapter" data-level="3" data-path="stopword-filtering.html"><a href="stopword-filtering.html"><i class="fa fa-check"></i><b>3</b> Stopword filtering</a></li>
-<li class="chapter" data-level="4" data-path="preparation-of-a-final-dataframe-of-classified-grants.html"><a href="preparation-of-a-final-dataframe-of-classified-grants.html"><i class="fa fa-check"></i><b>4</b> Preparation of a final dataframe of classified grants</a></li>
-<li class="chapter" data-level="5" data-path="post-processing-of-grants-following-validation.html"><a href="post-processing-of-grants-following-validation.html"><i class="fa fa-check"></i><b>5</b> Post-processing of grants following validation</a></li>
-<li class="chapter" data-level="6" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>6</b> Exploratory data analysis</a></li>
-<li class="chapter" data-level="7" data-path="threat-mismatch-calculations.html"><a href="threat-mismatch-calculations.html"><i class="fa fa-check"></i><b>7</b> Threat-mismatch calculations</a></li>
-<li class="chapter" data-level="8" data-path="temporal-trends.html"><a href="temporal-trends.html"><i class="fa fa-check"></i><b>8</b> Temporal trends</a></li>
-<li class="chapter" data-level="9" data-path="taxononmic-groupsthreats-mismatch.html"><a href="taxononmic-groupsthreats-mismatch.html"><i class="fa fa-check"></i><b>9</b> Taxononmic groups/Threats mismatch</a></li>
-<li class="chapter" data-level="10" data-path="network-analysis.html"><a href="network-analysis.html"><i class="fa fa-check"></i><b>10</b> Network Analysis</a><ul>
-<li class="chapter" data-level="10.1" data-path="network-analysis.html"><a href="network-analysis.html#pie-charts"><i class="fa fa-check"></i><b>10.1</b> Pie Charts</a></li>
-</ul></li>
+<li class="chapter" data-level="3" data-path="filtering-of-grants-using-stopwords.html"><a href="filtering-of-grants-using-stopwords.html"><i class="fa fa-check"></i><b>3</b> Filtering of grants using stopwords</a></li>
+<li class="chapter" data-level="4" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>4</b> Exploratory data analysis</a></li>
+<li class="chapter" data-level="5" data-path="post-processing-of-grants.html"><a href="post-processing-of-grants.html"><i class="fa fa-check"></i><b>5</b> Post-processing of grants</a></li>
+<li class="chapter" data-level="6" data-path="mismatch-between-conservation-funding-and-drivers-of-biodiversity-loss.html"><a href="mismatch-between-conservation-funding-and-drivers-of-biodiversity-loss.html"><i class="fa fa-check"></i><b>6</b> Mismatch between conservation funding and drivers of biodiversity loss</a></li>
+<li class="chapter" data-level="7" data-path="temporal-trends-in-conservation-funding.html"><a href="temporal-trends-in-conservation-funding.html"><i class="fa fa-check"></i><b>7</b> Temporal trends in conservation funding</a></li>
+<li class="chapter" data-level="8" data-path="taxononmic-groupsthreats-mismatch.html"><a href="taxononmic-groupsthreats-mismatch.html"><i class="fa fa-check"></i><b>8</b> Taxononmic groups/Threats mismatch</a></li>
+<li class="chapter" data-level="9" data-path="network-analysis.html"><a href="network-analysis.html"><i class="fa fa-check"></i><b>9</b> Network Analysis</a></li>
 </ul>
 
       </nav>
@@ -164,7 +161,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="pre-processing-and-filtering-of-grants" class="section level1">
 <h1><span class="header-section-number">Section 2</span> Pre-processing and filtering of grants</h1>
-<p>Here, we will filter our list our grants using our pre-processing phrases and use our list of keywords to carry out our rule-based classification</p>
+<p>Loading required python libraries for analysis</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb1-1" title="1"><span class="im">import</span> re</a>
 <a class="sourceLine" id="cb1-2" title="2"><span class="im">import</span> csv</a>
 <a class="sourceLine" id="cb1-3" title="3"><span class="im">import</span> tqdm</a>
@@ -175,8 +172,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb1-8" title="8">    <span class="cf">if</span> re.search(<span class="vs">r&quot;\b&quot;</span> <span class="op">+</span> re.escape(string1) <span class="op">+</span> <span class="vs">r&quot;\b&quot;</span>, string2):</a>
 <a class="sourceLine" id="cb1-9" title="9">        <span class="cf">return</span> <span class="va">True</span></a>
 <a class="sourceLine" id="cb1-10" title="10">    <span class="cf">return</span> <span class="va">False</span></a></code></pre></div>
-<p>Preprocessing to remove grants which are empty, operating support, etc.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb2-1" title="1">data <span class="op">=</span> pd.read_csv(<span class="st">&#39;data</span><span class="ch">\\</span><span class="st">all-grants.csv&#39;</span>)</a>
+<p>First, we will filter our list of grants using the pre-processing phrases to remove grants which have no descriptions (empty lines) and those that mention words such as operating support etc.</p>
+<p>Next, we will use our list of keywords to carry out a rule-based classification of all grants</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb2-1" title="1">data <span class="op">=</span> pd.read_csv(<span class="st">&#39;data</span><span class="ch">\\</span><span class="st">data-all-grants.csv&#39;</span>)</a>
 <a class="sourceLine" id="cb2-2" title="2">preproc_ph <span class="op">=</span> pd.read_csv(<span class="st">&#39;data</span><span class="ch">\\</span><span class="st">list-of-preprocessing-phrases.csv&#39;</span>)</a>
 <a class="sourceLine" id="cb2-3" title="3">preproc_phrases <span class="op">=</span> <span class="bu">list</span>(preproc_ph.Phrases)</a>
 <a class="sourceLine" id="cb2-4" title="4">data <span class="op">=</span> data.drop([ele <span class="cf">for</span> ele <span class="kw">in</span> data.columns.to_list()</a>
@@ -193,7 +191,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb2-15" title="15">data_sentences <span class="op">=</span> [x.lower() <span class="cf">for</span> x <span class="kw">in</span> data_sentences]</a>
 <a class="sourceLine" id="cb2-16" title="16"></a>
 <a class="sourceLine" id="cb2-17" title="17"><span class="co"># Bigrams/Keywords to be searched as substrings in description</span></a>
-<a class="sourceLine" id="cb2-18" title="18">keywords_df <span class="op">=</span> pd.read_csv(<span class="st">&#39;~data/list-of-keywords.csv&#39;</span>)</a>
+<a class="sourceLine" id="cb2-18" title="18">keywords_df <span class="op">=</span> pd.read_csv(<span class="st">&#39;data</span><span class="ch">\\</span><span class="st">list-of-keywords.csv&#39;</span>)</a>
 <a class="sourceLine" id="cb2-19" title="19">category_names <span class="op">=</span> [x.strip() <span class="cf">for</span> x <span class="kw">in</span> <span class="bu">list</span>(keywords_df)]</a>
 <a class="sourceLine" id="cb2-20" title="20">keywords <span class="op">=</span> []</a>
 <a class="sourceLine" id="cb2-21" title="21"></a>
@@ -242,7 +240,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
         </div>
       </div>
 <a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="stopword-filtering.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="filtering-of-grants-using-stopwords.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

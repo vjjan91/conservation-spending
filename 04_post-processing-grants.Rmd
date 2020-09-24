@@ -3,72 +3,115 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Post-processing of grants following validation
+# Post-processing of grants 
 
-Here we remove and filter those grants that may have been erroneously classified, following the process of validation
-```{r setup, include=FALSE}
-# Load libraries
-library(knitr)
-library(tidyverse)
-library(data.table)
-knitr::opts_chunk$set(echo = TRUE)
+Here we remove and filter those grants that may have been erroneously classified, following the process of validation and any initial exploratory data analysis
+```{r, include=FALSE}
+data <- read_csv("data\\classified-grants-for-analysis.csv")
 ```
 
-```{r, include=FALSE}
-dat <- read_csv("data\\classified-grants-for-analysis.csv")
+Those grants with no funding amount recorded or no keywords from our list contributed nothing to this analysis, and were removed.
+```{r}
+data <- data %>% 
+  filter(Keywords != "['-']") %>%
+  drop_na(Grant.Amount) %>%
+  dplyr::select(1:42) 
+names(data)
 ```
 
 Here we hard-coded several specific fixes to the classification that repeatedly cropped up during our validation process. All have been checked to have 0 mis-classifications.
 ```{r}
 # Removing grants containing "dinner"
-dat <- dat %>%
+data <- data %>%
   filter(str_detect(Description, "dinner") == FALSE)
 
 # Classifying "dissemination" as act_edu
-sum(dat$cat_act_edu)
-for(i in 1:nrow(dat)) {
-  if(str_detect(dat$Description[i], "dissemination") == TRUE) {
-    dat$cat_act_edu[i] = 1
+for(i in 1:nrow(data)) {
+  if(str_detect(data$Description[i], "dissemination") == TRUE) {
+    data$cat_act_edu[i] = 1
   }
 }
-sum(dat$cat_act_edu)
 
 # Removing threat_energytransport classification for "palm oil"
-sum(dat$cat_threat_energytransport)
-for(i in 1:nrow(dat)) {
-  if(str_detect(dat$Description[i], "palm oil|oil-palm|oil palm") == TRUE) {
-    dat$cat_threat_energytransport[i] = 0
+for(i in 1:nrow(data)) {
+  if(str_detect(data$Description[i], "palm oil|oil-palm|oil palm") == TRUE) {
+    data$cat_threat_energytransport[i] = 0
   }
 }
-sum(dat$cat_threat_energytransport)
 
 # Removing hab_other classification for "aquatic" (will be freshwater/marine)
-sum(dat$cat_habitat_other)
-for(i in 1:nrow(dat)) {
-  if(str_detect(dat$Description[i], "aquatic") == TRUE) {
-    dat$cat_habitat_other[i] = 0
+for(i in 1:nrow(data)) {
+  if(str_detect(data$Description[i], "aquatic") == TRUE) {
+    data$cat_habitat_other[i] = 0
   }
 }
-sum(dat$cat_habitat_other)
-
 ```
 
-Those grants with no funding amount recorded contributed nothing to this analysis, and were removed.
+Based on advice from the data provider, we only included grants between 2003-2016
 ```{r}
-dat.1 <- dat %>% 
-  drop_na(Grant.Amount) %>%
-  dplyr::select(1:42) 
-names(dat.1)
+data <- data %>%
+  filter(Year.Authorized >= 2003 & Year.Authorized <= 2016)
 ```
 
-We ensured that our study focused on in situ conservation grants by eliminating grants that were directed toward captive management (aquarium/zoo category)
-
+We ensured that our study focused on in situ conservation grants by eliminating classifications from grants that may be directed toward captive management (aquarium/zoo category).
 ```{r}
-for(i in 1:nrow(dat.1)){
-  if(dat.1$cat_aquarium_zoo[i]==1){
-    dat.1[i,c(11:17, 19:28, 30:42)]=0
+for(i in 1:nrow(data)){
+  if(data$cat_aquarium_zoo[i]==1){
+    data[i,c(11:17, 19:28, 30:42)]=0
   }
 }
+```
 
-write_csv(dat,"data\\post-processed-grants-for-analysis.csv")
+Here, we built dummy variables that take the sum of our binary classification data across the columns of each broader category.
+```{r}
+data <- data %>%
+  mutate(Num.Class = rowSums(.[,11:length(.)])) %>%
+  mutate(Num.Thr = rowSums(.[37:42])) %>%
+  mutate(Num.Act = rowSums(.[11:17])) %>%
+  mutate(Num.Hab = rowSums(.[c(25,26,28)])) %>%
+  mutate(Num.Tax = rowSums(.[30:36])) %>%
+  mutate(Num.Bio = rowSums(.[19:20]))
+```
+
+We sought to only consider grants that were focused on biodiversity conservation. Upon exploring the data, we found that many grants classified into threat_climate and threat_energytransportation were often not addressing biodiversity. Accordingly, we only included grants classified into these two sub-categories if the descriptions mentioned a biodiversity-related keyword (a habitat, taxa, or general word such as "conservation").
+
+Removing climate/energy grants that do not contain biodiversity conservation keywords:
+```{r}
+## Category Lists
+clim.energy_cat <- names(data)[c(37,38)]   # threat_climate and threat_energytransport
+
+bio.filter_cat <- names(data)[c(19:28, 30:36)]
+
+# Grants that were classified into a single category only
+data_bio.1 <- data %>%
+  filter_at(vars(bio.filter_cat), any_vars(.> 0)) 
+data_non.bio.1 <- data %>%
+  filter_at(vars(bio.filter_cat), all_vars(. == 0))
+
+data_bio.2 <- data_non.bio.1 %>%
+  filter_at(vars(clim.energy_cat), all_vars(.==0))
+data_non.bio.2 <- data_non.bio.1 %>%
+  filter_at(vars(clim.energy_cat), any_vars(.>0))
+
+data_bio <- bind_rows(data_bio.1, data_bio.2)
+data_non.bio <- data_non.bio.2
+```
+
+At this point, this is our final dataset of classified grants to analyze. This is our "data_multi" dataset, as grants are classified into all categories/sub-categories that the algorithm classified them into; multiple sub-category classifications are included in this dataframe. "Non-bio" grants are exported as well for supplementary analysis.
+```{r}
+data.multi <- data_bio
+
+write_csv(data.multi,"data\\post-processed-grants-for-analysis-multi.csv")
+write_csv(data_non.bio,"data\\post-processed-grants-for-analysis-nonbio.csv")
+```
+
+In the "data_multi" dataset, grants classified into multiple sub-categories (e.g. threat_climate + threat_habitat) would be over-represented in our analysis of funding. We sought to only count the amount of funding for a grant once within each category. Otherwise,  To accomplish this, we modified the dataset in several ways:
+  1. Grants classified into two sub-categories were classified into a new column combining the two (e.g. threat_climate_habitat)
+  2. Grants classified into three or more sub-categories were classified into new "other" column (e.g. threat_other)
+  3. The habitat category had joint sub-categories in the initial list of categories (e.g. hab_marine_terrestrial). Any grants classified into both a single (e.g. hab_marine) and an overlapping joint sub-category (e.g. hab_marine_terrestrial) were classified as only the joint (e.g. hab_marine_terrestrial)
+
+Full code exists in supplementary code folder. Subsequently, "unique" data file was written and used for further analysis
+```{r}
+source("code//code_01_unique-grant-classification.R")
+write_csv(data.unique, "data\\post-processed-grants-for-analysis-unique.csv")
 ```

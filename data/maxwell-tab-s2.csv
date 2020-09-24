@@ -1,0 +1,11 @@
+Major_threat_class,Abbreviated_clasfication,Category,n_species_threatened,perc_pecies_threatened
+Residential & commercial development,Urban development,cat_threat_habitat,3014,34.7
+Agriculture & aquaculture,Agricultural activity,cat_threat_habitat,5407,62.2
+Energy production & mining,Energy production,cat_threat_energytransport,913,10.5
+Transportation & service corridors,Transportation,cat_threat_energytransport,1219,14
+Biological resource use,Overexploitation,cat_threat_overexp,6241,71.8
+Human intrusions and disturbance,Human disturbance,cat_threat_habitat,1223,14.1
+Natural system modifications,System modification,cat_threat_habitat,1865,21.5
+"Invasive & other problematic species, genes & diseases",Invasion & disease,cat_threat_inv_spec,2298,26.5
+Pollution,Pollution,cat_threat_pollution,1901,21.9
+Climate change & severe weather,Climate change,cat_threat_climate,1688,19.4

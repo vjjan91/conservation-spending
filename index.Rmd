@@ -1,7 +1,7 @@
 --- 
 knit: "bookdown::render_book"
 title: "Conservation funding does not track drivers of biodiversity loss"
-author: Vijay Ramesh<sup>1*</sup>, Jay Schoen<sup>1</sup>, Michael Levin<sup>1</sup>, Pratik Dubal<sup>2</sup>, Rochelle Thomas<sup>1</sup>, Sebastian Heilpern<sup>1</sup>, Jared Meek<sup>1</sup>, Pooja Choksi<sup>1</sup>, Don J Melnick<sup>1</sup>, Sara Kross<sup>1</sup>"
+author: Vijay Ramesh<sup>1*</sup>, Jay Schoen<sup>1</sup>, Michael Levin<sup>1</sup>, Pratik Dubal<sup>2</sup>, Sebastian Heilpern<sup>1</sup>, Pooja Choksi<sup>1</sup>, Jared Meek<sup>1</sup>, Rochelle Thomas<sup>1</sup>, Don J Melnick<sup>1</sup>, Sara Kross<sup>1</sup>"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 output: 
@@ -23,16 +23,17 @@ This is the `bookdown` version of a repository that contains code and analyses a
 Please contact the following in case of interest in the project.
 
 - Vijay Ramesh (lead author)
-    - PhD student, Columbia University
+    - PhD Candidate, Department of Ecology, Evolution and Environmental Biology, Columbia University
 
 ## Data access
 
 The following files are required to reproduce our analysis.
 
-- all-grants.csv: A sheet containing all grant data.
+- all-grants.csv: A sheet containing all grant data (Please write to the author for access to this dataset which is currently being housed at [Candid](https://candid.org/)
 - list-of-preprocessing-phrases.csv: A sheet containing phrases which need to removed before classification.
 - list-of-keywords.csv: A sheet containing keywords which will be used to perform the rule-based classification.
 - list-of-stopwords.csv: A sheet containing stopwords, which need to be used to post-process and filter the classification results.
+- All supplementary data from Maxwell et al. 2016
 
 ## Data processing
 

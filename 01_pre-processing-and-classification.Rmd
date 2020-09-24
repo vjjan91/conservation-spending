@@ -5,7 +5,7 @@ editor_options:
 
 # Pre-processing and filtering of grants
 
-Here, we will filter our list our grants using our pre-processing phrases and use our list of keywords to carry out our rule-based classification
+Loading required python libraries for analysis
 ```{python prepare_py_libs, eval=FALSE}
 import re
 import csv
@@ -19,9 +19,11 @@ def string_found(string1, string2):
     return False
 ```
 
-Preprocessing to remove grants which are empty, operating support, etc.
+First, we will filter our list of grants using the pre-processing phrases to remove grants which have no descriptions (empty lines) and those that mention words such as operating support etc. 
+
+Next, we will use our list of keywords to carry out a rule-based classification of all grants
 ```{python eval=FALSE}
-data = pd.read_csv('data\\all-grants.csv')
+data = pd.read_csv('data\\data-all-grants.csv')
 preproc_ph = pd.read_csv('data\\list-of-preprocessing-phrases.csv')
 preproc_phrases = list(preproc_ph.Phrases)
 data = data.drop([ele for ele in data.columns.to_list()
@@ -38,7 +40,7 @@ data_sentences = data.Description.values.tolist()
 data_sentences = [x.lower() for x in data_sentences]
 
 # Bigrams/Keywords to be searched as substrings in description
-keywords_df = pd.read_csv('~data/list-of-keywords.csv')
+keywords_df = pd.read_csv('data\\list-of-keywords.csv')
 category_names = [x.strip() for x in list(keywords_df)]
 keywords = []
 

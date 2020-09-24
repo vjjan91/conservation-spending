@@ -121,12 +121,12 @@ fig_threats_funding<- ggplot(fig.1.data,
         legend.key.size = unit(1,"cm"),
         legend.text = element_text(size = 12))
 
-ggsave(fig_threats_funding, filename = "figs\\fig_threats_mismatch.png", width=17, height=7,
+ggsave(fig_threats_funding, filename = "figs\\Figure1.png", width=17, height=7,
        device = png(), units="in", dpi = 300)
 ```
 
-```{r, fig.cap='Fig. 1: Mismatch between conservation funding and drivers of biodiversity loss'}
+```{r, eval=TRUE, fig.cap='Figure 1: Mismatch between conservation funding and drivers of biodiversity loss'}
 # show exported image
-knitr::include_graphics("figs/fig_threats_mismatch.png")
+knitr::include_graphics("figs/Figure1.png")
 ```
 

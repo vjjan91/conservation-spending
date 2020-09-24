@@ -382,6 +382,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb46-27" title="27"><span class="kw">ggsave</span>(plot.pie.Nthreats_climate, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_climate.png&quot;</span>, <span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" title="1"><span class="co"># show exported image</span></a>
 <a class="sourceLine" id="cb47-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_pie_climate.png&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-56"></span>
+<img src="figs/fig_pie_climate.png" alt="Proportion of climate change funding that was shared between multiple threat categories" width="\textwidth" />
+<p class="caption">
+Figure 9.1: Proportion of climate change funding that was shared between multiple threat categories
+</p>
+</div>
 <p>Energy/Transportation</p>
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" title="1">pie.Nthreats_energytransport &lt;-<span class="st"> </span>money.data.multi <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb48-2" title="2"><span class="st">  </span><span class="kw">filter</span>(cat_threat_energytransport <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span></a>
@@ -411,6 +417,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb48-26" title="26"><span class="kw">ggsave</span>(plot.pie.Nthreats_energytransport, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_energytransport.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" title="1"><span class="co"># show exported image</span></a>
 <a class="sourceLine" id="cb49-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_pie_energytransport.png&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-58"></span>
+<img src="figs/fig_pie_energytransport.png" alt="Proportion of energy/transportation funding that was shared between multiple threat categories" width="\textwidth" />
+<p class="caption">
+Figure 9.2: Proportion of energy/transportation funding that was shared between multiple threat categories
+</p>
+</div>
 <p>Habitat Loss</p>
 <div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" title="1">pie.Nthreats_habitat &lt;-<span class="st"> </span>money.data.multi <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb50-2" title="2"><span class="st">  </span><span class="kw">filter</span>(cat_threat_habitat <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span></a>
@@ -441,6 +453,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb50-27" title="27"><span class="kw">ggsave</span>(plot.pie.Nthreats_habitat, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_habitatloss.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" title="1"><span class="co"># show exported image</span></a>
 <a class="sourceLine" id="cb51-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_pie_habitatloss.png&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-60"></span>
+<img src="figs/fig_pie_habitatloss.png" alt="Proportion of habitat loss funding that was shared between multiple threat categories" width="\textwidth" />
+<p class="caption">
+Figure 9.3: Proportion of habitat loss funding that was shared between multiple threat categories
+</p>
+</div>
 <p>Invasive Species</p>
 <div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" title="1">pie.Nthreats_inv_spec &lt;-<span class="st"> </span>money.data.multi <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb52-2" title="2"><span class="st">  </span><span class="kw">filter</span>(cat_threat_inv_spec <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span></a>
@@ -471,6 +489,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb52-27" title="27"><span class="kw">ggsave</span>(plot.pie.Nthreats_inv_spec, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_invasiveSpecies.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" title="1"><span class="co"># show exported image</span></a>
 <a class="sourceLine" id="cb53-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_pie_invasiveSpecies.png&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-62"></span>
+<img src="figs/fig_pie_invasiveSpecies.png" alt="Proportion of invasive species funding that was shared between multiple threat categories" width="\textwidth" />
+<p class="caption">
+Figure 9.4: Proportion of invasive species funding that was shared between multiple threat categories
+</p>
+</div>
 <p>Overexploitation</p>
 <div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" title="1">pie.Nthreats_overexp &lt;-<span class="st"> </span>money.data.multi <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb54-2" title="2"><span class="st">  </span><span class="kw">filter</span>(cat_threat_overexp <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span></a>
@@ -501,6 +525,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb54-27" title="27"><span class="kw">ggsave</span>(plot.pie.Nthreats_overexp, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_overexploitation.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" title="1"><span class="co"># show exported image</span></a>
 <a class="sourceLine" id="cb55-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_pie_overexploitation.png&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-64"></span>
+<img src="figs/fig_pie_overexploitation.png" alt="Proportion of overexploitation funding that was shared between multiple threat categories" width="\textwidth" />
+<p class="caption">
+Figure 9.5: Proportion of overexploitation funding that was shared between multiple threat categories
+</p>
+</div>
 <p>Pollution</p>
 <div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" title="1">pie.Nthreats_pollution &lt;-<span class="st"> </span>money.data.multi <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb56-2" title="2"><span class="st">  </span><span class="kw">filter</span>(cat_threat_pollution <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span></a>
@@ -531,6 +561,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb56-27" title="27"><span class="kw">ggsave</span>(plot.pie.Nthreats_pollution, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_pollution.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>, <span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" title="1"><span class="co"># show exported image</span></a>
 <a class="sourceLine" id="cb57-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_pie_pollution.png&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-66"></span>
+<img src="figs/fig_pie_pollution.png" alt="Proportion of pollution funding that was shared between multiple threat categories" width="\textwidth" />
+<p class="caption">
+Figure 9.6: Proportion of pollution funding that was shared between multiple threat categories
+</p>
+</div>
 
 </div>
             </section>

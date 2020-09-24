@@ -228,7 +228,7 @@ ggsave(fig.3.plot, filename = "figs\\Figure3.png", width=12, height=7,device = p
 
 ```
 
-```{r, fig.cap='Figure 3 - Mismatch between the proportion of funding allocated toward taxonomic groups and the proportion of threatened species within these taxonomic groups'}
+```{r, eval=TRUE, fig.cap='Figure 3 - Mismatch between the proportion of funding allocated toward taxonomic groups and the proportion of threatened species within these taxonomic groups'}
 # show exported image
 knitr::include_graphics("figs\\Figure3.png")
 ```

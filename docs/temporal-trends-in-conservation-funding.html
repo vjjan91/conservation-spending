@@ -212,6 +212,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb28-22" title="22"><span class="kw">ggsave</span>(fig<span class="fl">.2</span>a.plot, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">Fig2A.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1"><span class="co"># show exported image</span></a>
 <a class="sourceLine" id="cb29-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/Fig2A.png&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-35"></span>
+<img src="figs/Fig2A.png" alt="Figure 2A - Temporal variation (2003-2016) in proportion of funding across unique threat categories per year" width="\textwidth" />
+<p class="caption">
+Figure 7.1: Figure 2A - Temporal variation (2003-2016) in proportion of funding across unique threat categories per year
+</p>
+</div>
 <p>Fig.2: B.Temporal variation in overall allocation of money across unique threat categories per year</p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1">fig<span class="fl">.2</span>b.data &lt;-<span class="st"> </span>by.year.money <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb30-2" title="2"><span class="st">  </span><span class="kw">filter</span>(Category <span class="op">%in%</span><span class="st"> </span>u.threat_cat)</a>
@@ -241,6 +247,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb30-26" title="26"><span class="kw">ggsave</span>(fig<span class="fl">.2</span>b.plot, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">Fig2B.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>, <span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" title="1"><span class="co"># show exported image</span></a>
 <a class="sourceLine" id="cb31-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/Fig2B.png&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-36"></span>
+<img src="figs/Fig2B.png" alt="Figure 2B - Temporal variation (2003-2016) in overall allocation of money across unique threat categories per year" width="\textwidth" />
+<p class="caption">
+Figure 7.2: Figure 2B - Temporal variation (2003-2016) in overall allocation of money across unique threat categories per year
+</p>
+</div>
 
 </div>
             </section>

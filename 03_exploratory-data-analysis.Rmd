@@ -118,7 +118,7 @@ ggsave(fig_threats_grants, filename = "figs/fig_threats_grants.png",
 
 ```
 
-```{r export_fig_threats_grants, eval=TRUE, fig.cap="Number of grants that were classified into one or more categories of threat"}
+```{r, eval=TRUE, fig.cap="Number of grants that were classified into one or more categories of threat"}
 # show exported image
 knitr::include_graphics("figs/fig_threats_grants.png")
 ```

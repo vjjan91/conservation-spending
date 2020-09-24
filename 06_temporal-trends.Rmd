@@ -78,7 +78,7 @@ ggsave(fig.2a.plot, filename = "figs\\Fig2A.png", width=12, height=7,device = pn
 
 ```
 
-```{r,fig.cap='Figure 2A - Temporal variation (2003-2016) in proportion of funding across unique threat categories per year'}
+```{r,eval=TRUE, fig.cap='Figure 2A - Temporal variation (2003-2016) in proportion of funding across unique threat categories per year'}
 # show exported image
 knitr::include_graphics("figs/Fig2A.png")
 ```
@@ -113,7 +113,7 @@ fig.2b.plot <- ggplot(fig.2b.data,
 ggsave(fig.2b.plot, filename = "figs\\Fig2B.png", width=12, height=7,device = png(), units="in", dpi = 300)
 ```
 
-```{r, fig.cap='Figure 2B - Temporal variation (2003-2016) in overall allocation of money across unique threat categories per year'}
+```{r, eval=TRUE, fig.cap='Figure 2B - Temporal variation (2003-2016) in overall allocation of money across unique threat categories per year'}
 # show exported image
 knitr::include_graphics("figs/Fig2B.png")
 ```

@@ -3,7 +3,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Taxononmic groups/Threats mismatch
+# Taxonomic groups/Threats mismatch
 
 ```{r eval=TRUE}
 # Load libraries
@@ -223,12 +223,13 @@ fig.3.plot <- ggplot(fig.3.data %>% filter(Taxon != "Reptiles"),
   ylab("% Threatened | % Funding") +
   coord_flip()
 
-ggsave(fig.3.plot, filename = "figs\\Fig.3.png", width=12, height=7,dpi = 300)
+ggsave(fig.3.plot, filename = "figs\\Fig.3.png", width=12, height=7,device = png(), units="in",
+       dpi = 300)
 
 ```
 
 ```{r, fig.cap='Fig.3. Mismatch between the proportion of funding allocated toward taxonomic groups and the proportion of threatened species within these taxonomic groups', fig.align='center'}
 # show exported image
-knitr::include_graphics("figs/Fig.3.png")
+knitr::include_graphics("figs\\Fig.3.png")
 ```
 

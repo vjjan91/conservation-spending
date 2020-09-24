@@ -121,8 +121,8 @@ fig_threats_funding<- ggplot(fig.1.data,
         legend.key.size = unit(1,"cm"),
         legend.text = element_text(size = 12))
 
-ggsave(fig_threats_funding, filename = "figs\\Fig.1.png", width=17, height=7,dpi = 300,
-       units="in")
+ggsave(fig_threats_funding, filename = "figs\\Fig.1.png", width=17, height=7,
+       device = png(), units="in", dpi = 300)
 ```
 
 ```{r, fig.cap='Fig. 1: Mismatch between conservation funding and drivers of biodiversity loss.', fig.align='center'}

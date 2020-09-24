@@ -85,7 +85,7 @@ fig.2a.plot <- ggplot(fig.2a.data,
         axis.text.x = element_text(size = 20),
         axis.text.y = element_text(size = 26))
 
-ggsave(fig.2a.plot, filename = "figs\\Fig.2A.png", width=12, height=7,dpi = 300)
+ggsave(fig.2a.plot, filename = "figs\\Fig.2A.png", width=12, height=7,device = png(), units="in",dpi = 300)
 
 ```
 
@@ -121,7 +121,7 @@ fig.2b.plot <- ggplot(fig.2b.data,
         legend.spacing.x = unit(1,"cm"),
         legend.position = "bottom")
 
-ggsave(fig.2b.plot, filename = "figs\\Fig.2B.png", width=12, height=7,dpi = 300)
+ggsave(fig.2b.plot, filename = "figs\\Fig.2B.png", width=12, height=7,device = png(), units="in", dpi = 300)
 ```
 
 ```{r, fig.cap='Fig. 2B: Temporal variation (2003-2016) in overall allocation of money across unique threat categories per year',fig.align='center'}

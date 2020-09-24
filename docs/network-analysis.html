@@ -31,7 +31,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="taxononmic-groupsthreats-mismatch.html"/>
+<link rel="prev" href="taxonomic-groupsthreats-mismatch.html"/>
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -140,7 +140,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5" data-path="post-processing-of-grants.html"><a href="post-processing-of-grants.html"><i class="fa fa-check"></i><b>5</b> Post-processing of grants</a></li>
 <li class="chapter" data-level="6" data-path="mismatch-between-conservation-funding-and-drivers-of-biodiversity-loss.html"><a href="mismatch-between-conservation-funding-and-drivers-of-biodiversity-loss.html"><i class="fa fa-check"></i><b>6</b> Mismatch between conservation funding and drivers of biodiversity loss</a></li>
 <li class="chapter" data-level="7" data-path="temporal-trends-in-conservation-funding.html"><a href="temporal-trends-in-conservation-funding.html"><i class="fa fa-check"></i><b>7</b> Temporal trends in conservation funding</a></li>
-<li class="chapter" data-level="8" data-path="taxononmic-groupsthreats-mismatch.html"><a href="taxononmic-groupsthreats-mismatch.html"><i class="fa fa-check"></i><b>8</b> Taxononmic groups/Threats mismatch</a></li>
+<li class="chapter" data-level="8" data-path="taxonomic-groupsthreats-mismatch.html"><a href="taxonomic-groupsthreats-mismatch.html"><i class="fa fa-check"></i><b>8</b> Taxonomic groups/Threats mismatch</a></li>
 <li class="chapter" data-level="9" data-path="network-analysis.html"><a href="network-analysis.html"><i class="fa fa-check"></i><b>9</b> Network Analysis</a></li>
 </ul>
 
@@ -379,7 +379,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb46-24" title="24">            <span class="dt">size =</span> <span class="dv">3</span>,</a>
 <a class="sourceLine" id="cb46-25" title="25">            <span class="dt">col =</span> <span class="st">&quot;black&quot;</span>)</a>
 <a class="sourceLine" id="cb46-26" title="26"></a>
-<a class="sourceLine" id="cb46-27" title="27"><span class="kw">ggsave</span>(plot.pie.Nthreats_climate, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_climate.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb46-27" title="27"><span class="kw">ggsave</span>(plot.pie.Nthreats_climate, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_climate.png&quot;</span>, <span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" title="1"><span class="co"># show exported image</span></a>
 <a class="sourceLine" id="cb47-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_pie_climate.png&quot;</span>)</a></code></pre></div>
 <p>Energy/Transportation</p>
@@ -408,7 +408,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb48-23" title="23">            <span class="dt">size =</span> <span class="dv">3</span>,</a>
 <a class="sourceLine" id="cb48-24" title="24">            <span class="dt">col =</span> <span class="st">&quot;black&quot;</span>)</a>
 <a class="sourceLine" id="cb48-25" title="25"></a>
-<a class="sourceLine" id="cb48-26" title="26"><span class="kw">ggsave</span>(plot.pie.Nthreats_energytransport, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_energytransport.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb48-26" title="26"><span class="kw">ggsave</span>(plot.pie.Nthreats_energytransport, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_energytransport.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" title="1"><span class="co"># show exported image</span></a>
 <a class="sourceLine" id="cb49-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_pie_energytransport.png&quot;</span>)</a></code></pre></div>
 <p>Habitat Loss</p>
@@ -438,7 +438,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb50-24" title="24">            <span class="dt">size =</span> <span class="dv">3</span>,</a>
 <a class="sourceLine" id="cb50-25" title="25">            <span class="dt">col =</span> <span class="st">&quot;black&quot;</span>)</a>
 <a class="sourceLine" id="cb50-26" title="26"></a>
-<a class="sourceLine" id="cb50-27" title="27"><span class="kw">ggsave</span>(plot.pie.Nthreats_habitat, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_habitatloss.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb50-27" title="27"><span class="kw">ggsave</span>(plot.pie.Nthreats_habitat, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_habitatloss.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" title="1"><span class="co"># show exported image</span></a>
 <a class="sourceLine" id="cb51-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_pie_habitatloss.png&quot;</span>)</a></code></pre></div>
 <p>Invasive Species</p>
@@ -468,7 +468,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb52-24" title="24">            <span class="dt">size =</span> <span class="dv">3</span>,</a>
 <a class="sourceLine" id="cb52-25" title="25">            <span class="dt">col =</span> <span class="st">&quot;black&quot;</span>)</a>
 <a class="sourceLine" id="cb52-26" title="26"></a>
-<a class="sourceLine" id="cb52-27" title="27"><span class="kw">ggsave</span>(plot.pie.Nthreats_inv_spec, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_invasiveSpecies.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb52-27" title="27"><span class="kw">ggsave</span>(plot.pie.Nthreats_inv_spec, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_invasiveSpecies.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" title="1"><span class="co"># show exported image</span></a>
 <a class="sourceLine" id="cb53-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_pie_invasiveSpecies.png&quot;</span>)</a></code></pre></div>
 <p>Overexploitation</p>
@@ -498,7 +498,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb54-24" title="24">            <span class="dt">size =</span> <span class="dv">3</span>,</a>
 <a class="sourceLine" id="cb54-25" title="25">            <span class="dt">col =</span> <span class="st">&quot;black&quot;</span>)</a>
 <a class="sourceLine" id="cb54-26" title="26"></a>
-<a class="sourceLine" id="cb54-27" title="27"><span class="kw">ggsave</span>(plot.pie.Nthreats_overexp, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_overexploitation.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb54-27" title="27"><span class="kw">ggsave</span>(plot.pie.Nthreats_overexp, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_overexploitation.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" title="1"><span class="co"># show exported image</span></a>
 <a class="sourceLine" id="cb55-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_pie_overexploitation.png&quot;</span>)</a></code></pre></div>
 <p>Pollution</p>
@@ -528,7 +528,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb56-24" title="24">            <span class="dt">size =</span> <span class="dv">3</span>,</a>
 <a class="sourceLine" id="cb56-25" title="25">            <span class="dt">col =</span> <span class="st">&quot;black&quot;</span>)</a>
 <a class="sourceLine" id="cb56-26" title="26"></a>
-<a class="sourceLine" id="cb56-27" title="27"><span class="kw">ggsave</span>(plot.pie.Nthreats_pollution, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_pollution.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb56-27" title="27"><span class="kw">ggsave</span>(plot.pie.Nthreats_pollution, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_pollution.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>, <span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" title="1"><span class="co"># show exported image</span></a>
 <a class="sourceLine" id="cb57-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_pie_pollution.png&quot;</span>)</a></code></pre></div>
 
@@ -538,7 +538,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="taxononmic-groupsthreats-mismatch.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="taxonomic-groupsthreats-mismatch.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
     </div>
   </div>

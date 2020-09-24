@@ -21,7 +21,7 @@ data.multi <- read_csv("data\\post-processed-grants-for-analysis-multi.csv") %>%
 ```
 
 Calculate the overlap in funding between threat categories
-```{r, include=FALSE}
+```{r}
 threat.net1 <- data %>%
   dplyr::select(cat_threat_climate_energytransport:cat_threat_overexp_pollution) %>%
   map2_df(colnames(.), ~  c(NA, .y)[.x +1]) # Change the binary 1 values into the column heaers)

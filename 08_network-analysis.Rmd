@@ -271,7 +271,7 @@ plot.pie.Nthreats_climate <- ggplot(pie.Nthreats_climate,
 ggsave(plot.pie.Nthreats_climate, filename = "figs\\fig_pie_climate.png", device = png(), units="in", width=12, height=7,dpi = 300)
 ```
 
-```{r, fig.cap='Proportion of climate change funding that was shared between multiple threat categories', fig.align='center'}
+```{r, fig.cap='Proportion of climate change funding that was shared between multiple threat categories'}
 # show exported image
 knitr::include_graphics("figs/fig_pie_climate.png")
 ```
@@ -306,7 +306,7 @@ plot.pie.Nthreats_energytransport <- ggplot(pie.Nthreats_energytransport,
 ggsave(plot.pie.Nthreats_energytransport, filename = "figs\\fig_pie_energytransport.png", width=12, height=7,device = png(), units="in",dpi = 300)
 ```
 
-```{r, fig.cap='Proportion of energy/transportation funding that was shared between multiple threat categories', fig.align='center'}
+```{r, fig.cap='Proportion of energy/transportation funding that was shared between multiple threat categories'}
 # show exported image
 knitr::include_graphics("figs/fig_pie_energytransport.png")
 ```
@@ -342,7 +342,7 @@ plot.pie.Nthreats_habitat <- ggplot(pie.Nthreats_habitat,
 ggsave(plot.pie.Nthreats_habitat, filename = "figs\\fig_pie_habitatloss.png", width=12, height=7,device = png(), units="in",dpi = 300)
 ```
 
-```{r, fig.cap='Proportion of habitat loss funding that was shared between multiple threat categories', fig.align='center'}
+```{r, fig.cap='Proportion of habitat loss funding that was shared between multiple threat categories'}
 # show exported image
 knitr::include_graphics("figs/fig_pie_habitatloss.png")
 ```
@@ -378,7 +378,7 @@ plot.pie.Nthreats_inv_spec <- ggplot(pie.Nthreats_inv_spec,
 ggsave(plot.pie.Nthreats_inv_spec, filename = "figs\\fig_pie_invasiveSpecies.png", width=12, height=7,device = png(), units="in",dpi = 300)
 ```
 
-```{r, fig.cap='Proportion of invasive species funding that was shared between multiple threat categories', fig.align='center'}
+```{r, fig.cap='Proportion of invasive species funding that was shared between multiple threat categories'}
 # show exported image
 knitr::include_graphics("figs/fig_pie_invasiveSpecies.png")
 ```
@@ -414,7 +414,7 @@ plot.pie.Nthreats_overexp <- ggplot(pie.Nthreats_overexp,
 ggsave(plot.pie.Nthreats_overexp, filename = "figs\\fig_pie_overexploitation.png", width=12, height=7,device = png(), units="in",dpi = 300)
 ```
 
-```{r, fig.cap='Proportion of overexploitation funding that was shared between multiple threat categories', fig.align='center'}
+```{r, fig.cap='Proportion of overexploitation funding that was shared between multiple threat categories'}
 # show exported image
 knitr::include_graphics("figs/fig_pie_overexploitation.png")
 ```
@@ -450,7 +450,7 @@ plot.pie.Nthreats_pollution <- ggplot(pie.Nthreats_pollution,
 ggsave(plot.pie.Nthreats_pollution, filename = "figs\\fig_pie_pollution.png", width=12, height=7,device = png(), units="in", dpi = 300)
 ```
 
-```{r, fig.cap='Proportion of pollution funding that was shared between multiple threat categories', fig.align='center'}
+```{r, fig.cap='Proportion of pollution funding that was shared between multiple threat categories'}
 # show exported image
 knitr::include_graphics("figs/fig_pie_pollution.png")
 ```

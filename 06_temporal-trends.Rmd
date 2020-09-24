@@ -51,17 +51,6 @@ u.threat_list <- c("Climate Change",
                    "Pollution")
 ```
 
-Colors used for plots
-```{r, echo = FALSE}
-## Colors
-cat_colors22 <- c("#990000", "#BF1E1E", "#993399", "#4C0099", "#000099",
-                  "#2E10C3", "#3685B3", "#1AB3B3", "#8FC04F", "#09A256", 
-                  "#006400", "#FFF928", "#C6C600", "#FFA200", "#CE8300", 
-                  "#D0471E", "#9F8109", "#835506", "#317575", "#808080",
-                  "black", "white")
-barplot(1:22, col = cat_colors22, names.arg = 1:22)
-```
-
 Fig. 2: A. Temporal variation (2003-2016) in proportion of funding across unique threat categories per year
 ```{r fig-2a}
 fig.2a.data <- by.year.money %>%
@@ -85,13 +74,13 @@ fig.2a.plot <- ggplot(fig.2a.data,
         axis.text.x = element_text(size = 20),
         axis.text.y = element_text(size = 26))
 
-ggsave(fig.2a.plot, filename = "figs\\Fig.2A.png", width=12, height=7,device = png(), units="in",dpi = 300)
+ggsave(fig.2a.plot, filename = "figs\\Fig2A.png", width=12, height=7,device = png(), units="in",dpi = 300)
 
 ```
 
-```{r,fig.cap='Fig.2. A. Temporal variation (2003-2016) in proportion of funding across unique threat categories per year', fig.align='center'}
+```{r,fig.cap='Figure 2A - Temporal variation (2003-2016) in proportion of funding across unique threat categories per year'}
 # show exported image
-knitr::include_graphics("figs/Fig.2A.png")
+knitr::include_graphics("figs/Fig2A.png")
 ```
 
 Fig.2: B.Temporal variation in overall allocation of money across unique threat categories per year
@@ -121,11 +110,11 @@ fig.2b.plot <- ggplot(fig.2b.data,
         legend.spacing.x = unit(1,"cm"),
         legend.position = "bottom")
 
-ggsave(fig.2b.plot, filename = "figs\\Fig.2B.png", width=12, height=7,device = png(), units="in", dpi = 300)
+ggsave(fig.2b.plot, filename = "figs\\Fig2B.png", width=12, height=7,device = png(), units="in", dpi = 300)
 ```
 
-```{r, fig.cap='Fig. 2B: Temporal variation (2003-2016) in overall allocation of money across unique threat categories per year',fig.align='center'}
+```{r, fig.cap='Figure 2B - Temporal variation (2003-2016) in overall allocation of money across unique threat categories per year'}
 # show exported image
-knitr::include_graphics("figs/Fig.2B.png")
+knitr::include_graphics("figs/Fig2B.png")
 ```
 

@@ -187,7 +187,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb27-14" title="14"><span class="st">  </span><span class="kw">group_by</span>(Category) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb27-15" title="15"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">percent =</span> Amount<span class="op">/</span><span class="kw">sum</span>(Amount))</a></code></pre></div>
 <p>Categories used for analysis</p>
-<p>Colors used for plots</p>
 <p>Fig. 2: A. Temporal variation (2003-2016) in proportion of funding across unique threat categories per year</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1">fig<span class="fl">.2</span>a.data &lt;-<span class="st"> </span>by.year.money <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb28-2" title="2"><span class="st">  </span><span class="kw">filter</span>(Category <span class="op">%in%</span><span class="st"> </span>u.threat_cat) <span class="op">%&gt;%</span></a>
@@ -210,9 +209,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb28-19" title="19">        <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">20</span>),</a>
 <a class="sourceLine" id="cb28-20" title="20">        <span class="dt">axis.text.y =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">26</span>))</a>
 <a class="sourceLine" id="cb28-21" title="21"></a>
-<a class="sourceLine" id="cb28-22" title="22"><span class="kw">ggsave</span>(fig<span class="fl">.2</span>a.plot, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">Fig.2A.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb28-22" title="22"><span class="kw">ggsave</span>(fig<span class="fl">.2</span>a.plot, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">Fig2A.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1"><span class="co"># show exported image</span></a>
-<a class="sourceLine" id="cb29-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/Fig.2A.png&quot;</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb29-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/Fig2A.png&quot;</span>)</a></code></pre></div>
 <p>Fig.2: B.Temporal variation in overall allocation of money across unique threat categories per year</p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1">fig<span class="fl">.2</span>b.data &lt;-<span class="st"> </span>by.year.money <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb30-2" title="2"><span class="st">  </span><span class="kw">filter</span>(Category <span class="op">%in%</span><span class="st"> </span>u.threat_cat)</a>
@@ -239,9 +238,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb30-23" title="23">        <span class="dt">legend.spacing.x =</span> <span class="kw">unit</span>(<span class="dv">1</span>,<span class="st">&quot;cm&quot;</span>),</a>
 <a class="sourceLine" id="cb30-24" title="24">        <span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)</a>
 <a class="sourceLine" id="cb30-25" title="25"></a>
-<a class="sourceLine" id="cb30-26" title="26"><span class="kw">ggsave</span>(fig<span class="fl">.2</span>b.plot, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">Fig.2B.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>, <span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb30-26" title="26"><span class="kw">ggsave</span>(fig<span class="fl">.2</span>b.plot, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">Fig2B.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>, <span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" title="1"><span class="co"># show exported image</span></a>
-<a class="sourceLine" id="cb31-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/Fig.2B.png&quot;</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb31-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/Fig2B.png&quot;</span>)</a></code></pre></div>
 
 </div>
             </section>

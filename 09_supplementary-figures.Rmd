@@ -145,11 +145,12 @@ plot.pie.Ntaxa_amphibian <- ggplot(pie.Ntaxa_amphibian,
                            x = "",
                            fill = Num.Tax)) +
   geom_bar(stat = "identity", color = "white") +
-  theme_minimal() +
+  theme_bw() +
   scale_fill_manual(values = seq_gradient_pal(cat_colors22[9], "white",
                                               "Lab")(seq(0,1, length.out = 5))) +
   labs(title="Proportion of funding for amphibians that were shared between multiple taxonomic groups") +
   coord_polar("y", start=0, direction = -1) +
+  theme_void() +
   theme(axis.text.x = element_blank()) +
   geom_text(aes(x = 1.55,
                 label = paste0(round(perc*100,1), "%")),
@@ -185,6 +186,7 @@ plot.pie.Ntaxa_bird <- ggplot(pie.Ntaxa_bird,
                                               "Lab")(seq(0,1, length.out = 5))) +
   labs(title="Proportion of funding for birds that were shared between multiple taxonomic groups") +
   coord_polar("y", start=0, direction = -1) +
+  theme_void()+
   theme(axis.text.x = element_blank()) +
   geom_text(aes(x = c(rep(1.55, 3), 1.65),
                 label = paste0(round(perc*100,1), "%")),
@@ -220,6 +222,7 @@ plot.pie.Ntaxa_invertebrate <- ggplot(pie.Ntaxa_invertebrate,
                                               "Lab")(seq(0,1, length.out = 5))) +
   labs(title="Proportion of funding for invertebrates that were shared between multiple taxonomic groups") +
   coord_polar("y", start=0, direction = -1) +
+  theme_void() +
   theme(axis.text.x = element_blank()) +
   geom_text(aes(x = c(rep(1.55, 3), 1.65),
                 label = paste0(round(perc*100,1), "%")),
@@ -255,6 +258,7 @@ plot.pie.Ntaxa_fish <- ggplot(pie.Ntaxa_fish,
                                               "Lab")(seq(0,1, length.out = 5))) +
   labs(title="Proportion of funding for fish that were shared between multiple taxonomic groups") +
   coord_polar("y", start=0, direction = -1) +
+  theme_void()+
   theme(axis.text.x = element_blank()) +
   geom_text(aes(x = c(rep(1.55, 3), 1.65),
                 label = paste0(round(perc*100,1), "%")),
@@ -290,6 +294,7 @@ plot.pie.Ntaxa_mammal <- ggplot(pie.Ntaxa_mammal,
                                               "Lab")(seq(0,1, length.out = 5))) +
   labs(title="Proportion of funding for mammals that were shared between multiple taxonomic groups") +
   coord_polar("y", start=0, direction = -1) +
+  theme_void()+
   theme(axis.text.x = element_blank()) +
   geom_text(aes(x = c(rep(1.55, 3), 1.65),
                 label = paste0(round(perc*100,1), "%")),
@@ -325,6 +330,7 @@ plot.pie.Ntaxa_plant <- ggplot(pie.Ntaxa_plant,
                                               "Lab")(seq(0,1, length.out = 5))) +
   labs(title="Proportion of funding for plants that were shared between multiple taxonomic groups") +
   coord_polar("y", start=0, direction = -1) +
+  theme_void()+
   theme(axis.text.x = element_blank()) +
   geom_text(aes(x = c(rep(1.55, 3), 1.65),
                 label = paste0(round(perc*100,1), "%")),
@@ -360,6 +366,7 @@ plot.pie.Ntaxa_reptile <- ggplot(pie.Ntaxa_reptile,
                                               "Lab")(seq(0,1, length.out = 5))) +
   labs(title="Proportion of funding for reptiles that were shared between multiple taxonomic groups") +
   coord_polar("y", start=0, direction = -1) +
+  theme_void()+
   theme(axis.text.x = element_blank()) +
   geom_text(aes(x = c(rep(1.55, 3), 1.65),
                 label = paste0(round(perc*100,1), "%")),

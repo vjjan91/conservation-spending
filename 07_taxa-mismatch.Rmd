@@ -43,7 +43,7 @@ u.taxa_list <- c("Amphibians",
 ```
 
 Colors used for plots
-```{r, echo = FALSE}
+```{r}
 ## Colors
 cat_colors22 <- c("#990000", "#BF1E1E", "#993399", "#4C0099", "#000099",
                   "#2E10C3", "#3685B3", "#1AB3B3", "#8FC04F", "#09A256", 
@@ -228,7 +228,7 @@ ggsave(fig.3.plot, filename = "figs\\Figure3.png", width=12, height=7,device = p
 
 ```
 
-```{r, eval=TRUE, fig.cap='Figure 3 - Mismatch between the proportion of funding allocated toward taxonomic groups and the proportion of threatened species within these taxonomic groups'}
+```{r, eval=TRUE, fig.cap='Mismatch between the proportion of funding allocated toward taxonomic groups and the proportion of threatened species within these taxonomic groups'}
 # show exported image
 knitr::include_graphics("figs\\Figure3.png")
 ```

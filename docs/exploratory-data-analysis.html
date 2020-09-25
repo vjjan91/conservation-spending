@@ -24,7 +24,7 @@
 <meta name="author" content="Vijay Ramesh1*, Jay Schoen1, Michael Levin1, Pratik Dubal2, Sebastian Heilpern1, Pooja Choksi1, Jared Meek1, Rochelle Thomas1, Don J Melnick1, Sara Kross1&quot;" />
 
 
-<meta name="date" content="2020-09-24" />
+<meta name="date" content="2020-09-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -142,6 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7" data-path="temporal-trends-in-conservation-funding.html"><a href="temporal-trends-in-conservation-funding.html"><i class="fa fa-check"></i><b>7</b> Temporal trends in conservation funding</a></li>
 <li class="chapter" data-level="8" data-path="taxonomic-groupsthreats-mismatch.html"><a href="taxonomic-groupsthreats-mismatch.html"><i class="fa fa-check"></i><b>8</b> Taxonomic groups/Threats mismatch</a></li>
 <li class="chapter" data-level="9" data-path="network-analysis.html"><a href="network-analysis.html"><i class="fa fa-check"></i><b>9</b> Network Analysis</a></li>
+<li class="chapter" data-level="10" data-path="supplementary-figures.html"><a href="supplementary-figures.html"><i class="fa fa-check"></i><b>10</b> Supplementary figures</a></li>
 </ul>
 
       </nav>
@@ -163,12 +164,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Section 4</span> Exploratory data analysis</h1>
 <p>Here, we will carry out exploratory data analysis of grants to obtain a sense of how money has been allocated across threats and taxonomic groups</p>
 <p>Read in excel sheets for grants awarded by the top 1000 foundations and the list of classified grants for exploratory data analysis</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">funders_top500 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/data-list-of-top500-donors-by-money.csv&quot;</span>)</a>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">funders_top1000 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/data-list-of-top1000-donors-by-money.csv&quot;</span>)</a>
 <a class="sourceLine" id="cb5-2" title="2">data &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/classified-grants-for-analysis.csv&quot;</span>)</a></code></pre></div>
 <p>Below we visualize overall funding provided by the top 1000 grantmakers (Supplementary Fig S1 - Accumulation of Funding Across Top Grantmakers)</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">money_accum &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</a>
-<a class="sourceLine" id="cb6-2" title="2">  funders_top500 <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb6-3" title="3"><span class="st">    </span><span class="kw">group_by</span>(<span class="st">`</span><span class="dt">Grantmaker Name</span><span class="st">`</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb6-2" title="2">  funders_top1000 <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb6-3" title="3"><span class="st">    </span><span class="kw">group_by</span>(<span class="st">`</span><span class="dt">Number</span><span class="st">`</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb6-4" title="4"><span class="st">    </span><span class="kw">summarise</span>(<span class="dt">total =</span> <span class="kw">sum</span>(<span class="st">`</span><span class="dt">Amount Funded</span><span class="st">`</span>)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb6-5" title="5"><span class="st">    </span><span class="kw">arrange</span>(<span class="kw">desc</span>(total)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb6-6" title="6"><span class="st">    </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span>x) <span class="op">%&gt;%</span></a>
@@ -176,7 +177,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb6-8" title="8"><span class="st">    </span><span class="kw">sum</span>(<span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb6-9" title="9">}</a>
 <a class="sourceLine" id="cb6-10" title="10"></a>
-<a class="sourceLine" id="cb6-11" title="11">rank &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">50</span>,<span class="kw">seq</span>(<span class="dv">100</span>,<span class="dv">500</span>,<span class="dv">100</span>))</a>
+<a class="sourceLine" id="cb6-11" title="11">rank &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">50</span>,<span class="kw">seq</span>(<span class="dv">100</span>,<span class="dv">1000</span>,<span class="dv">100</span>))</a>
 <a class="sourceLine" id="cb6-12" title="12">money &lt;-<span class="st"> </span><span class="kw">sapply</span>(rank, money_accum)</a>
 <a class="sourceLine" id="cb6-13" title="13"></a>
 <a class="sourceLine" id="cb6-14" title="14">top_funders &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">n_funders =</span> rank, <span class="dt">tot_money_mil =</span> money<span class="op">/</span><span class="fl">1e6</span>)</a>
@@ -191,16 +192,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb6-23" title="23"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb6-24" title="24"><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Number of foundations&quot;</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb6-25" title="25"><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Cumulative total in millions of USD&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb6-26" title="26"><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">limits =</span> rank[<span class="op">-</span><span class="dv">2</span>])</a>
-<a class="sourceLine" id="cb6-27" title="27"></a>
-<a class="sourceLine" id="cb6-28" title="28">fig_top_funders</a>
+<a class="sourceLine" id="cb6-26" title="26"><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">limits =</span> rank[<span class="op">-</span><span class="dv">2</span>])<span class="op">+</span></a>
+<a class="sourceLine" id="cb6-27" title="27"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">margin</span>(<span class="dv">10</span>,<span class="dv">20</span>,<span class="dv">10</span>,<span class="dv">10</span>))</a>
+<a class="sourceLine" id="cb6-28" title="28"></a>
 <a class="sourceLine" id="cb6-29" title="29"></a>
-<a class="sourceLine" id="cb6-30" title="30"><span class="co"># % Money captured by top 400 funders = 98%</span></a>
-<a class="sourceLine" id="cb6-31" title="31">top400 &lt;-<span class="st"> </span>money[<span class="dv">6</span>]<span class="op">/</span>money[<span class="dv">7</span>]</a>
-<a class="sourceLine" id="cb6-32" title="32">top400</a>
-<a class="sourceLine" id="cb6-33" title="33"></a>
-<a class="sourceLine" id="cb6-34" title="34"><span class="kw">ggsave</span>(fig_top_funders, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_topGrantmakers_funding.png&quot;</span>, </a>
-<a class="sourceLine" id="cb6-35" title="35">       <span class="dt">height =</span> <span class="dv">8</span>, <span class="dt">width =</span> <span class="dv">11</span>, <span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>, <span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb6-30" title="30">fig_top_funders</a>
+<a class="sourceLine" id="cb6-31" title="31"></a>
+<a class="sourceLine" id="cb6-32" title="32"><span class="co"># % Money captured by top 400 funders = 98%</span></a>
+<a class="sourceLine" id="cb6-33" title="33">top400 &lt;-<span class="st"> </span>money[<span class="dv">6</span>]<span class="op">/</span>money[<span class="dv">7</span>]</a>
+<a class="sourceLine" id="cb6-34" title="34">top400</a>
+<a class="sourceLine" id="cb6-35" title="35"></a>
+<a class="sourceLine" id="cb6-36" title="36"><span class="kw">ggsave</span>(fig_top_funders, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_topGrantmakers_funding.png&quot;</span>, </a>
+<a class="sourceLine" id="cb6-37" title="37">       <span class="dt">height =</span> <span class="dv">7</span>, <span class="dt">width =</span> <span class="dv">14</span>, <span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>, <span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="co"># show exported image</span></a>
 <a class="sourceLine" id="cb7-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_topGrantmakers_funding.png&quot;</span>)</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-10"></span>

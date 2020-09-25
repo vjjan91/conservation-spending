@@ -9,16 +9,15 @@ Here, we will carry out exploratory data analysis of grants to obtain a sense of
 
 Read in excel sheets for grants awarded by the top 1000 foundations and the list of classified grants for exploratory data analysis
 ```{r}
-funders_top500 <- read_csv("data/data-list-of-top500-donors-by-money.csv")
+funders_top1000 <- read_csv("data/data-list-of-top1000-donors-by-money.csv")
 data <- read_csv("data/classified-grants-for-analysis.csv")
 ```
-
 
 Below we visualize overall funding provided by the top 1000 grantmakers (Supplementary Fig S1 - Accumulation of Funding Across Top Grantmakers)
 ```{r}
 money_accum <- function(x) {
-  funders_top500 %>%
-    group_by(`Grantmaker Name`) %>%
+  funders_top1000 %>%
+    group_by(`Number`) %>%
     summarise(total = sum(`Amount Funded`)) %>%
     arrange(desc(total)) %>%
     slice(1:x) %>%
@@ -26,7 +25,7 @@ money_accum <- function(x) {
     sum(na.rm = TRUE)
 }
 
-rank <- c(0,50,seq(100,500,100))
+rank <- c(0,50,seq(100,1000,100))
 money <- sapply(rank, money_accum)
 
 top_funders <- data.frame(n_funders = rank, tot_money_mil = money/1e6)
@@ -41,7 +40,9 @@ fig_top_funders <- ggplot(top_funders, aes(x = n_funders,
   theme_minimal() +
   xlab("Number of foundations") +
   ylab("Cumulative total in millions of USD") +
-  scale_x_discrete(limits = rank[-2])
+  scale_x_discrete(limits = rank[-2])+
+  theme(plot.margin = margin(10,20,10,10))
+
 
 fig_top_funders
 
@@ -50,7 +51,7 @@ top400 <- money[6]/money[7]
 top400
 
 ggsave(fig_top_funders, filename = "figs\\fig_topGrantmakers_funding.png", 
-       height = 8, width = 11, device = png(), units="in", dpi = 300)
+       height = 7, width = 14, device = png(), units="in", dpi = 300)
 
 ```
 

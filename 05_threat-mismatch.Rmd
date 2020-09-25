@@ -125,7 +125,7 @@ ggsave(fig_threats_funding, filename = "figs\\Figure1.png", width=17, height=7,
        device = png(), units="in", dpi = 300)
 ```
 
-```{r, eval=TRUE, fig.cap='Figure 1: Mismatch between conservation funding and drivers of biodiversity loss'}
+```{r, eval=TRUE, fig.cap='Mismatch between conservation funding and drivers of biodiversity loss'}
 # show exported image
 knitr::include_graphics("figs/Figure1.png")
 ```

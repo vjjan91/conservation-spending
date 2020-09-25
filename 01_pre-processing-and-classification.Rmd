@@ -22,7 +22,7 @@ def string_found(string1, string2):
 First, we will filter our list of grants using the pre-processing phrases to remove grants which have no descriptions (empty lines) and those that mention words such as operating support etc. 
 
 Next, we will use our list of keywords to carry out a rule-based classification of all grants
-```{python eval=FALSE}
+```{python, eval=FALSE}
 data = pd.read_csv('data\\data-all-grants.csv')
 preproc_ph = pd.read_csv('data\\list-of-preprocessing-phrases.csv')
 preproc_phrases = list(preproc_ph.Phrases)

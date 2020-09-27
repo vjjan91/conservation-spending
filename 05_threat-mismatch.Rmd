@@ -109,7 +109,7 @@ fig_threats_funding<- ggplot(fig.1.data,
        y="Proportion") + 
   scale_x_discrete(labels=u.threat_list) +
   scale_fill_manual(values = c("slategray4", alpha("orangered4",.9)),
-                    labels = c("Money (USD Million)", "No. of Threatened Species")) +
+                    labels = c("Money (USD Million)", "Threatened Species")) +
   geom_text(position = position_dodge(width= 1), 
             aes(label = rawLabels, hjust = 0.55, vjust = -0.5), angle=0, size=5) +
   ylim(0, 40) +

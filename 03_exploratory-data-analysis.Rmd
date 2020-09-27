@@ -46,16 +46,16 @@ fig_top_funders <- ggplot(top_funders, aes(x = n_funders,
 
 fig_top_funders
 
-# % Money captured by top 400 funders = 98%
-top400 <- money[6]/money[7]
-top400
+# % Money captured by top 500 funders = 95.5%
+top500 <- money[7]/money[12]
+top500
 
 ggsave(fig_top_funders, filename = "figs\\fig_topGrantmakers_funding.png", 
        height = 7, width = 14, device = png(), units="in", dpi = 300)
 
 ```
 
-```{r ,eval=TRUE, fig.cap="Accumulation curve of the funding in our dataset across the top 1000 grantmakers. The shaded region encompasses the amount of funding captured by the top 400 grantmakers, which represents more than 98% of the total amount of funding."}
+```{r ,eval=TRUE, fig.cap="Accumulation curve of the funding in our dataset across the top 1000 grantmakers. The shaded region encompasses the amount of funding captured by the top 500 grantmakers, which represents more than 95.5% of the total amount of funding."}
 # show exported image
 knitr::include_graphics("figs/fig_topGrantmakers_funding.png")
 ```

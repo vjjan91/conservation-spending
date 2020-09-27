@@ -78,31 +78,27 @@ We sought to only consider grants that were focused on biodiversity conservation
 Removing climate/energy grants that do not contain biodiversity conservation keywords:
 ```{r}
 ## Category Lists
-clim.energy_cat <- names(data)[c(37,38)]   # threat_climate and threat_energytransport
+clim.energy_cat <- names(data)[c(37,38)]                  # climate and energy/transport categories
 
-bio.filter_cat <- names(data)[c(19:28, 30:36)]
+bio.filter_cat <- names(data)[c(19:28, 30:36)]            # biodiversity, taxa, habitat categories
 
-# Grants that were classified into a single category only
-data_bio.1 <- data %>%
-  filter_at(vars(bio.filter_cat), any_vars(.> 0)) 
-data_non.bio.1 <- data %>%
-  filter_at(vars(bio.filter_cat), all_vars(. == 0))
-
-data_bio.2 <- data_non.bio.1 %>%
-  filter_at(vars(clim.energy_cat), all_vars(.==0))
-data_non.bio.2 <- data_non.bio.1 %>%
+clim.energy <- data %>%
   filter_at(vars(clim.energy_cat), any_vars(.>0))
+clim.energy_bio <- clim.energy %>%
+  filter_at(vars(bio.filter_cat), any_vars(.>0))
+clim.energy_non.bio <- anti_join(clim.energy, clim.energy_bio)
 
-data_bio <- bind_rows(data_bio.1, data_bio.2)
-data_non.bio <- data_non.bio.2
+data_bio <- data %>%
+  filter_at(vars(clim.energy_cat), all_vars(.==0)) %>%
+  bind_rows(clim.energy_bio)
+
 ```
 
-At this point, this is our final dataset of classified grants to analyze. This is our "data_multi" dataset, as grants are classified into all categories/sub-categories that the algorithm classified them into; multiple sub-category classifications are included in this dataframe. "Non-bio" grants are exported as well for supplementary analysis.
+At this point, this is our final dataset of classified grants to analyze. This is our "data_multi" dataset, as grants are classified into all categories/sub-categories that the algorithm classified them into; multiple sub-category classifications are included in this dataframe.
 ```{r}
 data.multi <- data_bio
 
 write_csv(data.multi,"data\\post-processed-grants-for-analysis-multi.csv")
-write_csv(data_non.bio,"data\\post-processed-grants-for-analysis-nonbio.csv")
 ```
 
 In the "data_multi" dataset, grants classified into multiple sub-categories (e.g. threat_climate + threat_habitat) would be over-represented in our analysis of funding. We sought to only count the amount of funding for a grant once within each category. Otherwise,  To accomplish this, we modified the dataset in several ways:

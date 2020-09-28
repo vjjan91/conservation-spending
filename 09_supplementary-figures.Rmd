@@ -58,6 +58,18 @@ by.year.money.multi <- money.data.multi %>%
 
 ```
 
+Categories used for analysis
+```{r, echo = FALSE}
+u.threat_cat <- names(data)[37:42]
+
+u.threat_list <- c("Climate Change", 
+                   "Energy/Transportation",
+                   "Habitat Loss",
+                   "Invasive Species",
+                   "Overexploitation",
+                   "Pollution")
+```
+
 The above analysis was recreated using grants that were simultaneously classified into multiple threat categories. Please see Fig. S2 in the supplementary data. 
 ```{r}
 fig.1a.money <- by.year.money.multi %>%

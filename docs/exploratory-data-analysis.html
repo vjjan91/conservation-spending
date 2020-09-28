@@ -24,7 +24,7 @@
 <meta name="author" content="Vijay Ramesh1*, Jay Schoen1, Michael Levin1, Pratik Dubal2, Sebastian Heilpern1, Pooja Choksi1, Jared Meek1, Rochelle Thomas1, Don J Melnick1, Sara Kross1&quot;" />
 
 
-<meta name="date" content="2020-09-25" />
+<meta name="date" content="2020-09-28" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -187,7 +187,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb6-18" title="18">                                           <span class="dt">group =</span> <span class="dv">1</span>)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb6-19" title="19"><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb6-20" title="20"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb6-21" title="21"><span class="st">  </span><span class="kw">geom_area</span>(<span class="kw">aes</span>(<span class="dt">y=</span><span class="kw">ifelse</span>(tot_money_mil<span class="op">&lt;</span><span class="st"> </span>top_funders[<span class="dv">6</span>,<span class="dv">2</span>], tot_money_mil, top_funders[<span class="dv">6</span>,<span class="dv">2</span>])),</a>
+<a class="sourceLine" id="cb6-21" title="21"><span class="st">  </span><span class="kw">geom_area</span>(<span class="kw">aes</span>(<span class="dt">y=</span><span class="kw">ifelse</span>(tot_money_mil<span class="op">&lt;</span><span class="st"> </span>top_funders[<span class="dv">7</span>,<span class="dv">2</span>], tot_money_mil, top_funders[<span class="dv">7</span>,<span class="dv">2</span>])),</a>
 <a class="sourceLine" id="cb6-22" title="22">            <span class="dt">fill=</span><span class="st">&quot;#696969&quot;</span>, <span class="dt">alpha =</span> <span class="fl">.4</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb6-23" title="23"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb6-24" title="24"><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Number of foundations&quot;</span>) <span class="op">+</span></a>
@@ -198,18 +198,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb6-29" title="29"></a>
 <a class="sourceLine" id="cb6-30" title="30">fig_top_funders</a>
 <a class="sourceLine" id="cb6-31" title="31"></a>
-<a class="sourceLine" id="cb6-32" title="32"><span class="co"># % Money captured by top 400 funders = 98%</span></a>
-<a class="sourceLine" id="cb6-33" title="33">top400 &lt;-<span class="st"> </span>money[<span class="dv">6</span>]<span class="op">/</span>money[<span class="dv">7</span>]</a>
-<a class="sourceLine" id="cb6-34" title="34">top400</a>
+<a class="sourceLine" id="cb6-32" title="32"><span class="co"># % Money captured by top 500 funders = 95.5%</span></a>
+<a class="sourceLine" id="cb6-33" title="33">top500 &lt;-<span class="st"> </span>money[<span class="dv">7</span>]<span class="op">/</span>money[<span class="dv">12</span>]</a>
+<a class="sourceLine" id="cb6-34" title="34">top500</a>
 <a class="sourceLine" id="cb6-35" title="35"></a>
 <a class="sourceLine" id="cb6-36" title="36"><span class="kw">ggsave</span>(fig_top_funders, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_topGrantmakers_funding.png&quot;</span>, </a>
 <a class="sourceLine" id="cb6-37" title="37">       <span class="dt">height =</span> <span class="dv">7</span>, <span class="dt">width =</span> <span class="dv">14</span>, <span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>, <span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="co"># show exported image</span></a>
 <a class="sourceLine" id="cb7-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_topGrantmakers_funding.png&quot;</span>)</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-10"></span>
-<img src="figs/fig_topGrantmakers_funding.png" alt="Accumulation curve of the funding in our dataset across the top 1000 grantmakers. The shaded region encompasses the amount of funding captured by the top 400 grantmakers, which represents more than 98% of the total amount of funding." width="\textwidth" />
+<img src="figs/fig_topGrantmakers_funding.png" alt="Accumulation curve of the funding in our dataset across the top 1000 grantmakers. The shaded region encompasses the amount of funding captured by the top 500 grantmakers, which represents more than 95.5% of the total amount of funding." width="\textwidth" />
 <p class="caption">
-Figure 4.1: Accumulation curve of the funding in our dataset across the top 1000 grantmakers. The shaded region encompasses the amount of funding captured by the top 400 grantmakers, which represents more than 98% of the total amount of funding.
+Figure 4.1: Accumulation curve of the funding in our dataset across the top 1000 grantmakers. The shaded region encompasses the amount of funding captured by the top 500 grantmakers, which represents more than 95.5% of the total amount of funding.
 </p>
 </div>
 <p>Now, let’s look at how many grants were classified across multiple threat categories and what proportion of money they retained</p>

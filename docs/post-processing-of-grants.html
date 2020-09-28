@@ -24,7 +24,7 @@
 <meta name="author" content="Vijay Ramesh1*, Jay Schoen1, Michael Levin1, Pratik Dubal2, Sebastian Heilpern1, Pooja Choksi1, Jared Meek1, Rochelle Thomas1, Don J Melnick1, Sara Kross1&quot;" />
 
 
-<meta name="date" content="2020-09-25" />
+<meta name="date" content="2020-09-28" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -214,28 +214,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>We sought to only consider grants that were focused on biodiversity conservation. Upon exploring the data, we found that many grants classified into threat_climate and threat_energytransportation were often not addressing biodiversity. Accordingly, we only included grants classified into these two sub-categories if the descriptions mentioned a biodiversity-related keyword (a habitat, taxa, or general word such as “conservation”).</p>
 <p>Removing climate/energy grants that do not contain biodiversity conservation keywords:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="co">## Category Lists</span></a>
-<a class="sourceLine" id="cb16-2" title="2">clim.energy_cat &lt;-<span class="st"> </span><span class="kw">names</span>(data)[<span class="kw">c</span>(<span class="dv">37</span>,<span class="dv">38</span>)]   <span class="co"># threat_climate and threat_energytransport</span></a>
+<a class="sourceLine" id="cb16-2" title="2">clim.energy_cat &lt;-<span class="st"> </span><span class="kw">names</span>(data)[<span class="kw">c</span>(<span class="dv">37</span>,<span class="dv">38</span>)]                  <span class="co"># climate and energy/transport categories</span></a>
 <a class="sourceLine" id="cb16-3" title="3"></a>
-<a class="sourceLine" id="cb16-4" title="4">bio.filter_cat &lt;-<span class="st"> </span><span class="kw">names</span>(data)[<span class="kw">c</span>(<span class="dv">19</span><span class="op">:</span><span class="dv">28</span>, <span class="dv">30</span><span class="op">:</span><span class="dv">36</span>)]</a>
+<a class="sourceLine" id="cb16-4" title="4">bio.filter_cat &lt;-<span class="st"> </span><span class="kw">names</span>(data)[<span class="kw">c</span>(<span class="dv">19</span><span class="op">:</span><span class="dv">28</span>, <span class="dv">30</span><span class="op">:</span><span class="dv">36</span>)]            <span class="co"># biodiversity, taxa, habitat categories</span></a>
 <a class="sourceLine" id="cb16-5" title="5"></a>
-<a class="sourceLine" id="cb16-6" title="6"><span class="co"># Grants that were classified into a single category only</span></a>
-<a class="sourceLine" id="cb16-7" title="7">data_bio<span class="fl">.1</span> &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb16-8" title="8"><span class="st">  </span><span class="kw">filter_at</span>(<span class="kw">vars</span>(bio.filter_cat), <span class="kw">any_vars</span>(.<span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)) </a>
-<a class="sourceLine" id="cb16-9" title="9">data_non.bio<span class="fl">.1</span> &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb16-10" title="10"><span class="st">  </span><span class="kw">filter_at</span>(<span class="kw">vars</span>(bio.filter_cat), <span class="kw">all_vars</span>(. <span class="op">==</span><span class="st"> </span><span class="dv">0</span>))</a>
+<a class="sourceLine" id="cb16-6" title="6">clim.energy &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb16-7" title="7"><span class="st">  </span><span class="kw">filter_at</span>(<span class="kw">vars</span>(clim.energy_cat), <span class="kw">any_vars</span>(.<span class="op">&gt;</span><span class="dv">0</span>))</a>
+<a class="sourceLine" id="cb16-8" title="8">clim.energy_bio &lt;-<span class="st"> </span>clim.energy <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb16-9" title="9"><span class="st">  </span><span class="kw">filter_at</span>(<span class="kw">vars</span>(bio.filter_cat), <span class="kw">any_vars</span>(.<span class="op">&gt;</span><span class="dv">0</span>))</a>
+<a class="sourceLine" id="cb16-10" title="10">clim.energy_non.bio &lt;-<span class="st"> </span><span class="kw">anti_join</span>(clim.energy, clim.energy_bio)</a>
 <a class="sourceLine" id="cb16-11" title="11"></a>
-<a class="sourceLine" id="cb16-12" title="12">data_bio<span class="fl">.2</span> &lt;-<span class="st"> </span>data_non.bio<span class="fl">.1</span> <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb16-13" title="13"><span class="st">  </span><span class="kw">filter_at</span>(<span class="kw">vars</span>(clim.energy_cat), <span class="kw">all_vars</span>(.<span class="op">==</span><span class="dv">0</span>))</a>
-<a class="sourceLine" id="cb16-14" title="14">data_non.bio<span class="fl">.2</span> &lt;-<span class="st"> </span>data_non.bio<span class="fl">.1</span> <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb16-15" title="15"><span class="st">  </span><span class="kw">filter_at</span>(<span class="kw">vars</span>(clim.energy_cat), <span class="kw">any_vars</span>(.<span class="op">&gt;</span><span class="dv">0</span>))</a>
-<a class="sourceLine" id="cb16-16" title="16"></a>
-<a class="sourceLine" id="cb16-17" title="17">data_bio &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(data_bio<span class="fl">.1</span>, data_bio<span class="fl">.2</span>)</a>
-<a class="sourceLine" id="cb16-18" title="18">data_non.bio &lt;-<span class="st"> </span>data_non.bio<span class="fl">.2</span></a></code></pre></div>
-<p>At this point, this is our final dataset of classified grants to analyze. This is our “data_multi” dataset, as grants are classified into all categories/sub-categories that the algorithm classified them into; multiple sub-category classifications are included in this dataframe. “Non-bio” grants are exported as well for supplementary analysis.</p>
+<a class="sourceLine" id="cb16-12" title="12">data_bio &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb16-13" title="13"><span class="st">  </span><span class="kw">filter_at</span>(<span class="kw">vars</span>(clim.energy_cat), <span class="kw">all_vars</span>(.<span class="op">==</span><span class="dv">0</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb16-14" title="14"><span class="st">  </span><span class="kw">bind_rows</span>(clim.energy_bio)</a></code></pre></div>
+<p>At this point, this is our final dataset of classified grants to analyze. This is our “data_multi” dataset, as grants are classified into all categories/sub-categories that the algorithm classified them into; multiple sub-category classifications are included in this dataframe.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">data.multi &lt;-<span class="st"> </span>data_bio</a>
 <a class="sourceLine" id="cb17-2" title="2"></a>
-<a class="sourceLine" id="cb17-3" title="3"><span class="kw">write_csv</span>(data.multi,<span class="st">&quot;data</span><span class="ch">\\</span><span class="st">post-processed-grants-for-analysis-multi.csv&quot;</span>)</a>
-<a class="sourceLine" id="cb17-4" title="4"><span class="kw">write_csv</span>(data_non.bio,<span class="st">&quot;data</span><span class="ch">\\</span><span class="st">post-processed-grants-for-analysis-nonbio.csv&quot;</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb17-3" title="3"><span class="kw">write_csv</span>(data.multi,<span class="st">&quot;data</span><span class="ch">\\</span><span class="st">post-processed-grants-for-analysis-multi.csv&quot;</span>)</a></code></pre></div>
 <p>In the “data_multi” dataset, grants classified into multiple sub-categories (e.g. threat_climate + threat_habitat) would be over-represented in our analysis of funding. We sought to only count the amount of funding for a grant once within each category. Otherwise, To accomplish this, we modified the dataset in several ways:
 1. Grants classified into two sub-categories were classified into a new column combining the two (e.g. threat_climate_habitat)
 2. Grants classified into three or more sub-categories were classified into new “other” column (e.g. threat_other)

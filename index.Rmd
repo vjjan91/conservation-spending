@@ -16,21 +16,21 @@ description: "Conservation funding does not track drivers of biodiversity loss"
 
 # Introduction  
 
-This is the `bookdown` version of a repository that contains code and analyses associated with Ramesh et. al. (in review). 
+This is the `bookdown` version of a repository that contains code and analyses associated with Ramesh et al. (in review). 
 
 ## Attribution
 
 Please contact the following in case of interest in the project.
 
 - Vijay Ramesh (lead author)
-    - PhD Candidate, Department of Ecology, Evolution and Environmental Biology, Columbia University
+    - PhD Candidate, Department of Ecology, Evolution and Environmental Biology, Columbia University.
 
 ## Data access
 
 The following files are required to reproduce our analysis.
 
 - all-grants.csv: A sheet containing all grant data (Please write to the author for access to this dataset which is currently being housed at [Candid](https://candid.org/)
-- list-of-preprocessing-phrases.csv: A sheet containing phrases which need to removed before classification.
+- list-of-preprocessing-phrases.csv: A sheet containing phrases which are needed to remove grants before classification.
 - list-of-keywords.csv: A sheet containing keywords which will be used to perform the rule-based classification.
 - list-of-stopwords.csv: A sheet containing stopwords, which need to be used to post-process and filter the classification results.
 - All supplementary data from Maxwell et al. 2016

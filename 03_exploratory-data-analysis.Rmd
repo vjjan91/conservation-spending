@@ -35,7 +35,7 @@ fig_top_funders <- ggplot(top_funders, aes(x = n_funders,
                                            group = 1)) +
   geom_line() +
   geom_point() +
-  geom_area(aes(y=ifelse(tot_money_mil< top_funders[6,2], tot_money_mil, top_funders[6,2])),
+  geom_area(aes(y=ifelse(tot_money_mil< top_funders[7,2], tot_money_mil, top_funders[7,2])),
             fill="#696969", alpha = .4) +
   theme_minimal() +
   xlab("Number of foundations") +

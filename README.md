@@ -1,6 +1,6 @@
 ## Conservation funding does not track drivers of biodiversity loss
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4055768.svg)](https://doi.org/10.5281/zenodo.4055768)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4057316.svg)](https://doi.org/10.5281/zenodo.4057316)
 
 This repository currently contains code and analyses for a publication in review (Ramesh et al.). 
 

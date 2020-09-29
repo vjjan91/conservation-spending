@@ -120,7 +120,7 @@ fig.1a.plot <- ggplot(fig.1a.data,
         legend.key.size = unit(1,"cm"),
         legend.text = element_text(size = 12))
 
-ggsave(fig.1a.plot, filename = "figs\\FigureS2-new-threat-mismatch-multiCategories.png", width=17, height=7,device=png(), units="in", dpi = 300)
+ggsave(fig.1a.plot, filename = "figs\\FigureS2-threat-mismatch-multiCategories.png", width=17, height=7,device=png(), units="in", dpi = 300)
 ```
 
 ```{r, eval=TRUE, fig.cap='Mismatch between conservation funding and drivers of biodiversity loss (including grants classified into multiple threat categories-Fig. S2)'}

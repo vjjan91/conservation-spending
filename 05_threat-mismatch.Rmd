@@ -62,7 +62,7 @@ by.year.money <- money.data %>%
 ```
 
 Categories used for analysis
-```{r, echo = FALSE}
+```{r}
 u.threat_cat <- names(data)[37:42]
 
 u.threat_list <- c("Climate Change", 

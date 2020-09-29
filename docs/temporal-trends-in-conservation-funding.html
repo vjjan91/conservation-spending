@@ -21,10 +21,10 @@
   <meta name="twitter:description" content="Section 7 Temporal trends in conservation funding | Conservation funding does not track drivers of biodiversity loss" />
   
 
-<meta name="author" content="Vijay Ramesh1*, Jay Schoen1, Michael Levin1, Pratik Dubal2, Sebastian Heilpern1, Pooja Choksi1, Jared Meek1, Rochelle Thomas1, Don J Melnick1, Sara Kross1&quot;" />
+<meta name="author" content="Vijay Ramesh1*^, Jay Schoen1^, Michael Levin1, Pratik Dubal2, Sebastian Heilpern1, Pooja Choksi1, Jared Meek1, Rochelle Thomas1, Don J Melnick1, Sara Kross1&quot;" />
 
 
-<meta name="date" content="2020-09-28" />
+<meta name="date" content="2020-09-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -162,93 +162,99 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="temporal-trends-in-conservation-funding" class="section level1">
 <h1><span class="header-section-number">Section 7</span> Temporal trends in conservation funding</h1>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1"><span class="co"># Load libraries</span></a>
-<a class="sourceLine" id="cb25-2" title="2"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb25-3" title="3"><span class="kw">library</span>(scales)</a>
-<a class="sourceLine" id="cb25-4" title="4"><span class="kw">library</span>(ggsci)</a></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1"><span class="co"># Load libraries</span></a>
+<a class="sourceLine" id="cb29-2" title="2"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb29-3" title="3"><span class="kw">library</span>(scales)</a>
+<a class="sourceLine" id="cb29-4" title="4"><span class="kw">library</span>(ggsci)</a></code></pre></div>
 <p>Importing data</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1"><span class="co"># Read in data of post-processed grants</span></a>
-<a class="sourceLine" id="cb26-2" title="2">data &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data</span><span class="ch">\\</span><span class="st">post-processed-grants-for-analysis-unique.csv&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb26-3" title="3"><span class="st">   </span><span class="kw">as.data.frame</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb26-4" title="4"><span class="st">   </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">42</span>, <span class="dv">49</span><span class="op">:</span><span class="dv">109</span>, <span class="dv">43</span><span class="op">:</span><span class="dv">48</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1"><span class="co"># Read in data of post-processed grants</span></a>
+<a class="sourceLine" id="cb30-2" title="2">data &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data</span><span class="ch">\\</span><span class="st">post-processed-grants-for-analysis-unique.csv&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb30-3" title="3"><span class="st">   </span><span class="kw">as.data.frame</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb30-4" title="4"><span class="st">   </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">42</span>, <span class="dv">49</span><span class="op">:</span><span class="dv">109</span>, <span class="dv">43</span><span class="op">:</span><span class="dv">48</span>))</a></code></pre></div>
 <p>Data on funding</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1"><span class="co"># Single Category Data</span></a>
-<a class="sourceLine" id="cb27-2" title="2">money.data &lt;-<span class="st"> </span>data[,<span class="dv">11</span><span class="op">:</span>(<span class="kw">length</span>(data)<span class="op">-</span><span class="dv">6</span>)]<span class="op">*</span>data[,<span class="dv">7</span>]</a>
-<a class="sourceLine" id="cb27-3" title="3">money.data &lt;-<span class="st"> </span><span class="kw">mutate</span>(money.data,</a>
-<a class="sourceLine" id="cb27-4" title="4">                         <span class="dt">Year.Authorized =</span> data<span class="op">$</span>Year.Authorized,</a>
-<a class="sourceLine" id="cb27-5" title="5">                         <span class="dt">Num.Thr =</span> data<span class="op">$</span>Num.Thr,</a>
-<a class="sourceLine" id="cb27-6" title="6">                         <span class="dt">Num.Tax =</span> data<span class="op">$</span>Num.Tax)</a>
-<a class="sourceLine" id="cb27-7" title="7"></a>
-<a class="sourceLine" id="cb27-8" title="8">by.year.money &lt;-<span class="st"> </span>money.data <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb27-9" title="9"><span class="st">  </span><span class="kw">group_by</span>(Year.Authorized) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb27-10" title="10"><span class="st">  </span><span class="kw">summarize_at</span>(<span class="kw">vars</span>(cat_act_area<span class="op">:</span>cat_taxa_other), sum, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb27-11" title="11"><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="op">-</span>Year.Authorized, <span class="dt">names_to =</span> <span class="st">&quot;Category&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;Amount&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb27-12" title="12"><span class="st">  </span><span class="kw">group_by</span>(Year.Authorized) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb27-13" title="13"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ann.percent =</span> Amount<span class="op">/</span><span class="kw">sum</span>(Amount)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb27-14" title="14"><span class="st">  </span><span class="kw">group_by</span>(Category) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb27-15" title="15"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">percent =</span> Amount<span class="op">/</span><span class="kw">sum</span>(Amount))</a></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" title="1"><span class="co"># Single Category Data</span></a>
+<a class="sourceLine" id="cb31-2" title="2">money.data &lt;-<span class="st"> </span>data[,<span class="dv">11</span><span class="op">:</span>(<span class="kw">length</span>(data)<span class="op">-</span><span class="dv">6</span>)]<span class="op">*</span>data[,<span class="dv">7</span>]</a>
+<a class="sourceLine" id="cb31-3" title="3">money.data &lt;-<span class="st"> </span><span class="kw">mutate</span>(money.data,</a>
+<a class="sourceLine" id="cb31-4" title="4">                         <span class="dt">Year.Authorized =</span> data<span class="op">$</span>Year.Authorized,</a>
+<a class="sourceLine" id="cb31-5" title="5">                         <span class="dt">Num.Thr =</span> data<span class="op">$</span>Num.Thr,</a>
+<a class="sourceLine" id="cb31-6" title="6">                         <span class="dt">Num.Tax =</span> data<span class="op">$</span>Num.Tax)</a>
+<a class="sourceLine" id="cb31-7" title="7"></a>
+<a class="sourceLine" id="cb31-8" title="8">by.year.money &lt;-<span class="st"> </span>money.data <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb31-9" title="9"><span class="st">  </span><span class="kw">group_by</span>(Year.Authorized) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb31-10" title="10"><span class="st">  </span><span class="kw">summarize_at</span>(<span class="kw">vars</span>(cat_act_area<span class="op">:</span>cat_taxa_other), sum, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb31-11" title="11"><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="op">-</span>Year.Authorized, <span class="dt">names_to =</span> <span class="st">&quot;Category&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;Amount&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb31-12" title="12"><span class="st">  </span><span class="kw">group_by</span>(Year.Authorized) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb31-13" title="13"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ann.percent =</span> Amount<span class="op">/</span><span class="kw">sum</span>(Amount)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb31-14" title="14"><span class="st">  </span><span class="kw">group_by</span>(Category) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb31-15" title="15"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">percent =</span> Amount<span class="op">/</span><span class="kw">sum</span>(Amount))</a></code></pre></div>
 <p>Categories used for analysis</p>
-<p>Fig. 2: A. Temporal variation (2003-2016) in proportion of funding across unique threat categories per year</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1">fig<span class="fl">.2</span>a.data &lt;-<span class="st"> </span>by.year.money <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb28-2" title="2"><span class="st">  </span><span class="kw">filter</span>(Category <span class="op">%in%</span><span class="st"> </span>u.threat_cat) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb28-3" title="3"><span class="st">  </span><span class="kw">group_by</span>(Year.Authorized) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb28-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ann.percent =</span> Amount<span class="op">/</span><span class="kw">sum</span>(Amount),</a>
-<a class="sourceLine" id="cb28-5" title="5">         <span class="dt">alpha =</span> <span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">1</span>,.<span class="dv">5</span>), <span class="dv">3</span>))</a>
-<a class="sourceLine" id="cb28-6" title="6"></a>
-<a class="sourceLine" id="cb28-7" title="7">fig<span class="fl">.2</span>a.plot &lt;-<span class="st"> </span><span class="kw">ggplot</span>(fig<span class="fl">.2</span>a.data, </a>
-<a class="sourceLine" id="cb28-8" title="8">                <span class="kw">aes</span>(<span class="dt">y =</span> ann.percent, </a>
-<a class="sourceLine" id="cb28-9" title="9">                    <span class="dt">x =</span> Year.Authorized)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb28-10" title="10"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="dv">4</span>, <span class="kw">aes</span>(<span class="dt">color =</span> Category, <span class="dt">alpha =</span> alpha), <span class="dt">show.legend =</span> F) <span class="op">+</span></a>
-<a class="sourceLine" id="cb28-11" title="11"><span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> cat_colors22[<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">13</span>,<span class="dv">11</span>,<span class="dv">20</span>,<span class="dv">5</span>,<span class="dv">18</span>)],</a>
-<a class="sourceLine" id="cb28-12" title="12">                     <span class="dt">name=</span><span class="st">&quot;Threat Category&quot;</span>,</a>
-<a class="sourceLine" id="cb28-13" title="13">                     <span class="dt">labels=</span>u.threat_list) <span class="op">+</span></a>
-<a class="sourceLine" id="cb28-14" title="14"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&quot;Year&quot;</span>,</a>
-<a class="sourceLine" id="cb28-15" title="15">       <span class="dt">y=</span><span class="st">&quot;Proportion of Funding&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb28-16" title="16"><span class="st">       </span><span class="co"># title=&quot;Proportion of Funding&quot;) +</span></a>
-<a class="sourceLine" id="cb28-17" title="17"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.background =</span> <span class="kw">element_rect</span>(<span class="dt">fill =</span> <span class="st">&quot;grey95&quot;</span>),</a>
-<a class="sourceLine" id="cb28-18" title="18">        <span class="dt">axis.title =</span> <span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">20</span>, <span class="dt">face =</span> <span class="st">&quot;bold&quot;</span>),</a>
-<a class="sourceLine" id="cb28-19" title="19">        <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">20</span>),</a>
-<a class="sourceLine" id="cb28-20" title="20">        <span class="dt">axis.text.y =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">26</span>))</a>
-<a class="sourceLine" id="cb28-21" title="21"></a>
-<a class="sourceLine" id="cb28-22" title="22"><span class="kw">ggsave</span>(fig<span class="fl">.2</span>a.plot, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">Fig2A.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1"><span class="co"># show exported image</span></a>
-<a class="sourceLine" id="cb29-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/Fig2A.png&quot;</span>)</a></code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-35"></span>
+<p>Palette of colors for plotting</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1">cat_colors22 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;#990000&quot;</span>, <span class="st">&quot;#BF1E1E&quot;</span>, <span class="st">&quot;#993399&quot;</span>, <span class="st">&quot;#4C0099&quot;</span>, <span class="st">&quot;#000099&quot;</span>,</a>
+<a class="sourceLine" id="cb32-2" title="2">                  <span class="st">&quot;#2E10C3&quot;</span>, <span class="st">&quot;#3685B3&quot;</span>, <span class="st">&quot;#1AB3B3&quot;</span>, <span class="st">&quot;#8FC04F&quot;</span>, <span class="st">&quot;#09A256&quot;</span>, </a>
+<a class="sourceLine" id="cb32-3" title="3">                  <span class="st">&quot;#006400&quot;</span>, <span class="st">&quot;#FFF928&quot;</span>, <span class="st">&quot;#C6C600&quot;</span>, <span class="st">&quot;#FFA200&quot;</span>, <span class="st">&quot;#CE8300&quot;</span>, </a>
+<a class="sourceLine" id="cb32-4" title="4">                  <span class="st">&quot;#D0471E&quot;</span>, <span class="st">&quot;#9F8109&quot;</span>, <span class="st">&quot;#835506&quot;</span>, <span class="st">&quot;#317575&quot;</span>, <span class="st">&quot;#808080&quot;</span>,</a>
+<a class="sourceLine" id="cb32-5" title="5">                  <span class="st">&quot;black&quot;</span>, <span class="st">&quot;white&quot;</span>)</a></code></pre></div>
+<p>Fig. 2A. Temporal variation (2003-2016) in proportion of funding across unique threat categories per year</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1">fig<span class="fl">.2</span>a.data &lt;-<span class="st"> </span>by.year.money <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb33-2" title="2"><span class="st">  </span><span class="kw">filter</span>(Category <span class="op">%in%</span><span class="st"> </span>u.threat_cat) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb33-3" title="3"><span class="st">  </span><span class="kw">group_by</span>(Year.Authorized) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb33-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ann.percent =</span> Amount<span class="op">/</span><span class="kw">sum</span>(Amount),</a>
+<a class="sourceLine" id="cb33-5" title="5">         <span class="dt">alpha =</span> <span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">1</span>,.<span class="dv">5</span>), <span class="dv">3</span>))</a>
+<a class="sourceLine" id="cb33-6" title="6"></a>
+<a class="sourceLine" id="cb33-7" title="7">fig<span class="fl">.2</span>a.plot &lt;-<span class="st"> </span><span class="kw">ggplot</span>(fig<span class="fl">.2</span>a.data, </a>
+<a class="sourceLine" id="cb33-8" title="8">                <span class="kw">aes</span>(<span class="dt">y =</span> ann.percent, </a>
+<a class="sourceLine" id="cb33-9" title="9">                    <span class="dt">x =</span> Year.Authorized)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb33-10" title="10"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="dv">4</span>, <span class="kw">aes</span>(<span class="dt">color =</span> Category, <span class="dt">alpha =</span> alpha), <span class="dt">show.legend =</span> F) <span class="op">+</span></a>
+<a class="sourceLine" id="cb33-11" title="11"><span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> cat_colors22[<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">13</span>,<span class="dv">11</span>,<span class="dv">20</span>,<span class="dv">5</span>,<span class="dv">18</span>)],</a>
+<a class="sourceLine" id="cb33-12" title="12">                     <span class="dt">name=</span><span class="st">&quot;Threat Category&quot;</span>,</a>
+<a class="sourceLine" id="cb33-13" title="13">                     <span class="dt">labels=</span>u.threat_list) <span class="op">+</span></a>
+<a class="sourceLine" id="cb33-14" title="14"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&quot;Year&quot;</span>,</a>
+<a class="sourceLine" id="cb33-15" title="15">       <span class="dt">y=</span><span class="st">&quot;Proportion of Funding&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb33-16" title="16"><span class="st">       </span><span class="co"># title=&quot;Proportion of Funding&quot;) +</span></a>
+<a class="sourceLine" id="cb33-17" title="17"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.background =</span> <span class="kw">element_rect</span>(<span class="dt">fill =</span> <span class="st">&quot;grey95&quot;</span>),</a>
+<a class="sourceLine" id="cb33-18" title="18">        <span class="dt">axis.title =</span> <span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">20</span>, <span class="dt">face =</span> <span class="st">&quot;bold&quot;</span>),</a>
+<a class="sourceLine" id="cb33-19" title="19">        <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">20</span>),</a>
+<a class="sourceLine" id="cb33-20" title="20">        <span class="dt">axis.text.y =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">26</span>))</a>
+<a class="sourceLine" id="cb33-21" title="21"></a>
+<a class="sourceLine" id="cb33-22" title="22"><span class="kw">ggsave</span>(fig<span class="fl">.2</span>a.plot, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">Fig2A.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1"><span class="co"># show exported image</span></a>
+<a class="sourceLine" id="cb34-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/Fig2A.png&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-38"></span>
 <img src="figs/Fig2A.png" alt="Temporal variation (2003-2016) in proportion of funding across unique threat categories per year" width="\textwidth" />
 <p class="caption">
 Figure 7.1: Temporal variation (2003-2016) in proportion of funding across unique threat categories per year
 </p>
 </div>
-<p>Fig.2: B.Temporal variation in overall allocation of money across unique threat categories per year</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1">fig<span class="fl">.2</span>b.data &lt;-<span class="st"> </span>by.year.money <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb30-2" title="2"><span class="st">  </span><span class="kw">filter</span>(Category <span class="op">%in%</span><span class="st"> </span>u.threat_cat)</a>
-<a class="sourceLine" id="cb30-3" title="3"></a>
-<a class="sourceLine" id="cb30-4" title="4">fig<span class="fl">.2</span>b.plot &lt;-<span class="st"> </span><span class="kw">ggplot</span>(fig<span class="fl">.2</span>b.data, </a>
-<a class="sourceLine" id="cb30-5" title="5">                <span class="kw">aes</span>(<span class="dt">y =</span> Amount, </a>
-<a class="sourceLine" id="cb30-6" title="6">                    <span class="dt">x =</span> Year.Authorized,</a>
-<a class="sourceLine" id="cb30-7" title="7">                    <span class="dt">color =</span> Category)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb30-8" title="8"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">linetype =</span> <span class="dv">1</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb30-9" title="9"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb30-10" title="10"><span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> cat_colors22[<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">13</span>,<span class="dv">11</span>,<span class="dv">20</span>,<span class="dv">5</span>,<span class="dv">18</span>)],</a>
-<a class="sourceLine" id="cb30-11" title="11">                     <span class="dt">name=</span><span class="st">&quot;Threat Category&quot;</span>,</a>
-<a class="sourceLine" id="cb30-12" title="12">                     <span class="dt">labels=</span>u.threat_list) <span class="op">+</span></a>
-<a class="sourceLine" id="cb30-13" title="13"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&quot;Year&quot;</span>, </a>
-<a class="sourceLine" id="cb30-14" title="14">       <span class="dt">y=</span><span class="st">&quot;Money (USD Million)&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb30-15" title="15"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">25e6</span>,<span class="fl">50e6</span>,<span class="fl">75e6</span>,<span class="fl">10e7</span>),</a>
-<a class="sourceLine" id="cb30-16" title="16">                     <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;0&quot;</span>,<span class="st">&quot;25&quot;</span>,<span class="st">&quot;50&quot;</span>,<span class="st">&quot;75&quot;</span>,<span class="st">&quot;100&quot;</span>),</a>
-<a class="sourceLine" id="cb30-17" title="17">                     <span class="dt">position =</span> <span class="st">&quot;right&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb30-18" title="18"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">14</span>),</a>
-<a class="sourceLine" id="cb30-19" title="19">        <span class="dt">axis.title =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">16</span>, <span class="dt">face =</span> <span class="st">&quot;bold&quot;</span>),</a>
-<a class="sourceLine" id="cb30-20" title="20">        <span class="dt">legend.title =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">14</span>),</a>
-<a class="sourceLine" id="cb30-21" title="21">        <span class="dt">legend.text =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">12</span>),</a>
-<a class="sourceLine" id="cb30-22" title="22">        <span class="dt">legend.key.width =</span> <span class="kw">unit</span>(<span class="dv">1</span>,<span class="st">&quot;cm&quot;</span>),</a>
-<a class="sourceLine" id="cb30-23" title="23">        <span class="dt">legend.spacing.x =</span> <span class="kw">unit</span>(<span class="dv">1</span>,<span class="st">&quot;cm&quot;</span>),</a>
-<a class="sourceLine" id="cb30-24" title="24">        <span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)</a>
-<a class="sourceLine" id="cb30-25" title="25"></a>
-<a class="sourceLine" id="cb30-26" title="26"><span class="kw">ggsave</span>(fig<span class="fl">.2</span>b.plot, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">Fig2B.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>, <span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" title="1"><span class="co"># show exported image</span></a>
-<a class="sourceLine" id="cb31-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/Fig2B.png&quot;</span>)</a></code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-36"></span>
+<p>Fig.2B.Temporal variation in overall allocation of money across unique threat categories per year</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" title="1">fig<span class="fl">.2</span>b.data &lt;-<span class="st"> </span>by.year.money <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb35-2" title="2"><span class="st">  </span><span class="kw">filter</span>(Category <span class="op">%in%</span><span class="st"> </span>u.threat_cat)</a>
+<a class="sourceLine" id="cb35-3" title="3"></a>
+<a class="sourceLine" id="cb35-4" title="4">fig<span class="fl">.2</span>b.plot &lt;-<span class="st"> </span><span class="kw">ggplot</span>(fig<span class="fl">.2</span>b.data, </a>
+<a class="sourceLine" id="cb35-5" title="5">                <span class="kw">aes</span>(<span class="dt">y =</span> Amount, </a>
+<a class="sourceLine" id="cb35-6" title="6">                    <span class="dt">x =</span> Year.Authorized,</a>
+<a class="sourceLine" id="cb35-7" title="7">                    <span class="dt">color =</span> Category)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb35-8" title="8"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">linetype =</span> <span class="dv">1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb35-9" title="9"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb35-10" title="10"><span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> cat_colors22[<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">13</span>,<span class="dv">11</span>,<span class="dv">20</span>,<span class="dv">5</span>,<span class="dv">18</span>)],</a>
+<a class="sourceLine" id="cb35-11" title="11">                     <span class="dt">name=</span><span class="st">&quot;Threat Category&quot;</span>,</a>
+<a class="sourceLine" id="cb35-12" title="12">                     <span class="dt">labels=</span>u.threat_list) <span class="op">+</span></a>
+<a class="sourceLine" id="cb35-13" title="13"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&quot;Year&quot;</span>, </a>
+<a class="sourceLine" id="cb35-14" title="14">       <span class="dt">y=</span><span class="st">&quot;Money (USD Million)&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb35-15" title="15"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">25e6</span>,<span class="fl">50e6</span>,<span class="fl">75e6</span>,<span class="fl">10e7</span>),</a>
+<a class="sourceLine" id="cb35-16" title="16">                     <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;0&quot;</span>,<span class="st">&quot;25&quot;</span>,<span class="st">&quot;50&quot;</span>,<span class="st">&quot;75&quot;</span>,<span class="st">&quot;100&quot;</span>),</a>
+<a class="sourceLine" id="cb35-17" title="17">                     <span class="dt">position =</span> <span class="st">&quot;right&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb35-18" title="18"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">14</span>),</a>
+<a class="sourceLine" id="cb35-19" title="19">        <span class="dt">axis.title =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">16</span>, <span class="dt">face =</span> <span class="st">&quot;bold&quot;</span>),</a>
+<a class="sourceLine" id="cb35-20" title="20">        <span class="dt">legend.title =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">14</span>),</a>
+<a class="sourceLine" id="cb35-21" title="21">        <span class="dt">legend.text =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">12</span>),</a>
+<a class="sourceLine" id="cb35-22" title="22">        <span class="dt">legend.key.width =</span> <span class="kw">unit</span>(<span class="dv">1</span>,<span class="st">&quot;cm&quot;</span>),</a>
+<a class="sourceLine" id="cb35-23" title="23">        <span class="dt">legend.spacing.x =</span> <span class="kw">unit</span>(<span class="dv">1</span>,<span class="st">&quot;cm&quot;</span>),</a>
+<a class="sourceLine" id="cb35-24" title="24">        <span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)</a>
+<a class="sourceLine" id="cb35-25" title="25"></a>
+<a class="sourceLine" id="cb35-26" title="26"><span class="kw">ggsave</span>(fig<span class="fl">.2</span>b.plot, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">Fig2B.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>, <span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1"><span class="co"># show exported image</span></a>
+<a class="sourceLine" id="cb36-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/Fig2B.png&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-39"></span>
 <img src="figs/Fig2B.png" alt="Temporal variation (2003-2016) in overall allocation of money across unique threat categories per year" width="\textwidth" />
 <p class="caption">
 Figure 7.2: Temporal variation (2003-2016) in overall allocation of money across unique threat categories per year

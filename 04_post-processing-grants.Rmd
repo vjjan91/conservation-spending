@@ -6,7 +6,14 @@ editor_options:
 # Post-processing of grants 
 
 Here we remove and filter those grants that may have been erroneously classified, following the process of validation and any initial exploratory data analysis
-```{r, include=FALSE}
+```{r eval=TRUE}
+# Load libraries
+library(tidyverse)
+library(scales)
+library(ggsci)
+```
+
+```{r, eval=TRUE}
 data <- read_csv("data\\classified-grants-for-analysis.csv")
 ```
 
@@ -101,11 +108,12 @@ data.multi <- data_bio
 write_csv(data.multi,"data\\post-processed-grants-for-analysis-multi.csv")
 ```
 
-In the "data_multi" dataset, grants classified into multiple sub-categories (e.g. threat_climate + threat_habitat) would be over-represented in our analysis of funding. We sought to only count the amount of funding for a grant once within each category. Otherwise,  To accomplish this, we modified the dataset in several ways:
-  1. Grants classified into two sub-categories were classified into a new column combining the two (e.g. threat_climate_habitat)
-  2. Grants classified into three or more sub-categories were classified into new "other" column (e.g. threat_other)
-  3. The habitat category had joint sub-categories in the initial list of categories (e.g. hab_marine_terrestrial). Any grants classified into both a single (e.g. hab_marine) and an overlapping joint sub-category (e.g. hab_marine_terrestrial) were classified as only the joint (e.g. hab_marine_terrestrial)
+In the "data_multi" dataset, grants classified into multiple sub-categories (e.g. threat_climate + threat_habitat) would be over-represented in our analysis of funding. We sought to only count the amount of funding for a grant once within each category. Otherwise,  To accomplish this, we modified the dataset in several ways:  
 
+- Grants classified into two sub-categories were classified into a new column combining the two (e.g. threat_climate_habitat).  
+- Grants classified into three or more sub-categories were classified into new "other" column (e.g. threat_other).  
+- The habitat category had joint sub-categories in the initial list of categories (e.g. hab_marine_terrestrial). Any grants classified into both a single (e.g. hab_marine) and an overlapping joint sub-category (e.g. hab_marine_terrestrial) were classified as only the joint (e.g. hab_marine_terrestrial).  
+  
 Full code exists in supplementary code folder. Subsequently, "unique" data file was written and used for further analysis
 ```{r}
 source("code//code_01_unique-grant-classification.R")

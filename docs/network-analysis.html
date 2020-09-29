@@ -21,10 +21,10 @@
   <meta name="twitter:description" content="Section 9 Network Analysis | Conservation funding does not track drivers of biodiversity loss" />
   
 
-<meta name="author" content="Vijay Ramesh1*, Jay Schoen1, Michael Levin1, Pratik Dubal2, Sebastian Heilpern1, Pooja Choksi1, Jared Meek1, Rochelle Thomas1, Don J Melnick1, Sara Kross1&quot;" />
+<meta name="author" content="Vijay Ramesh1*^, Jay Schoen1^, Michael Levin1, Pratik Dubal2, Sebastian Heilpern1, Pooja Choksi1, Jared Meek1, Rochelle Thomas1, Don J Melnick1, Sara Kross1&quot;" />
 
 
-<meta name="date" content="2020-09-28" />
+<meta name="date" content="2020-09-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -162,425 +162,425 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="network-analysis" class="section level1">
 <h1><span class="header-section-number">Section 9</span> Network Analysis</h1>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" title="1"><span class="co"># Load libraries</span></a>
-<a class="sourceLine" id="cb40-2" title="2"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb40-3" title="3"><span class="kw">library</span>(scales)</a>
-<a class="sourceLine" id="cb40-4" title="4"><span class="kw">library</span>(ggsci)</a></code></pre></div>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" title="1">data &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data</span><span class="ch">\\</span><span class="st">post-processed-grants-for-analysis-unique.csv&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb41-2" title="2"><span class="st">  </span><span class="kw">as.data.frame</span>()</a>
-<a class="sourceLine" id="cb41-3" title="3"></a>
-<a class="sourceLine" id="cb41-4" title="4">data.multi &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data</span><span class="ch">\\</span><span class="st">post-processed-grants-for-analysis-multi.csv&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb41-5" title="5"><span class="st">  </span><span class="kw">as.data.frame</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" title="1"><span class="co"># Load libraries</span></a>
+<a class="sourceLine" id="cb45-2" title="2"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb45-3" title="3"><span class="kw">library</span>(scales)</a>
+<a class="sourceLine" id="cb45-4" title="4"><span class="kw">library</span>(ggsci)</a></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" title="1">data &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data</span><span class="ch">\\</span><span class="st">post-processed-grants-for-analysis-unique.csv&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb46-2" title="2"><span class="st">  </span><span class="kw">as.data.frame</span>()</a>
+<a class="sourceLine" id="cb46-3" title="3"></a>
+<a class="sourceLine" id="cb46-4" title="4">data.multi &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data</span><span class="ch">\\</span><span class="st">post-processed-grants-for-analysis-multi.csv&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb46-5" title="5"><span class="st">  </span><span class="kw">as.data.frame</span>()</a></code></pre></div>
 <p>Calculate the overlap in funding between threat categories</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" title="1">threat.net1 &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb42-2" title="2"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(cat_threat_climate_energytransport<span class="op">:</span>cat_threat_overexp_pollution) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb42-3" title="3"><span class="st">  </span><span class="kw">map2_df</span>(<span class="kw">colnames</span>(.), <span class="op">~</span><span class="st">  </span><span class="kw">c</span>(<span class="ot">NA</span>, .y)[.x <span class="op">+</span><span class="dv">1</span>]) <span class="co"># Change the binary 1 values into the column heaers)</span></a>
-<a class="sourceLine" id="cb42-4" title="4">threat.net2 &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb42-5" title="5"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(Grant.Amount, Num.Thr, Description, Keywords)</a>
-<a class="sourceLine" id="cb42-6" title="6">threat.net3 &lt;-<span class="st"> </span><span class="kw">bind_cols</span>(threat.net2, threat.net1)</a>
-<a class="sourceLine" id="cb42-7" title="7"></a>
-<a class="sourceLine" id="cb42-8" title="8">threat.net4 &lt;-<span class="st"> </span>threat.net3 <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb42-9" title="9"><span class="st">  </span><span class="kw">filter</span>(Num.Thr <span class="op">==</span><span class="st"> </span><span class="dv">2</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb42-10" title="10"><span class="st">  </span><span class="kw">unite</span>(<span class="st">&quot;joint_cat&quot;</span>,</a>
-<a class="sourceLine" id="cb42-11" title="11">        cat_threat_climate_energytransport<span class="op">:</span>cat_threat_overexp_pollution, </a>
-<a class="sourceLine" id="cb42-12" title="12">        <span class="dt">na.rm =</span> <span class="ot">TRUE</span>, <span class="dt">remove =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb42-13" title="13"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(joint_cat, Grant.Amount, Description, Keywords) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb42-14" title="14"><span class="st">  </span><span class="kw">group_by</span>(joint_cat) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb42-15" title="15"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">total =</span> <span class="kw">sum</span>(Grant.Amount)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb42-16" title="16"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p =</span> total<span class="op">/</span><span class="kw">sum</span>(total))</a>
-<a class="sourceLine" id="cb42-17" title="17"></a>
-<a class="sourceLine" id="cb42-18" title="18"><span class="kw">write_csv</span>(threat.net4, <span class="st">&quot;data</span><span class="ch">\\</span><span class="st">threat-network-data.csv&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" title="1">threat.net1 &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb47-2" title="2"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(cat_threat_climate_energytransport<span class="op">:</span>cat_threat_overexp_pollution) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb47-3" title="3"><span class="st">  </span><span class="kw">map2_df</span>(<span class="kw">colnames</span>(.), <span class="op">~</span><span class="st">  </span><span class="kw">c</span>(<span class="ot">NA</span>, .y)[.x <span class="op">+</span><span class="dv">1</span>]) <span class="co"># Change the binary 1 values into the column heaers)</span></a>
+<a class="sourceLine" id="cb47-4" title="4">threat.net2 &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb47-5" title="5"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(Grant.Amount, Num.Thr, Description, Keywords)</a>
+<a class="sourceLine" id="cb47-6" title="6">threat.net3 &lt;-<span class="st"> </span><span class="kw">bind_cols</span>(threat.net2, threat.net1)</a>
+<a class="sourceLine" id="cb47-7" title="7"></a>
+<a class="sourceLine" id="cb47-8" title="8">threat.net4 &lt;-<span class="st"> </span>threat.net3 <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb47-9" title="9"><span class="st">  </span><span class="kw">filter</span>(Num.Thr <span class="op">==</span><span class="st"> </span><span class="dv">2</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb47-10" title="10"><span class="st">  </span><span class="kw">unite</span>(<span class="st">&quot;joint_cat&quot;</span>,</a>
+<a class="sourceLine" id="cb47-11" title="11">        cat_threat_climate_energytransport<span class="op">:</span>cat_threat_overexp_pollution, </a>
+<a class="sourceLine" id="cb47-12" title="12">        <span class="dt">na.rm =</span> <span class="ot">TRUE</span>, <span class="dt">remove =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb47-13" title="13"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(joint_cat, Grant.Amount, Description, Keywords) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb47-14" title="14"><span class="st">  </span><span class="kw">group_by</span>(joint_cat) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb47-15" title="15"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">total =</span> <span class="kw">sum</span>(Grant.Amount)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb47-16" title="16"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p =</span> total<span class="op">/</span><span class="kw">sum</span>(total))</a>
+<a class="sourceLine" id="cb47-17" title="17"></a>
+<a class="sourceLine" id="cb47-18" title="18"><span class="kw">write_csv</span>(threat.net4, <span class="st">&quot;data</span><span class="ch">\\</span><span class="st">threat-network-data.csv&quot;</span>)</a></code></pre></div>
 <p>The above overlap in funding data was used in Python to run the network analysis followed by creation of piecharts within R</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb43-1" title="1"><span class="im">import</span> numpy <span class="im">as</span> np</a>
-<a class="sourceLine" id="cb43-2" title="2"><span class="im">import</span> pandas <span class="im">as</span> pd</a>
-<a class="sourceLine" id="cb43-3" title="3"><span class="im">import</span> igraph <span class="im">as</span> ig</a>
-<a class="sourceLine" id="cb43-4" title="4"><span class="im">import</span> chart_studio.plotly <span class="im">as</span> py</a>
-<a class="sourceLine" id="cb43-5" title="5"><span class="im">import</span> plotly.graph_objs <span class="im">as</span> go</a>
-<a class="sourceLine" id="cb43-6" title="6"><span class="im">from</span> plotly.offline <span class="im">import</span> download_plotlyjs, init_notebook_mode, plot, iplot</a>
-<a class="sourceLine" id="cb43-7" title="7"><span class="im">from</span> IPython.display <span class="im">import</span> Image</a>
-<a class="sourceLine" id="cb43-8" title="8"></a>
-<a class="sourceLine" id="cb43-9" title="9"><span class="co"># Helper functions</span></a>
-<a class="sourceLine" id="cb43-10" title="10"><span class="kw">def</span> dist(A, B):</a>
-<a class="sourceLine" id="cb43-11" title="11">    <span class="cf">return</span> np.linalg.norm(np.array(A)<span class="op">-</span>np.array(B))</a>
-<a class="sourceLine" id="cb43-12" title="12"></a>
-<a class="sourceLine" id="cb43-13" title="13"><span class="kw">def</span> get_idx_interv(d, D):</a>
-<a class="sourceLine" id="cb43-14" title="14">    k<span class="op">=</span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb43-15" title="15">    <span class="cf">while</span>(d<span class="op">&gt;</span>D[k]): </a>
-<a class="sourceLine" id="cb43-16" title="16">        k<span class="op">+=</span><span class="dv">1</span></a>
-<a class="sourceLine" id="cb43-17" title="17">    <span class="cf">return</span>  k<span class="dv">-1</span></a>
-<a class="sourceLine" id="cb43-18" title="18"></a>
-<a class="sourceLine" id="cb43-19" title="19"><span class="kw">def</span> deCasteljau(b,t): </a>
-<a class="sourceLine" id="cb43-20" title="20">    N<span class="op">=</span><span class="bu">len</span>(b) </a>
-<a class="sourceLine" id="cb43-21" title="21">    <span class="cf">if</span>(N<span class="op">&lt;</span><span class="dv">2</span>):</a>
-<a class="sourceLine" id="cb43-22" title="22">        <span class="cf">raise</span> InvalidInputError(<span class="st">&quot;The  control polygon must have at least two points&quot;</span>)</a>
-<a class="sourceLine" id="cb43-23" title="23">    a<span class="op">=</span>np.copy(b) <span class="co">#shallow copy of the list of control points </span></a>
-<a class="sourceLine" id="cb43-24" title="24">    <span class="cf">for</span> r <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,N): </a>
-<a class="sourceLine" id="cb43-25" title="25">        a[:N<span class="op">-</span>r,:]<span class="op">=</span>(<span class="dv">1</span><span class="op">-</span>t)<span class="op">*</span>a[:N<span class="op">-</span>r,:]<span class="op">+</span>t<span class="op">*</span>a[<span class="dv">1</span>:N<span class="op">-</span>r<span class="op">+</span><span class="dv">1</span>,:]                             </a>
-<a class="sourceLine" id="cb43-26" title="26">    <span class="cf">return</span> a[<span class="dv">0</span>,:]</a>
-<a class="sourceLine" id="cb43-27" title="27"></a>
-<a class="sourceLine" id="cb43-28" title="28"><span class="kw">def</span> BezierCv(b, nr<span class="op">=</span><span class="dv">5</span>):</a>
-<a class="sourceLine" id="cb43-29" title="29">    t<span class="op">=</span>np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, nr)</a>
-<a class="sourceLine" id="cb43-30" title="30">    <span class="cf">return</span> np.array([deCasteljau(b, t[k]) <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(nr)])</a>
-<a class="sourceLine" id="cb43-31" title="31"></a>
-<a class="sourceLine" id="cb43-32" title="32">Dist<span class="op">=</span>[<span class="dv">0</span>, dist([<span class="dv">1</span>,<span class="dv">0</span>], <span class="dv">2</span><span class="op">*</span>[np.sqrt(<span class="dv">2</span>)<span class="op">/</span><span class="dv">2</span>]), np.sqrt(<span class="dv">2</span>), dist([<span class="dv">1</span>,<span class="dv">0</span>],  [<span class="op">-</span>np.sqrt(<span class="dv">2</span>)<span class="op">/</span><span class="dv">2</span>, np.sqrt(<span class="dv">2</span>)<span class="op">/</span><span class="dv">2</span>]), <span class="fl">2.0</span>]</a>
-<a class="sourceLine" id="cb43-33" title="33">params<span class="op">=</span>[<span class="fl">1.2</span>, <span class="fl">1.5</span>, <span class="fl">1.8</span>, <span class="fl">2.1</span>]</a>
-<a class="sourceLine" id="cb43-34" title="34"></a>
-<a class="sourceLine" id="cb43-35" title="35"><span class="co"># Read the data file</span></a>
-<a class="sourceLine" id="cb43-36" title="36">df <span class="op">=</span> pd.read_csv(<span class="st">&#39;data/threat-network-data.csv&#39;</span>)</a>
-<a class="sourceLine" id="cb43-37" title="37">categories <span class="op">=</span> <span class="bu">list</span>(<span class="bu">set</span>(df[<span class="st">&#39;A&#39;</span>].tolist() <span class="op">+</span> df[<span class="st">&#39;B&#39;</span>].tolist()))</a>
-<a class="sourceLine" id="cb43-38" title="38"></a>
-<a class="sourceLine" id="cb43-39" title="39"><span class="co"># Remove edges which have a contribution of less than 2000000</span></a>
-<a class="sourceLine" id="cb43-40" title="40">df.loc[df[<span class="st">&#39;n&#39;</span>] <span class="op">&lt;</span>  <span class="dv">2000000</span>, <span class="st">&#39;n&#39;</span>] <span class="op">=</span> <span class="fl">0.0</span></a></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb48-1" title="1"><span class="im">import</span> numpy <span class="im">as</span> np</a>
+<a class="sourceLine" id="cb48-2" title="2"><span class="im">import</span> pandas <span class="im">as</span> pd</a>
+<a class="sourceLine" id="cb48-3" title="3"><span class="im">import</span> igraph <span class="im">as</span> ig</a>
+<a class="sourceLine" id="cb48-4" title="4"><span class="im">import</span> chart_studio.plotly <span class="im">as</span> py</a>
+<a class="sourceLine" id="cb48-5" title="5"><span class="im">import</span> plotly.graph_objs <span class="im">as</span> go</a>
+<a class="sourceLine" id="cb48-6" title="6"><span class="im">from</span> plotly.offline <span class="im">import</span> download_plotlyjs, init_notebook_mode, plot, iplot</a>
+<a class="sourceLine" id="cb48-7" title="7"><span class="im">from</span> IPython.display <span class="im">import</span> Image</a>
+<a class="sourceLine" id="cb48-8" title="8"></a>
+<a class="sourceLine" id="cb48-9" title="9"><span class="co"># Helper functions</span></a>
+<a class="sourceLine" id="cb48-10" title="10"><span class="kw">def</span> dist(A, B):</a>
+<a class="sourceLine" id="cb48-11" title="11">    <span class="cf">return</span> np.linalg.norm(np.array(A)<span class="op">-</span>np.array(B))</a>
+<a class="sourceLine" id="cb48-12" title="12"></a>
+<a class="sourceLine" id="cb48-13" title="13"><span class="kw">def</span> get_idx_interv(d, D):</a>
+<a class="sourceLine" id="cb48-14" title="14">    k<span class="op">=</span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb48-15" title="15">    <span class="cf">while</span>(d<span class="op">&gt;</span>D[k]): </a>
+<a class="sourceLine" id="cb48-16" title="16">        k<span class="op">+=</span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb48-17" title="17">    <span class="cf">return</span>  k<span class="dv">-1</span></a>
+<a class="sourceLine" id="cb48-18" title="18"></a>
+<a class="sourceLine" id="cb48-19" title="19"><span class="kw">def</span> deCasteljau(b,t): </a>
+<a class="sourceLine" id="cb48-20" title="20">    N<span class="op">=</span><span class="bu">len</span>(b) </a>
+<a class="sourceLine" id="cb48-21" title="21">    <span class="cf">if</span>(N<span class="op">&lt;</span><span class="dv">2</span>):</a>
+<a class="sourceLine" id="cb48-22" title="22">        <span class="cf">raise</span> InvalidInputError(<span class="st">&quot;The  control polygon must have at least two points&quot;</span>)</a>
+<a class="sourceLine" id="cb48-23" title="23">    a<span class="op">=</span>np.copy(b) <span class="co">#shallow copy of the list of control points </span></a>
+<a class="sourceLine" id="cb48-24" title="24">    <span class="cf">for</span> r <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,N): </a>
+<a class="sourceLine" id="cb48-25" title="25">        a[:N<span class="op">-</span>r,:]<span class="op">=</span>(<span class="dv">1</span><span class="op">-</span>t)<span class="op">*</span>a[:N<span class="op">-</span>r,:]<span class="op">+</span>t<span class="op">*</span>a[<span class="dv">1</span>:N<span class="op">-</span>r<span class="op">+</span><span class="dv">1</span>,:]                             </a>
+<a class="sourceLine" id="cb48-26" title="26">    <span class="cf">return</span> a[<span class="dv">0</span>,:]</a>
+<a class="sourceLine" id="cb48-27" title="27"></a>
+<a class="sourceLine" id="cb48-28" title="28"><span class="kw">def</span> BezierCv(b, nr<span class="op">=</span><span class="dv">5</span>):</a>
+<a class="sourceLine" id="cb48-29" title="29">    t<span class="op">=</span>np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, nr)</a>
+<a class="sourceLine" id="cb48-30" title="30">    <span class="cf">return</span> np.array([deCasteljau(b, t[k]) <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(nr)])</a>
+<a class="sourceLine" id="cb48-31" title="31"></a>
+<a class="sourceLine" id="cb48-32" title="32">Dist<span class="op">=</span>[<span class="dv">0</span>, dist([<span class="dv">1</span>,<span class="dv">0</span>], <span class="dv">2</span><span class="op">*</span>[np.sqrt(<span class="dv">2</span>)<span class="op">/</span><span class="dv">2</span>]), np.sqrt(<span class="dv">2</span>), dist([<span class="dv">1</span>,<span class="dv">0</span>],  [<span class="op">-</span>np.sqrt(<span class="dv">2</span>)<span class="op">/</span><span class="dv">2</span>, np.sqrt(<span class="dv">2</span>)<span class="op">/</span><span class="dv">2</span>]), <span class="fl">2.0</span>]</a>
+<a class="sourceLine" id="cb48-33" title="33">params<span class="op">=</span>[<span class="fl">1.2</span>, <span class="fl">1.5</span>, <span class="fl">1.8</span>, <span class="fl">2.1</span>]</a>
+<a class="sourceLine" id="cb48-34" title="34"></a>
+<a class="sourceLine" id="cb48-35" title="35"><span class="co"># Read the data file</span></a>
+<a class="sourceLine" id="cb48-36" title="36">df <span class="op">=</span> pd.read_csv(<span class="st">&#39;data/threat-network-data.csv&#39;</span>)</a>
+<a class="sourceLine" id="cb48-37" title="37">categories <span class="op">=</span> <span class="bu">list</span>(<span class="bu">set</span>(df[<span class="st">&#39;A&#39;</span>].tolist() <span class="op">+</span> df[<span class="st">&#39;B&#39;</span>].tolist()))</a>
+<a class="sourceLine" id="cb48-38" title="38"></a>
+<a class="sourceLine" id="cb48-39" title="39"><span class="co"># Remove edges which have a contribution of less than 2000000</span></a>
+<a class="sourceLine" id="cb48-40" title="40">df.loc[df[<span class="st">&#39;n&#39;</span>] <span class="op">&lt;</span>  <span class="dv">2000000</span>, <span class="st">&#39;n&#39;</span>] <span class="op">=</span> <span class="fl">0.0</span></a></code></pre></div>
 <p>Create the graph network</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb44-1" title="1">g <span class="op">=</span> ig.Graph.Full(<span class="bu">len</span>(categories))</a>
-<a class="sourceLine" id="cb44-2" title="2">g.vs[<span class="st">&#39;name&#39;</span>] <span class="op">=</span> categories</a>
-<a class="sourceLine" id="cb44-3" title="3">g.es[<span class="st">&quot;weight&quot;</span>] <span class="op">=</span> <span class="fl">0.0</span></a>
-<a class="sourceLine" id="cb44-4" title="4"></a>
-<a class="sourceLine" id="cb44-5" title="5"><span class="cf">for</span> idx, row <span class="kw">in</span> df.iterrows():</a>
-<a class="sourceLine" id="cb44-6" title="6">    <span class="cf">if</span> row[<span class="st">&#39;A&#39;</span>] <span class="op">==</span> row[<span class="st">&#39;B&#39;</span>]:</a>
-<a class="sourceLine" id="cb44-7" title="7">        <span class="cf">continue</span></a>
-<a class="sourceLine" id="cb44-8" title="8">    <span class="co"># Scale the contribution by a factor of 60000</span></a>
-<a class="sourceLine" id="cb44-9" title="9">    g[row[<span class="st">&#39;A&#39;</span>], row[<span class="st">&#39;B&#39;</span>]] <span class="op">+=</span> row[<span class="st">&#39;n&#39;</span>]<span class="op">/</span><span class="fl">60000.0</span></a>
-<a class="sourceLine" id="cb44-10" title="10">g.es.select(weight<span class="op">=</span><span class="fl">0.0</span>).delete()</a>
-<a class="sourceLine" id="cb44-11" title="11"></a>
-<a class="sourceLine" id="cb44-12" title="12">layt <span class="op">=</span> g.layout(<span class="st">&#39;circular&#39;</span>) <span class="co">#circular layout</span></a>
-<a class="sourceLine" id="cb44-13" title="13">Weights <span class="op">=</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">int</span>, g.es[<span class="st">&quot;weight&quot;</span>]))</a>
-<a class="sourceLine" id="cb44-14" title="14">V<span class="op">=</span><span class="bu">list</span>(g.vs)</a>
-<a class="sourceLine" id="cb44-15" title="15">labels<span class="op">=</span>[v[<span class="st">&#39;name&#39;</span>]  <span class="cf">for</span> v <span class="kw">in</span> V]</a>
-<a class="sourceLine" id="cb44-16" title="16">E<span class="op">=</span>[e.<span class="bu">tuple</span> <span class="cf">for</span> e <span class="kw">in</span> g.es]<span class="co"># list of edges</span></a>
-<a class="sourceLine" id="cb44-17" title="17"></a>
-<a class="sourceLine" id="cb44-18" title="18">node_color<span class="op">=</span>[<span class="st">&#39;#FF0000&#39;</span> <span class="cf">for</span> v <span class="kw">in</span> g.vs] </a>
-<a class="sourceLine" id="cb44-19" title="19">line_color<span class="op">=</span>[<span class="st">&#39;rgb(342,342,342)&#39;</span> <span class="cf">for</span> v <span class="kw">in</span> g.vs]</a>
-<a class="sourceLine" id="cb44-20" title="20">edge_colors<span class="op">=</span>[<span class="st">&#39;#000000&#39;</span>,<span class="st">&#39;#000000&#39;</span>, <span class="st">&#39;#000000&#39;</span>, <span class="st">&#39;#000000&#39;</span>]</a>
-<a class="sourceLine" id="cb44-21" title="21"></a>
-<a class="sourceLine" id="cb44-22" title="22">Xn<span class="op">=</span>[layt[k][<span class="dv">0</span>] <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(layt))]</a>
-<a class="sourceLine" id="cb44-23" title="23">Yn<span class="op">=</span>[layt[k][<span class="dv">1</span>] <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(layt))]</a>
-<a class="sourceLine" id="cb44-24" title="24"></a>
-<a class="sourceLine" id="cb44-25" title="25">lines<span class="op">=</span>[] <span class="co"># the list of dicts defining edge Plotly attributes</span></a>
-<a class="sourceLine" id="cb44-26" title="26">edge_info<span class="op">=</span>[] <span class="co"># the list of points on edges where the information is placed</span></a>
-<a class="sourceLine" id="cb44-27" title="27"></a>
-<a class="sourceLine" id="cb44-28" title="28"><span class="co"># Percentage contrbutions of every category</span></a>
-<a class="sourceLine" id="cb44-29" title="29">marker_size_dict <span class="op">=</span> {}</a>
-<a class="sourceLine" id="cb44-30" title="30">marker_size_dict[<span class="st">&#39;OE&#39;</span>] <span class="op">=</span> <span class="fl">0.3588109538682985</span></a>
-<a class="sourceLine" id="cb44-31" title="31">marker_size_dict[<span class="st">&#39;IS&#39;</span>] <span class="op">=</span> <span class="fl">0.08341313937829264</span></a>
-<a class="sourceLine" id="cb44-32" title="32">marker_size_dict[<span class="st">&#39;CC&#39;</span>] <span class="op">=</span> <span class="fl">0.3027677823015496</span></a>
-<a class="sourceLine" id="cb44-33" title="33">marker_size_dict[<span class="st">&#39;ET&#39;</span>] <span class="op">=</span> <span class="fl">0.08004130412646482</span></a>
-<a class="sourceLine" id="cb44-34" title="34">marker_size_dict[<span class="st">&#39;P&#39;</span>] <span class="op">=</span> <span class="fl">0.052836471758225034</span></a>
-<a class="sourceLine" id="cb44-35" title="35">marker_size_dict[<span class="st">&#39;HL&#39;</span>] <span class="op">=</span> <span class="fl">0.1221303485671694</span></a>
-<a class="sourceLine" id="cb44-36" title="36"></a>
-<a class="sourceLine" id="cb44-37" title="37"><span class="co"># Marker sizes based on Percentage contributions</span></a>
-<a class="sourceLine" id="cb44-38" title="38">threat_marker_size <span class="op">=</span> []</a>
-<a class="sourceLine" id="cb44-39" title="39"><span class="cf">for</span> label <span class="kw">in</span> labels:</a>
-<a class="sourceLine" id="cb44-40" title="40">    threat_marker_size.append(marker_size_dict[label])</a>
-<a class="sourceLine" id="cb44-41" title="41"><span class="cf">for</span> idx <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(threat_marker_size)):</a>
-<a class="sourceLine" id="cb44-42" title="42">    threat_marker_size[idx] <span class="op">=</span> np.log(threat_marker_size[idx]<span class="op">*</span><span class="dv">100</span>)<span class="op">*</span><span class="dv">40</span></a></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb49-1" title="1">g <span class="op">=</span> ig.Graph.Full(<span class="bu">len</span>(categories))</a>
+<a class="sourceLine" id="cb49-2" title="2">g.vs[<span class="st">&#39;name&#39;</span>] <span class="op">=</span> categories</a>
+<a class="sourceLine" id="cb49-3" title="3">g.es[<span class="st">&quot;weight&quot;</span>] <span class="op">=</span> <span class="fl">0.0</span></a>
+<a class="sourceLine" id="cb49-4" title="4"></a>
+<a class="sourceLine" id="cb49-5" title="5"><span class="cf">for</span> idx, row <span class="kw">in</span> df.iterrows():</a>
+<a class="sourceLine" id="cb49-6" title="6">    <span class="cf">if</span> row[<span class="st">&#39;A&#39;</span>] <span class="op">==</span> row[<span class="st">&#39;B&#39;</span>]:</a>
+<a class="sourceLine" id="cb49-7" title="7">        <span class="cf">continue</span></a>
+<a class="sourceLine" id="cb49-8" title="8">    <span class="co"># Scale the contribution by a factor of 60000</span></a>
+<a class="sourceLine" id="cb49-9" title="9">    g[row[<span class="st">&#39;A&#39;</span>], row[<span class="st">&#39;B&#39;</span>]] <span class="op">+=</span> row[<span class="st">&#39;n&#39;</span>]<span class="op">/</span><span class="fl">60000.0</span></a>
+<a class="sourceLine" id="cb49-10" title="10">g.es.select(weight<span class="op">=</span><span class="fl">0.0</span>).delete()</a>
+<a class="sourceLine" id="cb49-11" title="11"></a>
+<a class="sourceLine" id="cb49-12" title="12">layt <span class="op">=</span> g.layout(<span class="st">&#39;circular&#39;</span>) <span class="co">#circular layout</span></a>
+<a class="sourceLine" id="cb49-13" title="13">Weights <span class="op">=</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">int</span>, g.es[<span class="st">&quot;weight&quot;</span>]))</a>
+<a class="sourceLine" id="cb49-14" title="14">V<span class="op">=</span><span class="bu">list</span>(g.vs)</a>
+<a class="sourceLine" id="cb49-15" title="15">labels<span class="op">=</span>[v[<span class="st">&#39;name&#39;</span>]  <span class="cf">for</span> v <span class="kw">in</span> V]</a>
+<a class="sourceLine" id="cb49-16" title="16">E<span class="op">=</span>[e.<span class="bu">tuple</span> <span class="cf">for</span> e <span class="kw">in</span> g.es]<span class="co"># list of edges</span></a>
+<a class="sourceLine" id="cb49-17" title="17"></a>
+<a class="sourceLine" id="cb49-18" title="18">node_color<span class="op">=</span>[<span class="st">&#39;#FF0000&#39;</span> <span class="cf">for</span> v <span class="kw">in</span> g.vs] </a>
+<a class="sourceLine" id="cb49-19" title="19">line_color<span class="op">=</span>[<span class="st">&#39;rgb(342,342,342)&#39;</span> <span class="cf">for</span> v <span class="kw">in</span> g.vs]</a>
+<a class="sourceLine" id="cb49-20" title="20">edge_colors<span class="op">=</span>[<span class="st">&#39;#000000&#39;</span>,<span class="st">&#39;#000000&#39;</span>, <span class="st">&#39;#000000&#39;</span>, <span class="st">&#39;#000000&#39;</span>]</a>
+<a class="sourceLine" id="cb49-21" title="21"></a>
+<a class="sourceLine" id="cb49-22" title="22">Xn<span class="op">=</span>[layt[k][<span class="dv">0</span>] <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(layt))]</a>
+<a class="sourceLine" id="cb49-23" title="23">Yn<span class="op">=</span>[layt[k][<span class="dv">1</span>] <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(layt))]</a>
+<a class="sourceLine" id="cb49-24" title="24"></a>
+<a class="sourceLine" id="cb49-25" title="25">lines<span class="op">=</span>[] <span class="co"># the list of dicts defining edge Plotly attributes</span></a>
+<a class="sourceLine" id="cb49-26" title="26">edge_info<span class="op">=</span>[] <span class="co"># the list of points on edges where the information is placed</span></a>
+<a class="sourceLine" id="cb49-27" title="27"></a>
+<a class="sourceLine" id="cb49-28" title="28"><span class="co"># Percentage contrbutions of every category</span></a>
+<a class="sourceLine" id="cb49-29" title="29">marker_size_dict <span class="op">=</span> {}</a>
+<a class="sourceLine" id="cb49-30" title="30">marker_size_dict[<span class="st">&#39;OE&#39;</span>] <span class="op">=</span> <span class="fl">0.3588109538682985</span></a>
+<a class="sourceLine" id="cb49-31" title="31">marker_size_dict[<span class="st">&#39;IS&#39;</span>] <span class="op">=</span> <span class="fl">0.08341313937829264</span></a>
+<a class="sourceLine" id="cb49-32" title="32">marker_size_dict[<span class="st">&#39;CC&#39;</span>] <span class="op">=</span> <span class="fl">0.3027677823015496</span></a>
+<a class="sourceLine" id="cb49-33" title="33">marker_size_dict[<span class="st">&#39;ET&#39;</span>] <span class="op">=</span> <span class="fl">0.08004130412646482</span></a>
+<a class="sourceLine" id="cb49-34" title="34">marker_size_dict[<span class="st">&#39;P&#39;</span>] <span class="op">=</span> <span class="fl">0.052836471758225034</span></a>
+<a class="sourceLine" id="cb49-35" title="35">marker_size_dict[<span class="st">&#39;HL&#39;</span>] <span class="op">=</span> <span class="fl">0.1221303485671694</span></a>
+<a class="sourceLine" id="cb49-36" title="36"></a>
+<a class="sourceLine" id="cb49-37" title="37"><span class="co"># Marker sizes based on Percentage contributions</span></a>
+<a class="sourceLine" id="cb49-38" title="38">threat_marker_size <span class="op">=</span> []</a>
+<a class="sourceLine" id="cb49-39" title="39"><span class="cf">for</span> label <span class="kw">in</span> labels:</a>
+<a class="sourceLine" id="cb49-40" title="40">    threat_marker_size.append(marker_size_dict[label])</a>
+<a class="sourceLine" id="cb49-41" title="41"><span class="cf">for</span> idx <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(threat_marker_size)):</a>
+<a class="sourceLine" id="cb49-42" title="42">    threat_marker_size[idx] <span class="op">=</span> np.log(threat_marker_size[idx]<span class="op">*</span><span class="dv">100</span>)<span class="op">*</span><span class="dv">40</span></a></code></pre></div>
 <p>Plot the network analysis</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb45-1" title="1"><span class="cf">for</span> j, e <span class="kw">in</span> <span class="bu">enumerate</span>(E):</a>
-<a class="sourceLine" id="cb45-2" title="2">    A<span class="op">=</span>np.array(layt[e[<span class="dv">0</span>]])</a>
-<a class="sourceLine" id="cb45-3" title="3">    B<span class="op">=</span>np.array(layt[e[<span class="dv">1</span>]])</a>
-<a class="sourceLine" id="cb45-4" title="4">    d<span class="op">=</span>dist(A, B)</a>
-<a class="sourceLine" id="cb45-5" title="5">    K<span class="op">=</span>get_idx_interv(d, Dist)</a>
-<a class="sourceLine" id="cb45-6" title="6">    b<span class="op">=</span>[A, A<span class="op">/</span>params[K], B<span class="op">/</span>params[K], B]</a>
-<a class="sourceLine" id="cb45-7" title="7">    color<span class="op">=</span>edge_colors[K]</a>
-<a class="sourceLine" id="cb45-8" title="8">    pts<span class="op">=</span>BezierCv(b, nr<span class="op">=</span><span class="dv">5</span>)</a>
-<a class="sourceLine" id="cb45-9" title="9">    text<span class="op">=</span>V[e[<span class="dv">0</span>]][<span class="st">&#39;name&#39;</span>]<span class="op">+</span><span class="st">&#39; to &#39;</span><span class="op">+</span>V[e[<span class="dv">1</span>]][<span class="st">&#39;name&#39;</span>]<span class="op">+</span><span class="st">&#39; &#39;</span><span class="op">+</span><span class="bu">str</span>(Weights[j])<span class="op">+</span><span class="st">&#39; x100000&#39;</span></a>
-<a class="sourceLine" id="cb45-10" title="10">    mark<span class="op">=</span>deCasteljau(b,<span class="fl">0.9</span>)</a>
-<a class="sourceLine" id="cb45-11" title="11">    </a>
-<a class="sourceLine" id="cb45-12" title="12">    edge_info.append(go.Scatter(x<span class="op">=</span>[mark[<span class="dv">0</span>]],</a>
-<a class="sourceLine" id="cb45-13" title="13">                             y<span class="op">=</span>[mark[<span class="dv">1</span>]],</a>
-<a class="sourceLine" id="cb45-14" title="14">                             mode<span class="op">=</span><span class="st">&#39;markers&#39;</span>,</a>
-<a class="sourceLine" id="cb45-15" title="15">                             marker<span class="op">=</span><span class="bu">dict</span>(size<span class="op">=</span><span class="fl">0.5</span>, color<span class="op">=</span>edge_colors),</a>
-<a class="sourceLine" id="cb45-16" title="16">                             text<span class="op">=</span><span class="va">None</span>,</a>
-<a class="sourceLine" id="cb45-17" title="17">                             hoverinfo<span class="op">=</span><span class="st">&#39;text&#39;</span></a>
-<a class="sourceLine" id="cb45-18" title="18">                             ))</a>
-<a class="sourceLine" id="cb45-19" title="19">    </a>
-<a class="sourceLine" id="cb45-20" title="20">    lines.append(go.Scatter(x<span class="op">=</span>pts[:,<span class="dv">0</span>],</a>
-<a class="sourceLine" id="cb45-21" title="21">                         y<span class="op">=</span>pts[:,<span class="dv">1</span>],</a>
-<a class="sourceLine" id="cb45-22" title="22">                         mode<span class="op">=</span><span class="st">&#39;lines&#39;</span>,</a>
-<a class="sourceLine" id="cb45-23" title="23">                         line<span class="op">=</span><span class="bu">dict</span>(color<span class="op">=</span>color,</a>
-<a class="sourceLine" id="cb45-24" title="24">                                  shape<span class="op">=</span><span class="st">&#39;spline&#39;</span>,</a>
-<a class="sourceLine" id="cb45-25" title="25">                                  width<span class="op">=</span>Weights[j]<span class="op">/</span><span class="dv">100</span><span class="co">#The  width is proportional to the edge weight</span></a>
-<a class="sourceLine" id="cb45-26" title="26">                                 ),</a>
-<a class="sourceLine" id="cb45-27" title="27">                        text<span class="op">=</span><span class="bu">str</span>(Weights[j]),</a>
-<a class="sourceLine" id="cb45-28" title="28">                        hoverinfo<span class="op">=</span><span class="st">&#39;text&#39;</span></a>
-<a class="sourceLine" id="cb45-29" title="29">                       )</a>
-<a class="sourceLine" id="cb45-30" title="30">                )</a>
-<a class="sourceLine" id="cb45-31" title="31">                </a>
-<a class="sourceLine" id="cb45-32" title="32">race2<span class="op">=</span>go.Scatter(x<span class="op">=</span>Xn,</a>
-<a class="sourceLine" id="cb45-33" title="33">           y<span class="op">=</span>Yn,</a>
-<a class="sourceLine" id="cb45-34" title="34">           mode<span class="op">=</span><span class="st">&#39;markers+text&#39;</span>,</a>
-<a class="sourceLine" id="cb45-35" title="35">           name<span class="op">=</span><span class="st">&#39;&#39;</span>,</a>
-<a class="sourceLine" id="cb45-36" title="36">           marker<span class="op">=</span><span class="bu">dict</span>(symbol<span class="op">=</span><span class="st">&#39;circle&#39;</span>,</a>
-<a class="sourceLine" id="cb45-37" title="37">                         size<span class="op">=</span>threat_marker_size,</a>
-<a class="sourceLine" id="cb45-38" title="38">                         color<span class="op">=</span>node_color,</a>
-<a class="sourceLine" id="cb45-39" title="39">                         line<span class="op">=</span><span class="bu">dict</span>(color<span class="op">=</span>line_color, width<span class="op">=</span><span class="fl">0.5</span>)</a>
-<a class="sourceLine" id="cb45-40" title="40">                         ),</a>
-<a class="sourceLine" id="cb45-41" title="41">           text<span class="op">=</span>labels,</a>
-<a class="sourceLine" id="cb45-42" title="42">           hoverinfo<span class="op">=</span><span class="st">&#39;text&#39;</span>,</a>
-<a class="sourceLine" id="cb45-43" title="43">           )</a>
-<a class="sourceLine" id="cb45-44" title="44"></a>
-<a class="sourceLine" id="cb45-45" title="45">axis<span class="op">=</span><span class="bu">dict</span>(showline<span class="op">=</span><span class="va">False</span>, <span class="co"># hide axis line, grid, ticklabels and  title</span></a>
-<a class="sourceLine" id="cb45-46" title="46">          zeroline<span class="op">=</span><span class="va">False</span>,</a>
-<a class="sourceLine" id="cb45-47" title="47">          showgrid<span class="op">=</span><span class="va">False</span>,</a>
-<a class="sourceLine" id="cb45-48" title="48">          showticklabels<span class="op">=</span><span class="va">False</span>,</a>
-<a class="sourceLine" id="cb45-49" title="49">          title<span class="op">=</span><span class="st">&#39;&#39;</span></a>
-<a class="sourceLine" id="cb45-50" title="50">          )</a>
-<a class="sourceLine" id="cb45-51" title="51"></a>
-<a class="sourceLine" id="cb45-52" title="52"></a>
-<a class="sourceLine" id="cb45-53" title="53">width<span class="op">=</span><span class="dv">800</span></a>
-<a class="sourceLine" id="cb45-54" title="54">height<span class="op">=</span><span class="dv">850</span></a>
-<a class="sourceLine" id="cb45-55" title="55">layout<span class="op">=</span>go.Layout(title<span class="op">=</span> <span class="st">&#39;Threat Overlap&#39;</span>,</a>
-<a class="sourceLine" id="cb45-56" title="56">              font<span class="op">=</span> <span class="bu">dict</span>(size<span class="op">=</span><span class="dv">20</span>),</a>
-<a class="sourceLine" id="cb45-57" title="57">              showlegend<span class="op">=</span><span class="va">False</span>,</a>
-<a class="sourceLine" id="cb45-58" title="58">              autosize<span class="op">=</span><span class="va">True</span>,</a>
-<a class="sourceLine" id="cb45-59" title="59">              width<span class="op">=</span>width,</a>
-<a class="sourceLine" id="cb45-60" title="60">              height<span class="op">=</span>height,</a>
-<a class="sourceLine" id="cb45-61" title="61">              xaxis<span class="op">=</span><span class="bu">dict</span>(axis),</a>
-<a class="sourceLine" id="cb45-62" title="62">              yaxis<span class="op">=</span><span class="bu">dict</span>(axis),</a>
-<a class="sourceLine" id="cb45-63" title="63">              margin<span class="op">=</span><span class="bu">dict</span>(l<span class="op">=</span><span class="dv">20</span>,</a>
-<a class="sourceLine" id="cb45-64" title="64">                            r<span class="op">=</span><span class="dv">20</span>,</a>
-<a class="sourceLine" id="cb45-65" title="65">                            b<span class="op">=</span><span class="dv">85</span>,</a>
-<a class="sourceLine" id="cb45-66" title="66">                            t<span class="op">=</span><span class="dv">100</span>,</a>
-<a class="sourceLine" id="cb45-67" title="67">                          ),</a>
-<a class="sourceLine" id="cb45-68" title="68">              hovermode<span class="op">=</span><span class="st">&#39;closest&#39;</span>,</a>
-<a class="sourceLine" id="cb45-69" title="69">              paper_bgcolor<span class="op">=</span><span class="st">&#39;rgba(0,0,0,0)&#39;</span>,</a>
-<a class="sourceLine" id="cb45-70" title="70">              plot_bgcolor<span class="op">=</span><span class="st">&#39;rgba(0,0,0,0)&#39;</span>   </a>
-<a class="sourceLine" id="cb45-71" title="71">              )</a>
-<a class="sourceLine" id="cb45-72" title="72">data<span class="op">=</span>lines<span class="op">+</span>edge_info<span class="op">+</span>[trace2]</a>
-<a class="sourceLine" id="cb45-73" title="73">fig<span class="op">=</span>go.Figure(data<span class="op">=</span>data, layout<span class="op">=</span>layout)</a></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb50-1" title="1"><span class="cf">for</span> j, e <span class="kw">in</span> <span class="bu">enumerate</span>(E):</a>
+<a class="sourceLine" id="cb50-2" title="2">    A<span class="op">=</span>np.array(layt[e[<span class="dv">0</span>]])</a>
+<a class="sourceLine" id="cb50-3" title="3">    B<span class="op">=</span>np.array(layt[e[<span class="dv">1</span>]])</a>
+<a class="sourceLine" id="cb50-4" title="4">    d<span class="op">=</span>dist(A, B)</a>
+<a class="sourceLine" id="cb50-5" title="5">    K<span class="op">=</span>get_idx_interv(d, Dist)</a>
+<a class="sourceLine" id="cb50-6" title="6">    b<span class="op">=</span>[A, A<span class="op">/</span>params[K], B<span class="op">/</span>params[K], B]</a>
+<a class="sourceLine" id="cb50-7" title="7">    color<span class="op">=</span>edge_colors[K]</a>
+<a class="sourceLine" id="cb50-8" title="8">    pts<span class="op">=</span>BezierCv(b, nr<span class="op">=</span><span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb50-9" title="9">    text<span class="op">=</span>V[e[<span class="dv">0</span>]][<span class="st">&#39;name&#39;</span>]<span class="op">+</span><span class="st">&#39; to &#39;</span><span class="op">+</span>V[e[<span class="dv">1</span>]][<span class="st">&#39;name&#39;</span>]<span class="op">+</span><span class="st">&#39; &#39;</span><span class="op">+</span><span class="bu">str</span>(Weights[j])<span class="op">+</span><span class="st">&#39; x100000&#39;</span></a>
+<a class="sourceLine" id="cb50-10" title="10">    mark<span class="op">=</span>deCasteljau(b,<span class="fl">0.9</span>)</a>
+<a class="sourceLine" id="cb50-11" title="11">    </a>
+<a class="sourceLine" id="cb50-12" title="12">    edge_info.append(go.Scatter(x<span class="op">=</span>[mark[<span class="dv">0</span>]],</a>
+<a class="sourceLine" id="cb50-13" title="13">                             y<span class="op">=</span>[mark[<span class="dv">1</span>]],</a>
+<a class="sourceLine" id="cb50-14" title="14">                             mode<span class="op">=</span><span class="st">&#39;markers&#39;</span>,</a>
+<a class="sourceLine" id="cb50-15" title="15">                             marker<span class="op">=</span><span class="bu">dict</span>(size<span class="op">=</span><span class="fl">0.5</span>, color<span class="op">=</span>edge_colors),</a>
+<a class="sourceLine" id="cb50-16" title="16">                             text<span class="op">=</span><span class="va">None</span>,</a>
+<a class="sourceLine" id="cb50-17" title="17">                             hoverinfo<span class="op">=</span><span class="st">&#39;text&#39;</span></a>
+<a class="sourceLine" id="cb50-18" title="18">                             ))</a>
+<a class="sourceLine" id="cb50-19" title="19">    </a>
+<a class="sourceLine" id="cb50-20" title="20">    lines.append(go.Scatter(x<span class="op">=</span>pts[:,<span class="dv">0</span>],</a>
+<a class="sourceLine" id="cb50-21" title="21">                         y<span class="op">=</span>pts[:,<span class="dv">1</span>],</a>
+<a class="sourceLine" id="cb50-22" title="22">                         mode<span class="op">=</span><span class="st">&#39;lines&#39;</span>,</a>
+<a class="sourceLine" id="cb50-23" title="23">                         line<span class="op">=</span><span class="bu">dict</span>(color<span class="op">=</span>color,</a>
+<a class="sourceLine" id="cb50-24" title="24">                                  shape<span class="op">=</span><span class="st">&#39;spline&#39;</span>,</a>
+<a class="sourceLine" id="cb50-25" title="25">                                  width<span class="op">=</span>Weights[j]<span class="op">/</span><span class="dv">100</span><span class="co">#The  width is proportional to the edge weight</span></a>
+<a class="sourceLine" id="cb50-26" title="26">                                 ),</a>
+<a class="sourceLine" id="cb50-27" title="27">                        text<span class="op">=</span><span class="bu">str</span>(Weights[j]),</a>
+<a class="sourceLine" id="cb50-28" title="28">                        hoverinfo<span class="op">=</span><span class="st">&#39;text&#39;</span></a>
+<a class="sourceLine" id="cb50-29" title="29">                       )</a>
+<a class="sourceLine" id="cb50-30" title="30">                )</a>
+<a class="sourceLine" id="cb50-31" title="31">                </a>
+<a class="sourceLine" id="cb50-32" title="32">race2<span class="op">=</span>go.Scatter(x<span class="op">=</span>Xn,</a>
+<a class="sourceLine" id="cb50-33" title="33">           y<span class="op">=</span>Yn,</a>
+<a class="sourceLine" id="cb50-34" title="34">           mode<span class="op">=</span><span class="st">&#39;markers+text&#39;</span>,</a>
+<a class="sourceLine" id="cb50-35" title="35">           name<span class="op">=</span><span class="st">&#39;&#39;</span>,</a>
+<a class="sourceLine" id="cb50-36" title="36">           marker<span class="op">=</span><span class="bu">dict</span>(symbol<span class="op">=</span><span class="st">&#39;circle&#39;</span>,</a>
+<a class="sourceLine" id="cb50-37" title="37">                         size<span class="op">=</span>threat_marker_size,</a>
+<a class="sourceLine" id="cb50-38" title="38">                         color<span class="op">=</span>node_color,</a>
+<a class="sourceLine" id="cb50-39" title="39">                         line<span class="op">=</span><span class="bu">dict</span>(color<span class="op">=</span>line_color, width<span class="op">=</span><span class="fl">0.5</span>)</a>
+<a class="sourceLine" id="cb50-40" title="40">                         ),</a>
+<a class="sourceLine" id="cb50-41" title="41">           text<span class="op">=</span>labels,</a>
+<a class="sourceLine" id="cb50-42" title="42">           hoverinfo<span class="op">=</span><span class="st">&#39;text&#39;</span>,</a>
+<a class="sourceLine" id="cb50-43" title="43">           )</a>
+<a class="sourceLine" id="cb50-44" title="44"></a>
+<a class="sourceLine" id="cb50-45" title="45">axis<span class="op">=</span><span class="bu">dict</span>(showline<span class="op">=</span><span class="va">False</span>, <span class="co"># hide axis line, grid, ticklabels and  title</span></a>
+<a class="sourceLine" id="cb50-46" title="46">          zeroline<span class="op">=</span><span class="va">False</span>,</a>
+<a class="sourceLine" id="cb50-47" title="47">          showgrid<span class="op">=</span><span class="va">False</span>,</a>
+<a class="sourceLine" id="cb50-48" title="48">          showticklabels<span class="op">=</span><span class="va">False</span>,</a>
+<a class="sourceLine" id="cb50-49" title="49">          title<span class="op">=</span><span class="st">&#39;&#39;</span></a>
+<a class="sourceLine" id="cb50-50" title="50">          )</a>
+<a class="sourceLine" id="cb50-51" title="51"></a>
+<a class="sourceLine" id="cb50-52" title="52"></a>
+<a class="sourceLine" id="cb50-53" title="53">width<span class="op">=</span><span class="dv">800</span></a>
+<a class="sourceLine" id="cb50-54" title="54">height<span class="op">=</span><span class="dv">850</span></a>
+<a class="sourceLine" id="cb50-55" title="55">layout<span class="op">=</span>go.Layout(title<span class="op">=</span> <span class="st">&#39;Threat Overlap&#39;</span>,</a>
+<a class="sourceLine" id="cb50-56" title="56">              font<span class="op">=</span> <span class="bu">dict</span>(size<span class="op">=</span><span class="dv">20</span>),</a>
+<a class="sourceLine" id="cb50-57" title="57">              showlegend<span class="op">=</span><span class="va">False</span>,</a>
+<a class="sourceLine" id="cb50-58" title="58">              autosize<span class="op">=</span><span class="va">True</span>,</a>
+<a class="sourceLine" id="cb50-59" title="59">              width<span class="op">=</span>width,</a>
+<a class="sourceLine" id="cb50-60" title="60">              height<span class="op">=</span>height,</a>
+<a class="sourceLine" id="cb50-61" title="61">              xaxis<span class="op">=</span><span class="bu">dict</span>(axis),</a>
+<a class="sourceLine" id="cb50-62" title="62">              yaxis<span class="op">=</span><span class="bu">dict</span>(axis),</a>
+<a class="sourceLine" id="cb50-63" title="63">              margin<span class="op">=</span><span class="bu">dict</span>(l<span class="op">=</span><span class="dv">20</span>,</a>
+<a class="sourceLine" id="cb50-64" title="64">                            r<span class="op">=</span><span class="dv">20</span>,</a>
+<a class="sourceLine" id="cb50-65" title="65">                            b<span class="op">=</span><span class="dv">85</span>,</a>
+<a class="sourceLine" id="cb50-66" title="66">                            t<span class="op">=</span><span class="dv">100</span>,</a>
+<a class="sourceLine" id="cb50-67" title="67">                          ),</a>
+<a class="sourceLine" id="cb50-68" title="68">              hovermode<span class="op">=</span><span class="st">&#39;closest&#39;</span>,</a>
+<a class="sourceLine" id="cb50-69" title="69">              paper_bgcolor<span class="op">=</span><span class="st">&#39;rgba(0,0,0,0)&#39;</span>,</a>
+<a class="sourceLine" id="cb50-70" title="70">              plot_bgcolor<span class="op">=</span><span class="st">&#39;rgba(0,0,0,0)&#39;</span>   </a>
+<a class="sourceLine" id="cb50-71" title="71">              )</a>
+<a class="sourceLine" id="cb50-72" title="72">data<span class="op">=</span>lines<span class="op">+</span>edge_info<span class="op">+</span>[trace2]</a>
+<a class="sourceLine" id="cb50-73" title="73">fig<span class="op">=</span>go.Figure(data<span class="op">=</span>data, layout<span class="op">=</span>layout)</a></code></pre></div>
 <p>The above figure was exported out of Python to create corresponding piecharts for Fig. 4</p>
 <p>Pie Charts for proportion of money shared between threat sub-categories</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" title="1">blank_theme &lt;-<span class="st"> </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb46-2" title="2"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.x =</span> <span class="kw">element_blank</span>(),</a>
-<a class="sourceLine" id="cb46-3" title="3">        <span class="dt">axis.title.y =</span> <span class="kw">element_blank</span>(),</a>
-<a class="sourceLine" id="cb46-4" title="4">        <span class="dt">panel.border =</span> <span class="kw">element_blank</span>(),</a>
-<a class="sourceLine" id="cb46-5" title="5">        <span class="dt">panel.grid =</span> <span class="kw">element_blank</span>(),</a>
-<a class="sourceLine" id="cb46-6" title="6">        <span class="dt">axis.ticks =</span> <span class="kw">element_blank</span>(),</a>
-<a class="sourceLine" id="cb46-7" title="7">        <span class="dt">plot.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">14</span>, <span class="dt">face=</span><span class="st">&quot;bold&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" title="1">blank_theme &lt;-<span class="st"> </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb51-2" title="2"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.x =</span> <span class="kw">element_blank</span>(),</a>
+<a class="sourceLine" id="cb51-3" title="3">        <span class="dt">axis.title.y =</span> <span class="kw">element_blank</span>(),</a>
+<a class="sourceLine" id="cb51-4" title="4">        <span class="dt">panel.border =</span> <span class="kw">element_blank</span>(),</a>
+<a class="sourceLine" id="cb51-5" title="5">        <span class="dt">panel.grid =</span> <span class="kw">element_blank</span>(),</a>
+<a class="sourceLine" id="cb51-6" title="6">        <span class="dt">axis.ticks =</span> <span class="kw">element_blank</span>(),</a>
+<a class="sourceLine" id="cb51-7" title="7">        <span class="dt">plot.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">14</span>, <span class="dt">face=</span><span class="st">&quot;bold&quot;</span>))</a></code></pre></div>
 <p>Data on funding</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" title="1"><span class="co"># Multi-category Data</span></a>
-<a class="sourceLine" id="cb47-2" title="2">money.data.multi &lt;-<span class="st"> </span>data.multi[,<span class="dv">11</span><span class="op">:</span>(<span class="kw">length</span>(data.multi)<span class="op">-</span><span class="dv">6</span>)]<span class="op">*</span>data.multi[,<span class="dv">7</span>]</a>
-<a class="sourceLine" id="cb47-3" title="3">money.data.multi &lt;-<span class="st"> </span><span class="kw">mutate</span>(money.data.multi, </a>
-<a class="sourceLine" id="cb47-4" title="4">                               <span class="dt">Year.Authorized =</span> data.multi<span class="op">$</span>Year.Authorized,</a>
-<a class="sourceLine" id="cb47-5" title="5">                               <span class="dt">Num.Thr =</span> data.multi<span class="op">$</span>Num.Thr,</a>
-<a class="sourceLine" id="cb47-6" title="6">                               <span class="dt">Num.Tax =</span> data.multi<span class="op">$</span>Num.Tax)</a>
-<a class="sourceLine" id="cb47-7" title="7"></a>
-<a class="sourceLine" id="cb47-8" title="8">by.year.money.multi &lt;-<span class="st"> </span>money.data.multi <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb47-9" title="9"><span class="st">  </span><span class="kw">group_by</span>(Year.Authorized) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb47-10" title="10"><span class="st">  </span><span class="kw">summarize_at</span>(<span class="kw">vars</span>(cat_act_area<span class="op">:</span>cat_threat_pollution), sum, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb47-11" title="11"><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="op">-</span>Year.Authorized, <span class="dt">names_to =</span> <span class="st">&quot;Category&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;Amount&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb47-12" title="12"><span class="st">  </span><span class="kw">group_by</span>(Category) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb47-13" title="13"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">percent =</span> Amount<span class="op">/</span><span class="kw">sum</span>(Amount))</a></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" title="1"><span class="co"># Multi-category Data</span></a>
+<a class="sourceLine" id="cb52-2" title="2">money.data.multi &lt;-<span class="st"> </span>data.multi[,<span class="dv">11</span><span class="op">:</span>(<span class="kw">length</span>(data.multi)<span class="op">-</span><span class="dv">6</span>)]<span class="op">*</span>data.multi[,<span class="dv">7</span>]</a>
+<a class="sourceLine" id="cb52-3" title="3">money.data.multi &lt;-<span class="st"> </span><span class="kw">mutate</span>(money.data.multi, </a>
+<a class="sourceLine" id="cb52-4" title="4">                               <span class="dt">Year.Authorized =</span> data.multi<span class="op">$</span>Year.Authorized,</a>
+<a class="sourceLine" id="cb52-5" title="5">                               <span class="dt">Num.Thr =</span> data.multi<span class="op">$</span>Num.Thr,</a>
+<a class="sourceLine" id="cb52-6" title="6">                               <span class="dt">Num.Tax =</span> data.multi<span class="op">$</span>Num.Tax)</a>
+<a class="sourceLine" id="cb52-7" title="7"></a>
+<a class="sourceLine" id="cb52-8" title="8">by.year.money.multi &lt;-<span class="st"> </span>money.data.multi <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb52-9" title="9"><span class="st">  </span><span class="kw">group_by</span>(Year.Authorized) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb52-10" title="10"><span class="st">  </span><span class="kw">summarize_at</span>(<span class="kw">vars</span>(cat_act_area<span class="op">:</span>cat_threat_pollution), sum, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb52-11" title="11"><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="op">-</span>Year.Authorized, <span class="dt">names_to =</span> <span class="st">&quot;Category&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;Amount&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb52-12" title="12"><span class="st">  </span><span class="kw">group_by</span>(Category) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb52-13" title="13"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">percent =</span> Amount<span class="op">/</span><span class="kw">sum</span>(Amount))</a></code></pre></div>
 <p>Climate</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" title="1">pie.Nthreats_climate &lt;-<span class="st"> </span>money.data.multi <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb48-2" title="2"><span class="st">  </span><span class="kw">filter</span>(cat_threat_climate <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb48-3" title="3"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(Num.Thr, cat_threat_climate) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb48-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Num.Thr =</span> <span class="kw">as.factor</span>(Num.Thr)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb48-5" title="5"><span class="st">  </span><span class="kw">group_by</span>(Num.Thr) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb48-6" title="6"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Total.money =</span> <span class="kw">sum</span>(cat_threat_climate)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb48-7" title="7"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">perc =</span> Total.money<span class="op">/</span><span class="kw">sum</span>(Total.money))</a>
-<a class="sourceLine" id="cb48-8" title="8"></a>
-<a class="sourceLine" id="cb48-9" title="9">plot.pie.Nthreats_climate &lt;-<span class="st"> </span><span class="kw">ggplot</span>(pie.Nthreats_climate,</a>
-<a class="sourceLine" id="cb48-10" title="10">                       <span class="kw">aes</span>(<span class="dt">y =</span> perc, </a>
-<a class="sourceLine" id="cb48-11" title="11">                           <span class="dt">x =</span> <span class="st">&quot;&quot;</span>,</a>
-<a class="sourceLine" id="cb48-12" title="12">                           <span class="dt">fill =</span> Num.Thr)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb48-13" title="13"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb48-14" title="14"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb48-15" title="15"><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">seq_gradient_pal</span>(cat_colors22[<span class="dv">1</span>], <span class="st">&quot;white&quot;</span>,</a>
-<a class="sourceLine" id="cb48-16" title="16">                                              <span class="st">&quot;Lab&quot;</span>)(<span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">5</span>))) <span class="op">+</span></a>
-<a class="sourceLine" id="cb48-17" title="17"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Proportion of Climate Change Funding Shared Between Other Threat Categories&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb48-18" title="18"><span class="st">  </span><span class="kw">coord_polar</span>(<span class="st">&quot;y&quot;</span>, <span class="dt">start=</span><span class="dv">0</span>, <span class="dt">direction =</span> <span class="dv">-1</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb48-19" title="19"><span class="st">  </span>blank_theme <span class="op">+</span></a>
-<a class="sourceLine" id="cb48-20" title="20"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_blank</span>()) <span class="op">+</span></a>
-<a class="sourceLine" id="cb48-21" title="21"><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="fl">1.55</span>,<span class="dv">4</span>), <span class="fl">1.65</span>),</a>
-<a class="sourceLine" id="cb48-22" title="22">                <span class="dt">label =</span> <span class="kw">paste0</span>(<span class="kw">round</span>(perc<span class="op">*</span><span class="dv">100</span>,<span class="dv">1</span>), <span class="st">&quot;%&quot;</span>)),</a>
-<a class="sourceLine" id="cb48-23" title="23">            <span class="dt">position =</span> <span class="kw">position_stack</span>(<span class="dt">vjust =</span> <span class="fl">0.5</span>),</a>
-<a class="sourceLine" id="cb48-24" title="24">            <span class="dt">size =</span> <span class="dv">3</span>,</a>
-<a class="sourceLine" id="cb48-25" title="25">            <span class="dt">col =</span> <span class="st">&quot;black&quot;</span>)</a>
-<a class="sourceLine" id="cb48-26" title="26"></a>
-<a class="sourceLine" id="cb48-27" title="27"><span class="kw">ggsave</span>(plot.pie.Nthreats_climate, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_climate.png&quot;</span>, <span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" title="1"><span class="co"># show exported image</span></a>
-<a class="sourceLine" id="cb49-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_pie_climate.png&quot;</span>)</a></code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-56"></span>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" title="1">pie.Nthreats_climate &lt;-<span class="st"> </span>money.data.multi <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb53-2" title="2"><span class="st">  </span><span class="kw">filter</span>(cat_threat_climate <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb53-3" title="3"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(Num.Thr, cat_threat_climate) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb53-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Num.Thr =</span> <span class="kw">as.factor</span>(Num.Thr)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb53-5" title="5"><span class="st">  </span><span class="kw">group_by</span>(Num.Thr) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb53-6" title="6"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Total.money =</span> <span class="kw">sum</span>(cat_threat_climate)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb53-7" title="7"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">perc =</span> Total.money<span class="op">/</span><span class="kw">sum</span>(Total.money))</a>
+<a class="sourceLine" id="cb53-8" title="8"></a>
+<a class="sourceLine" id="cb53-9" title="9">plot.pie.Nthreats_climate &lt;-<span class="st"> </span><span class="kw">ggplot</span>(pie.Nthreats_climate,</a>
+<a class="sourceLine" id="cb53-10" title="10">                       <span class="kw">aes</span>(<span class="dt">y =</span> perc, </a>
+<a class="sourceLine" id="cb53-11" title="11">                           <span class="dt">x =</span> <span class="st">&quot;&quot;</span>,</a>
+<a class="sourceLine" id="cb53-12" title="12">                           <span class="dt">fill =</span> Num.Thr)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb53-13" title="13"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb53-14" title="14"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb53-15" title="15"><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">seq_gradient_pal</span>(cat_colors22[<span class="dv">1</span>], <span class="st">&quot;white&quot;</span>,</a>
+<a class="sourceLine" id="cb53-16" title="16">                                              <span class="st">&quot;Lab&quot;</span>)(<span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">5</span>))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb53-17" title="17"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Proportion of Climate Change Funding Shared Between Other Threat Categories&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb53-18" title="18"><span class="st">  </span><span class="kw">coord_polar</span>(<span class="st">&quot;y&quot;</span>, <span class="dt">start=</span><span class="dv">0</span>, <span class="dt">direction =</span> <span class="dv">-1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb53-19" title="19"><span class="st">  </span>blank_theme <span class="op">+</span></a>
+<a class="sourceLine" id="cb53-20" title="20"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_blank</span>()) <span class="op">+</span></a>
+<a class="sourceLine" id="cb53-21" title="21"><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="fl">1.55</span>,<span class="dv">4</span>), <span class="fl">1.65</span>),</a>
+<a class="sourceLine" id="cb53-22" title="22">                <span class="dt">label =</span> <span class="kw">paste0</span>(<span class="kw">round</span>(perc<span class="op">*</span><span class="dv">100</span>,<span class="dv">1</span>), <span class="st">&quot;%&quot;</span>)),</a>
+<a class="sourceLine" id="cb53-23" title="23">            <span class="dt">position =</span> <span class="kw">position_stack</span>(<span class="dt">vjust =</span> <span class="fl">0.5</span>),</a>
+<a class="sourceLine" id="cb53-24" title="24">            <span class="dt">size =</span> <span class="dv">3</span>,</a>
+<a class="sourceLine" id="cb53-25" title="25">            <span class="dt">col =</span> <span class="st">&quot;black&quot;</span>)</a>
+<a class="sourceLine" id="cb53-26" title="26"></a>
+<a class="sourceLine" id="cb53-27" title="27"><span class="kw">ggsave</span>(plot.pie.Nthreats_climate, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_climate.png&quot;</span>, <span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" title="1"><span class="co"># show exported image</span></a>
+<a class="sourceLine" id="cb54-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_pie_climate.png&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-59"></span>
 <img src="figs/fig_pie_climate.png" alt="Proportion of climate change funding that was shared between multiple threat categories" width="\textwidth" />
 <p class="caption">
 Figure 9.1: Proportion of climate change funding that was shared between multiple threat categories
 </p>
 </div>
 <p>Energy/Transportation</p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" title="1">pie.Nthreats_energytransport &lt;-<span class="st"> </span>money.data.multi <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb50-2" title="2"><span class="st">  </span><span class="kw">filter</span>(cat_threat_energytransport <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb50-3" title="3"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(Num.Thr, cat_threat_energytransport) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb50-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Num.Thr =</span> <span class="kw">as.factor</span>(Num.Thr)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb50-5" title="5"><span class="st">  </span><span class="kw">group_by</span>(Num.Thr) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb50-6" title="6"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Total.money =</span> <span class="kw">sum</span>(cat_threat_energytransport)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb50-7" title="7"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">perc =</span> Total.money<span class="op">/</span><span class="kw">sum</span>(Total.money))</a>
-<a class="sourceLine" id="cb50-8" title="8"></a>
-<a class="sourceLine" id="cb50-9" title="9">plot.pie.Nthreats_energytransport &lt;-<span class="st"> </span><span class="kw">ggplot</span>(pie.Nthreats_energytransport,</a>
-<a class="sourceLine" id="cb50-10" title="10">                       <span class="kw">aes</span>(<span class="dt">y =</span> perc, </a>
-<a class="sourceLine" id="cb50-11" title="11">                           <span class="dt">x =</span> <span class="st">&quot;&quot;</span>,</a>
-<a class="sourceLine" id="cb50-12" title="12">                           <span class="dt">fill =</span> Num.Thr)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb50-13" title="13"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb50-14" title="14"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb50-15" title="15"><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">seq_gradient_pal</span>(cat_colors22[<span class="dv">13</span>], <span class="st">&quot;black&quot;</span>,</a>
-<a class="sourceLine" id="cb50-16" title="16">                                              <span class="st">&quot;Lab&quot;</span>)(<span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">5</span>))) <span class="op">+</span></a>
-<a class="sourceLine" id="cb50-17" title="17"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Proportion of Energy/Transportation Funding Shared Between Other Threat Categories&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">coord_polar</span>(<span class="st">&quot;y&quot;</span>, <span class="dt">start=</span><span class="dv">0</span>, <span class="dt">direction =</span> <span class="dv">-1</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb50-18" title="18"><span class="st">  </span>blank_theme <span class="op">+</span></a>
-<a class="sourceLine" id="cb50-19" title="19"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_blank</span>()) <span class="op">+</span></a>
-<a class="sourceLine" id="cb50-20" title="20"><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="fl">1.55</span>,<span class="dv">4</span>), <span class="fl">1.65</span>),</a>
-<a class="sourceLine" id="cb50-21" title="21">                <span class="dt">label =</span> <span class="kw">paste0</span>(<span class="kw">round</span>(perc<span class="op">*</span><span class="dv">100</span>,<span class="dv">1</span>), <span class="st">&quot;%&quot;</span>)),</a>
-<a class="sourceLine" id="cb50-22" title="22">            <span class="dt">position =</span> <span class="kw">position_stack</span>(<span class="dt">vjust =</span> <span class="fl">0.5</span>),</a>
-<a class="sourceLine" id="cb50-23" title="23">            <span class="dt">size =</span> <span class="dv">3</span>,</a>
-<a class="sourceLine" id="cb50-24" title="24">            <span class="dt">col =</span> <span class="st">&quot;black&quot;</span>)</a>
-<a class="sourceLine" id="cb50-25" title="25"></a>
-<a class="sourceLine" id="cb50-26" title="26"><span class="kw">ggsave</span>(plot.pie.Nthreats_energytransport, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_energytransport.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" title="1"><span class="co"># show exported image</span></a>
-<a class="sourceLine" id="cb51-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_pie_energytransport.png&quot;</span>)</a></code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-58"></span>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" title="1">pie.Nthreats_energytransport &lt;-<span class="st"> </span>money.data.multi <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb55-2" title="2"><span class="st">  </span><span class="kw">filter</span>(cat_threat_energytransport <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb55-3" title="3"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(Num.Thr, cat_threat_energytransport) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb55-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Num.Thr =</span> <span class="kw">as.factor</span>(Num.Thr)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb55-5" title="5"><span class="st">  </span><span class="kw">group_by</span>(Num.Thr) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb55-6" title="6"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Total.money =</span> <span class="kw">sum</span>(cat_threat_energytransport)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb55-7" title="7"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">perc =</span> Total.money<span class="op">/</span><span class="kw">sum</span>(Total.money))</a>
+<a class="sourceLine" id="cb55-8" title="8"></a>
+<a class="sourceLine" id="cb55-9" title="9">plot.pie.Nthreats_energytransport &lt;-<span class="st"> </span><span class="kw">ggplot</span>(pie.Nthreats_energytransport,</a>
+<a class="sourceLine" id="cb55-10" title="10">                       <span class="kw">aes</span>(<span class="dt">y =</span> perc, </a>
+<a class="sourceLine" id="cb55-11" title="11">                           <span class="dt">x =</span> <span class="st">&quot;&quot;</span>,</a>
+<a class="sourceLine" id="cb55-12" title="12">                           <span class="dt">fill =</span> Num.Thr)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb55-13" title="13"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb55-14" title="14"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb55-15" title="15"><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">seq_gradient_pal</span>(cat_colors22[<span class="dv">13</span>], <span class="st">&quot;black&quot;</span>,</a>
+<a class="sourceLine" id="cb55-16" title="16">                                              <span class="st">&quot;Lab&quot;</span>)(<span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">5</span>))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb55-17" title="17"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Proportion of Energy/Transportation Funding Shared Between Other Threat Categories&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">coord_polar</span>(<span class="st">&quot;y&quot;</span>, <span class="dt">start=</span><span class="dv">0</span>, <span class="dt">direction =</span> <span class="dv">-1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb55-18" title="18"><span class="st">  </span>blank_theme <span class="op">+</span></a>
+<a class="sourceLine" id="cb55-19" title="19"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_blank</span>()) <span class="op">+</span></a>
+<a class="sourceLine" id="cb55-20" title="20"><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="fl">1.55</span>,<span class="dv">4</span>), <span class="fl">1.65</span>),</a>
+<a class="sourceLine" id="cb55-21" title="21">                <span class="dt">label =</span> <span class="kw">paste0</span>(<span class="kw">round</span>(perc<span class="op">*</span><span class="dv">100</span>,<span class="dv">1</span>), <span class="st">&quot;%&quot;</span>)),</a>
+<a class="sourceLine" id="cb55-22" title="22">            <span class="dt">position =</span> <span class="kw">position_stack</span>(<span class="dt">vjust =</span> <span class="fl">0.5</span>),</a>
+<a class="sourceLine" id="cb55-23" title="23">            <span class="dt">size =</span> <span class="dv">3</span>,</a>
+<a class="sourceLine" id="cb55-24" title="24">            <span class="dt">col =</span> <span class="st">&quot;black&quot;</span>)</a>
+<a class="sourceLine" id="cb55-25" title="25"></a>
+<a class="sourceLine" id="cb55-26" title="26"><span class="kw">ggsave</span>(plot.pie.Nthreats_energytransport, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_energytransport.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" title="1"><span class="co"># show exported image</span></a>
+<a class="sourceLine" id="cb56-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_pie_energytransport.png&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-61"></span>
 <img src="figs/fig_pie_energytransport.png" alt="Proportion of energy/transportation funding that was shared between multiple threat categories" width="\textwidth" />
 <p class="caption">
 Figure 9.2: Proportion of energy/transportation funding that was shared between multiple threat categories
 </p>
 </div>
 <p>Habitat Loss</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" title="1">pie.Nthreats_habitat &lt;-<span class="st"> </span>money.data.multi <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb52-2" title="2"><span class="st">  </span><span class="kw">filter</span>(cat_threat_habitat <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb52-3" title="3"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(Num.Thr, cat_threat_habitat) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb52-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Num.Thr =</span> <span class="kw">as.factor</span>(Num.Thr)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb52-5" title="5"><span class="st">  </span><span class="kw">group_by</span>(Num.Thr) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb52-6" title="6"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Total.money =</span> <span class="kw">sum</span>(cat_threat_habitat)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb52-7" title="7"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">perc =</span> Total.money<span class="op">/</span><span class="kw">sum</span>(Total.money))</a>
-<a class="sourceLine" id="cb52-8" title="8"></a>
-<a class="sourceLine" id="cb52-9" title="9">plot.pie.Nthreats_habitat &lt;-<span class="st"> </span><span class="kw">ggplot</span>(pie.Nthreats_habitat,</a>
-<a class="sourceLine" id="cb52-10" title="10">                       <span class="kw">aes</span>(<span class="dt">y =</span> perc, </a>
-<a class="sourceLine" id="cb52-11" title="11">                           <span class="dt">x =</span> <span class="st">&quot;&quot;</span>,</a>
-<a class="sourceLine" id="cb52-12" title="12">                           <span class="dt">fill =</span> Num.Thr)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb52-13" title="13"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb52-14" title="14"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb52-15" title="15"><span class="st">    </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">seq_gradient_pal</span>(cat_colors22[<span class="dv">11</span>], <span class="st">&quot;white&quot;</span>,</a>
-<a class="sourceLine" id="cb52-16" title="16">                                              <span class="st">&quot;Lab&quot;</span>)(<span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">5</span>))) <span class="op">+</span></a>
-<a class="sourceLine" id="cb52-17" title="17"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Proportion of Habitat Loss Funding Shared Between Other Threat Categories&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb52-18" title="18"><span class="st">  </span><span class="kw">coord_polar</span>(<span class="st">&quot;y&quot;</span>, <span class="dt">start=</span><span class="dv">0</span>, <span class="dt">direction =</span> <span class="dv">-1</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb52-19" title="19"><span class="st">  </span>blank_theme <span class="op">+</span></a>
-<a class="sourceLine" id="cb52-20" title="20"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_blank</span>()) <span class="op">+</span></a>
-<a class="sourceLine" id="cb52-21" title="21"><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="fl">1.55</span>,<span class="dv">4</span>)),</a>
-<a class="sourceLine" id="cb52-22" title="22">                <span class="dt">label =</span> <span class="kw">paste0</span>(<span class="kw">round</span>(perc<span class="op">*</span><span class="dv">100</span>,<span class="dv">1</span>), <span class="st">&quot;%&quot;</span>)),</a>
-<a class="sourceLine" id="cb52-23" title="23">            <span class="dt">position =</span> <span class="kw">position_stack</span>(<span class="dt">vjust =</span> <span class="fl">0.5</span>),</a>
-<a class="sourceLine" id="cb52-24" title="24">            <span class="dt">size =</span> <span class="dv">3</span>,</a>
-<a class="sourceLine" id="cb52-25" title="25">            <span class="dt">col =</span> <span class="st">&quot;black&quot;</span>)</a>
-<a class="sourceLine" id="cb52-26" title="26"></a>
-<a class="sourceLine" id="cb52-27" title="27"><span class="kw">ggsave</span>(plot.pie.Nthreats_habitat, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_habitatloss.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" title="1"><span class="co"># show exported image</span></a>
-<a class="sourceLine" id="cb53-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_pie_habitatloss.png&quot;</span>)</a></code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-60"></span>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" title="1">pie.Nthreats_habitat &lt;-<span class="st"> </span>money.data.multi <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb57-2" title="2"><span class="st">  </span><span class="kw">filter</span>(cat_threat_habitat <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb57-3" title="3"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(Num.Thr, cat_threat_habitat) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb57-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Num.Thr =</span> <span class="kw">as.factor</span>(Num.Thr)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb57-5" title="5"><span class="st">  </span><span class="kw">group_by</span>(Num.Thr) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb57-6" title="6"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Total.money =</span> <span class="kw">sum</span>(cat_threat_habitat)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb57-7" title="7"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">perc =</span> Total.money<span class="op">/</span><span class="kw">sum</span>(Total.money))</a>
+<a class="sourceLine" id="cb57-8" title="8"></a>
+<a class="sourceLine" id="cb57-9" title="9">plot.pie.Nthreats_habitat &lt;-<span class="st"> </span><span class="kw">ggplot</span>(pie.Nthreats_habitat,</a>
+<a class="sourceLine" id="cb57-10" title="10">                       <span class="kw">aes</span>(<span class="dt">y =</span> perc, </a>
+<a class="sourceLine" id="cb57-11" title="11">                           <span class="dt">x =</span> <span class="st">&quot;&quot;</span>,</a>
+<a class="sourceLine" id="cb57-12" title="12">                           <span class="dt">fill =</span> Num.Thr)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb57-13" title="13"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb57-14" title="14"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb57-15" title="15"><span class="st">    </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">seq_gradient_pal</span>(cat_colors22[<span class="dv">11</span>], <span class="st">&quot;white&quot;</span>,</a>
+<a class="sourceLine" id="cb57-16" title="16">                                              <span class="st">&quot;Lab&quot;</span>)(<span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">5</span>))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb57-17" title="17"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Proportion of Habitat Loss Funding Shared Between Other Threat Categories&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb57-18" title="18"><span class="st">  </span><span class="kw">coord_polar</span>(<span class="st">&quot;y&quot;</span>, <span class="dt">start=</span><span class="dv">0</span>, <span class="dt">direction =</span> <span class="dv">-1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb57-19" title="19"><span class="st">  </span>blank_theme <span class="op">+</span></a>
+<a class="sourceLine" id="cb57-20" title="20"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_blank</span>()) <span class="op">+</span></a>
+<a class="sourceLine" id="cb57-21" title="21"><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="fl">1.55</span>,<span class="dv">4</span>)),</a>
+<a class="sourceLine" id="cb57-22" title="22">                <span class="dt">label =</span> <span class="kw">paste0</span>(<span class="kw">round</span>(perc<span class="op">*</span><span class="dv">100</span>,<span class="dv">1</span>), <span class="st">&quot;%&quot;</span>)),</a>
+<a class="sourceLine" id="cb57-23" title="23">            <span class="dt">position =</span> <span class="kw">position_stack</span>(<span class="dt">vjust =</span> <span class="fl">0.5</span>),</a>
+<a class="sourceLine" id="cb57-24" title="24">            <span class="dt">size =</span> <span class="dv">3</span>,</a>
+<a class="sourceLine" id="cb57-25" title="25">            <span class="dt">col =</span> <span class="st">&quot;black&quot;</span>)</a>
+<a class="sourceLine" id="cb57-26" title="26"></a>
+<a class="sourceLine" id="cb57-27" title="27"><span class="kw">ggsave</span>(plot.pie.Nthreats_habitat, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_habitatloss.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" title="1"><span class="co"># show exported image</span></a>
+<a class="sourceLine" id="cb58-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_pie_habitatloss.png&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-63"></span>
 <img src="figs/fig_pie_habitatloss.png" alt="Proportion of habitat loss funding that was shared between multiple threat categories" width="\textwidth" />
 <p class="caption">
 Figure 9.3: Proportion of habitat loss funding that was shared between multiple threat categories
 </p>
 </div>
 <p>Invasive Species</p>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" title="1">pie.Nthreats_inv_spec &lt;-<span class="st"> </span>money.data.multi <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb54-2" title="2"><span class="st">  </span><span class="kw">filter</span>(cat_threat_inv_spec <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb54-3" title="3"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(Num.Thr, cat_threat_inv_spec) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb54-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Num.Thr =</span> <span class="kw">as.factor</span>(Num.Thr)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb54-5" title="5"><span class="st">  </span><span class="kw">group_by</span>(Num.Thr) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb54-6" title="6"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Total.money =</span> <span class="kw">sum</span>(cat_threat_inv_spec)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb54-7" title="7"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">perc =</span> Total.money<span class="op">/</span><span class="kw">sum</span>(Total.money))</a>
-<a class="sourceLine" id="cb54-8" title="8"></a>
-<a class="sourceLine" id="cb54-9" title="9">plot.pie.Nthreats_inv_spec &lt;-<span class="st"> </span><span class="kw">ggplot</span>(pie.Nthreats_inv_spec,</a>
-<a class="sourceLine" id="cb54-10" title="10">                       <span class="kw">aes</span>(<span class="dt">y =</span> perc, </a>
-<a class="sourceLine" id="cb54-11" title="11">                           <span class="dt">x =</span> <span class="st">&quot;&quot;</span>,</a>
-<a class="sourceLine" id="cb54-12" title="12">                           <span class="dt">fill =</span> Num.Thr)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb54-13" title="13"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb54-14" title="14"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb54-15" title="15"><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">seq_gradient_pal</span>(cat_colors22[<span class="dv">20</span>], <span class="st">&quot;white&quot;</span>,</a>
-<a class="sourceLine" id="cb54-16" title="16">                                              <span class="st">&quot;Lab&quot;</span>)(<span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">5</span>))) <span class="op">+</span></a>
-<a class="sourceLine" id="cb54-17" title="17"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Proportion of Invasive Species Funding Shared Between Other Threat Categories&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb54-18" title="18"><span class="st">  </span><span class="kw">coord_polar</span>(<span class="st">&quot;y&quot;</span>, <span class="dt">start=</span><span class="dv">0</span>, <span class="dt">direction =</span> <span class="dv">-1</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb54-19" title="19"><span class="st">  </span>blank_theme <span class="op">+</span></a>
-<a class="sourceLine" id="cb54-20" title="20"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_blank</span>()) <span class="op">+</span></a>
-<a class="sourceLine" id="cb54-21" title="21"><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="fl">1.55</span>,<span class="dv">4</span>), <span class="fl">1.65</span>),</a>
-<a class="sourceLine" id="cb54-22" title="22">                <span class="dt">label =</span> <span class="kw">paste0</span>(<span class="kw">round</span>(perc<span class="op">*</span><span class="dv">100</span>,<span class="dv">1</span>), <span class="st">&quot;%&quot;</span>)),</a>
-<a class="sourceLine" id="cb54-23" title="23">            <span class="dt">position =</span> <span class="kw">position_stack</span>(<span class="dt">vjust =</span> <span class="fl">0.5</span>),</a>
-<a class="sourceLine" id="cb54-24" title="24">            <span class="dt">size =</span> <span class="dv">3</span>,</a>
-<a class="sourceLine" id="cb54-25" title="25">            <span class="dt">col =</span> <span class="st">&quot;black&quot;</span>)</a>
-<a class="sourceLine" id="cb54-26" title="26"></a>
-<a class="sourceLine" id="cb54-27" title="27"><span class="kw">ggsave</span>(plot.pie.Nthreats_inv_spec, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_invasiveSpecies.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" title="1"><span class="co"># show exported image</span></a>
-<a class="sourceLine" id="cb55-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_pie_invasiveSpecies.png&quot;</span>)</a></code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-62"></span>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb59-1" title="1">pie.Nthreats_inv_spec &lt;-<span class="st"> </span>money.data.multi <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb59-2" title="2"><span class="st">  </span><span class="kw">filter</span>(cat_threat_inv_spec <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb59-3" title="3"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(Num.Thr, cat_threat_inv_spec) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb59-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Num.Thr =</span> <span class="kw">as.factor</span>(Num.Thr)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb59-5" title="5"><span class="st">  </span><span class="kw">group_by</span>(Num.Thr) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb59-6" title="6"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Total.money =</span> <span class="kw">sum</span>(cat_threat_inv_spec)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb59-7" title="7"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">perc =</span> Total.money<span class="op">/</span><span class="kw">sum</span>(Total.money))</a>
+<a class="sourceLine" id="cb59-8" title="8"></a>
+<a class="sourceLine" id="cb59-9" title="9">plot.pie.Nthreats_inv_spec &lt;-<span class="st"> </span><span class="kw">ggplot</span>(pie.Nthreats_inv_spec,</a>
+<a class="sourceLine" id="cb59-10" title="10">                       <span class="kw">aes</span>(<span class="dt">y =</span> perc, </a>
+<a class="sourceLine" id="cb59-11" title="11">                           <span class="dt">x =</span> <span class="st">&quot;&quot;</span>,</a>
+<a class="sourceLine" id="cb59-12" title="12">                           <span class="dt">fill =</span> Num.Thr)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb59-13" title="13"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb59-14" title="14"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb59-15" title="15"><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">seq_gradient_pal</span>(cat_colors22[<span class="dv">20</span>], <span class="st">&quot;white&quot;</span>,</a>
+<a class="sourceLine" id="cb59-16" title="16">                                              <span class="st">&quot;Lab&quot;</span>)(<span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">5</span>))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb59-17" title="17"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Proportion of Invasive Species Funding Shared Between Other Threat Categories&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb59-18" title="18"><span class="st">  </span><span class="kw">coord_polar</span>(<span class="st">&quot;y&quot;</span>, <span class="dt">start=</span><span class="dv">0</span>, <span class="dt">direction =</span> <span class="dv">-1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb59-19" title="19"><span class="st">  </span>blank_theme <span class="op">+</span></a>
+<a class="sourceLine" id="cb59-20" title="20"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_blank</span>()) <span class="op">+</span></a>
+<a class="sourceLine" id="cb59-21" title="21"><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="fl">1.55</span>,<span class="dv">4</span>), <span class="fl">1.65</span>),</a>
+<a class="sourceLine" id="cb59-22" title="22">                <span class="dt">label =</span> <span class="kw">paste0</span>(<span class="kw">round</span>(perc<span class="op">*</span><span class="dv">100</span>,<span class="dv">1</span>), <span class="st">&quot;%&quot;</span>)),</a>
+<a class="sourceLine" id="cb59-23" title="23">            <span class="dt">position =</span> <span class="kw">position_stack</span>(<span class="dt">vjust =</span> <span class="fl">0.5</span>),</a>
+<a class="sourceLine" id="cb59-24" title="24">            <span class="dt">size =</span> <span class="dv">3</span>,</a>
+<a class="sourceLine" id="cb59-25" title="25">            <span class="dt">col =</span> <span class="st">&quot;black&quot;</span>)</a>
+<a class="sourceLine" id="cb59-26" title="26"></a>
+<a class="sourceLine" id="cb59-27" title="27"><span class="kw">ggsave</span>(plot.pie.Nthreats_inv_spec, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_invasiveSpecies.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb60-1" title="1"><span class="co"># show exported image</span></a>
+<a class="sourceLine" id="cb60-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_pie_invasiveSpecies.png&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-65"></span>
 <img src="figs/fig_pie_invasiveSpecies.png" alt="Proportion of invasive species funding that was shared between multiple threat categories" width="\textwidth" />
 <p class="caption">
 Figure 9.4: Proportion of invasive species funding that was shared between multiple threat categories
 </p>
 </div>
 <p>Overexploitation</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" title="1">pie.Nthreats_overexp &lt;-<span class="st"> </span>money.data.multi <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb56-2" title="2"><span class="st">  </span><span class="kw">filter</span>(cat_threat_overexp <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb56-3" title="3"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(Num.Thr, cat_threat_overexp) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb56-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Num.Thr =</span> <span class="kw">as.factor</span>(Num.Thr)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb56-5" title="5"><span class="st">  </span><span class="kw">group_by</span>(Num.Thr) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb56-6" title="6"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Total.money =</span> <span class="kw">sum</span>(cat_threat_overexp)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb56-7" title="7"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">perc =</span> Total.money<span class="op">/</span><span class="kw">sum</span>(Total.money))</a>
-<a class="sourceLine" id="cb56-8" title="8"></a>
-<a class="sourceLine" id="cb56-9" title="9">plot.pie.Nthreats_overexp &lt;-<span class="st"> </span><span class="kw">ggplot</span>(pie.Nthreats_overexp,</a>
-<a class="sourceLine" id="cb56-10" title="10">                       <span class="kw">aes</span>(<span class="dt">y =</span> perc, </a>
-<a class="sourceLine" id="cb56-11" title="11">                           <span class="dt">x =</span> <span class="st">&quot;&quot;</span>,</a>
-<a class="sourceLine" id="cb56-12" title="12">                           <span class="dt">fill =</span> Num.Thr)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb56-13" title="13"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb56-14" title="14"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb56-15" title="15"><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">seq_gradient_pal</span>(cat_colors22[<span class="dv">5</span>], <span class="st">&quot;white&quot;</span>,</a>
-<a class="sourceLine" id="cb56-16" title="16">                                              <span class="st">&quot;Lab&quot;</span>)(<span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">5</span>))) <span class="op">+</span></a>
-<a class="sourceLine" id="cb56-17" title="17"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Proportion of Overexploitation Funding Shared Between Other Threat Categories&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb56-18" title="18"><span class="st">  </span><span class="kw">coord_polar</span>(<span class="st">&quot;y&quot;</span>, <span class="dt">start=</span><span class="dv">0</span>, <span class="dt">direction =</span> <span class="dv">-1</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb56-19" title="19"><span class="st">  </span>blank_theme <span class="op">+</span></a>
-<a class="sourceLine" id="cb56-20" title="20"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_blank</span>()) <span class="op">+</span></a>
-<a class="sourceLine" id="cb56-21" title="21"><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="fl">1.55</span>,<span class="dv">4</span>), <span class="fl">1.65</span>),</a>
-<a class="sourceLine" id="cb56-22" title="22">                <span class="dt">label =</span> <span class="kw">str_glue</span>(<span class="st">&quot;{round(perc*100,1)}%&quot;</span>)),</a>
-<a class="sourceLine" id="cb56-23" title="23">            <span class="dt">position =</span> <span class="kw">position_stack</span>(<span class="dt">vjust =</span> <span class="fl">0.5</span>),</a>
-<a class="sourceLine" id="cb56-24" title="24">            <span class="dt">size =</span> <span class="dv">3</span>,</a>
-<a class="sourceLine" id="cb56-25" title="25">            <span class="dt">col =</span> <span class="st">&quot;black&quot;</span>)</a>
-<a class="sourceLine" id="cb56-26" title="26"></a>
-<a class="sourceLine" id="cb56-27" title="27"><span class="kw">ggsave</span>(plot.pie.Nthreats_overexp, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_overexploitation.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" title="1"><span class="co"># show exported image</span></a>
-<a class="sourceLine" id="cb57-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_pie_overexploitation.png&quot;</span>)</a></code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-64"></span>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" title="1">pie.Nthreats_overexp &lt;-<span class="st"> </span>money.data.multi <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb61-2" title="2"><span class="st">  </span><span class="kw">filter</span>(cat_threat_overexp <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb61-3" title="3"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(Num.Thr, cat_threat_overexp) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb61-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Num.Thr =</span> <span class="kw">as.factor</span>(Num.Thr)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb61-5" title="5"><span class="st">  </span><span class="kw">group_by</span>(Num.Thr) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb61-6" title="6"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Total.money =</span> <span class="kw">sum</span>(cat_threat_overexp)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb61-7" title="7"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">perc =</span> Total.money<span class="op">/</span><span class="kw">sum</span>(Total.money))</a>
+<a class="sourceLine" id="cb61-8" title="8"></a>
+<a class="sourceLine" id="cb61-9" title="9">plot.pie.Nthreats_overexp &lt;-<span class="st"> </span><span class="kw">ggplot</span>(pie.Nthreats_overexp,</a>
+<a class="sourceLine" id="cb61-10" title="10">                       <span class="kw">aes</span>(<span class="dt">y =</span> perc, </a>
+<a class="sourceLine" id="cb61-11" title="11">                           <span class="dt">x =</span> <span class="st">&quot;&quot;</span>,</a>
+<a class="sourceLine" id="cb61-12" title="12">                           <span class="dt">fill =</span> Num.Thr)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb61-13" title="13"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb61-14" title="14"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb61-15" title="15"><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">seq_gradient_pal</span>(cat_colors22[<span class="dv">5</span>], <span class="st">&quot;white&quot;</span>,</a>
+<a class="sourceLine" id="cb61-16" title="16">                                              <span class="st">&quot;Lab&quot;</span>)(<span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">5</span>))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb61-17" title="17"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Proportion of Overexploitation Funding Shared Between Other Threat Categories&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb61-18" title="18"><span class="st">  </span><span class="kw">coord_polar</span>(<span class="st">&quot;y&quot;</span>, <span class="dt">start=</span><span class="dv">0</span>, <span class="dt">direction =</span> <span class="dv">-1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb61-19" title="19"><span class="st">  </span>blank_theme <span class="op">+</span></a>
+<a class="sourceLine" id="cb61-20" title="20"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_blank</span>()) <span class="op">+</span></a>
+<a class="sourceLine" id="cb61-21" title="21"><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="fl">1.55</span>,<span class="dv">4</span>), <span class="fl">1.65</span>),</a>
+<a class="sourceLine" id="cb61-22" title="22">                <span class="dt">label =</span> <span class="kw">str_glue</span>(<span class="st">&quot;{round(perc*100,1)}%&quot;</span>)),</a>
+<a class="sourceLine" id="cb61-23" title="23">            <span class="dt">position =</span> <span class="kw">position_stack</span>(<span class="dt">vjust =</span> <span class="fl">0.5</span>),</a>
+<a class="sourceLine" id="cb61-24" title="24">            <span class="dt">size =</span> <span class="dv">3</span>,</a>
+<a class="sourceLine" id="cb61-25" title="25">            <span class="dt">col =</span> <span class="st">&quot;black&quot;</span>)</a>
+<a class="sourceLine" id="cb61-26" title="26"></a>
+<a class="sourceLine" id="cb61-27" title="27"><span class="kw">ggsave</span>(plot.pie.Nthreats_overexp, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_overexploitation.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>,<span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb62-1" title="1"><span class="co"># show exported image</span></a>
+<a class="sourceLine" id="cb62-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_pie_overexploitation.png&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-67"></span>
 <img src="figs/fig_pie_overexploitation.png" alt="Proportion of overexploitation funding that was shared between multiple threat categories" width="\textwidth" />
 <p class="caption">
 Figure 9.5: Proportion of overexploitation funding that was shared between multiple threat categories
 </p>
 </div>
 <p>Pollution</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" title="1">pie.Nthreats_pollution &lt;-<span class="st"> </span>money.data.multi <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb58-2" title="2"><span class="st">  </span><span class="kw">filter</span>(cat_threat_pollution <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb58-3" title="3"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(Num.Thr, cat_threat_pollution) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb58-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Num.Thr =</span> <span class="kw">as.factor</span>(Num.Thr)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb58-5" title="5"><span class="st">  </span><span class="kw">group_by</span>(Num.Thr) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb58-6" title="6"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Total.money =</span> <span class="kw">sum</span>(cat_threat_pollution)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb58-7" title="7"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">perc =</span> Total.money<span class="op">/</span><span class="kw">sum</span>(Total.money))</a>
-<a class="sourceLine" id="cb58-8" title="8"></a>
-<a class="sourceLine" id="cb58-9" title="9">plot.pie.Nthreats_pollution &lt;-<span class="st"> </span><span class="kw">ggplot</span>(pie.Nthreats_pollution,</a>
-<a class="sourceLine" id="cb58-10" title="10">                       <span class="kw">aes</span>(<span class="dt">y =</span> perc, </a>
-<a class="sourceLine" id="cb58-11" title="11">                           <span class="dt">x =</span> <span class="st">&quot;&quot;</span>,</a>
-<a class="sourceLine" id="cb58-12" title="12">                           <span class="dt">fill =</span> Num.Thr)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb58-13" title="13"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb58-14" title="14"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb58-15" title="15"><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">seq_gradient_pal</span>(cat_colors22[<span class="dv">18</span>], <span class="st">&quot;white&quot;</span>,</a>
-<a class="sourceLine" id="cb58-16" title="16">                                              <span class="st">&quot;Lab&quot;</span>)(<span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">5</span>))) <span class="op">+</span></a>
-<a class="sourceLine" id="cb58-17" title="17"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Proportion of Pollution Funding Shared Between Other Threat Categories&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb58-18" title="18"><span class="st">  </span><span class="kw">coord_polar</span>(<span class="st">&quot;y&quot;</span>, <span class="dt">start=</span><span class="dv">0</span>, <span class="dt">direction =</span> <span class="dv">-1</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb58-19" title="19"><span class="st">  </span>blank_theme <span class="op">+</span></a>
-<a class="sourceLine" id="cb58-20" title="20"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_blank</span>()) <span class="op">+</span></a>
-<a class="sourceLine" id="cb58-21" title="21"><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="fl">1.55</span>,<span class="dv">4</span>), <span class="fl">1.65</span>),</a>
-<a class="sourceLine" id="cb58-22" title="22">                <span class="dt">label =</span> <span class="kw">paste0</span>(<span class="kw">round</span>(perc<span class="op">*</span><span class="dv">100</span>,<span class="dv">1</span>), <span class="st">&quot;%&quot;</span>)),</a>
-<a class="sourceLine" id="cb58-23" title="23">            <span class="dt">position =</span> <span class="kw">position_stack</span>(<span class="dt">vjust =</span> <span class="fl">0.5</span>),</a>
-<a class="sourceLine" id="cb58-24" title="24">            <span class="dt">size =</span> <span class="dv">3</span>,</a>
-<a class="sourceLine" id="cb58-25" title="25">            <span class="dt">col =</span> <span class="st">&quot;black&quot;</span>)</a>
-<a class="sourceLine" id="cb58-26" title="26"></a>
-<a class="sourceLine" id="cb58-27" title="27"><span class="kw">ggsave</span>(plot.pie.Nthreats_pollution, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_pollution.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>, <span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb59-1" title="1"><span class="co"># show exported image</span></a>
-<a class="sourceLine" id="cb59-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_pie_pollution.png&quot;</span>)</a></code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-66"></span>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" title="1">pie.Nthreats_pollution &lt;-<span class="st"> </span>money.data.multi <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb63-2" title="2"><span class="st">  </span><span class="kw">filter</span>(cat_threat_pollution <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb63-3" title="3"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(Num.Thr, cat_threat_pollution) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb63-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Num.Thr =</span> <span class="kw">as.factor</span>(Num.Thr)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb63-5" title="5"><span class="st">  </span><span class="kw">group_by</span>(Num.Thr) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb63-6" title="6"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Total.money =</span> <span class="kw">sum</span>(cat_threat_pollution)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb63-7" title="7"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">perc =</span> Total.money<span class="op">/</span><span class="kw">sum</span>(Total.money))</a>
+<a class="sourceLine" id="cb63-8" title="8"></a>
+<a class="sourceLine" id="cb63-9" title="9">plot.pie.Nthreats_pollution &lt;-<span class="st"> </span><span class="kw">ggplot</span>(pie.Nthreats_pollution,</a>
+<a class="sourceLine" id="cb63-10" title="10">                       <span class="kw">aes</span>(<span class="dt">y =</span> perc, </a>
+<a class="sourceLine" id="cb63-11" title="11">                           <span class="dt">x =</span> <span class="st">&quot;&quot;</span>,</a>
+<a class="sourceLine" id="cb63-12" title="12">                           <span class="dt">fill =</span> Num.Thr)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb63-13" title="13"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb63-14" title="14"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb63-15" title="15"><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">seq_gradient_pal</span>(cat_colors22[<span class="dv">18</span>], <span class="st">&quot;white&quot;</span>,</a>
+<a class="sourceLine" id="cb63-16" title="16">                                              <span class="st">&quot;Lab&quot;</span>)(<span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">5</span>))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb63-17" title="17"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Proportion of Pollution Funding Shared Between Other Threat Categories&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb63-18" title="18"><span class="st">  </span><span class="kw">coord_polar</span>(<span class="st">&quot;y&quot;</span>, <span class="dt">start=</span><span class="dv">0</span>, <span class="dt">direction =</span> <span class="dv">-1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb63-19" title="19"><span class="st">  </span>blank_theme <span class="op">+</span></a>
+<a class="sourceLine" id="cb63-20" title="20"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_blank</span>()) <span class="op">+</span></a>
+<a class="sourceLine" id="cb63-21" title="21"><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="fl">1.55</span>,<span class="dv">4</span>), <span class="fl">1.65</span>),</a>
+<a class="sourceLine" id="cb63-22" title="22">                <span class="dt">label =</span> <span class="kw">paste0</span>(<span class="kw">round</span>(perc<span class="op">*</span><span class="dv">100</span>,<span class="dv">1</span>), <span class="st">&quot;%&quot;</span>)),</a>
+<a class="sourceLine" id="cb63-23" title="23">            <span class="dt">position =</span> <span class="kw">position_stack</span>(<span class="dt">vjust =</span> <span class="fl">0.5</span>),</a>
+<a class="sourceLine" id="cb63-24" title="24">            <span class="dt">size =</span> <span class="dv">3</span>,</a>
+<a class="sourceLine" id="cb63-25" title="25">            <span class="dt">col =</span> <span class="st">&quot;black&quot;</span>)</a>
+<a class="sourceLine" id="cb63-26" title="26"></a>
+<a class="sourceLine" id="cb63-27" title="27"><span class="kw">ggsave</span>(plot.pie.Nthreats_pollution, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_pie_pollution.png&quot;</span>, <span class="dt">width=</span><span class="dv">12</span>, <span class="dt">height=</span><span class="dv">7</span>,<span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>, <span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb64-1" title="1"><span class="co"># show exported image</span></a>
+<a class="sourceLine" id="cb64-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_pie_pollution.png&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-69"></span>
 <img src="figs/fig_pie_pollution.png" alt="Proportion of pollution funding that was shared between multiple threat categories" width="\textwidth" />
 <p class="caption">
 Figure 9.6: Proportion of pollution funding that was shared between multiple threat categories

@@ -1,7 +1,7 @@
 --- 
 knit: "bookdown::render_book"
 title: "Conservation funding does not track drivers of biodiversity loss"
-author: Vijay Ramesh<sup>1*</sup>, Jay Schoen<sup>1</sup>, Michael Levin<sup>1</sup>, Pratik Dubal<sup>2</sup>, Sebastian Heilpern<sup>1</sup>, Pooja Choksi<sup>1</sup>, Jared Meek<sup>1</sup>, Rochelle Thomas<sup>1</sup>, Don J Melnick<sup>1</sup>, Sara Kross<sup>1</sup>"
+author: Vijay Ramesh<sup>1*^</sup>, Jay Schoen<sup>1^</sup>, Michael Levin<sup>1</sup>, Pratik Dubal<sup>2</sup>, Sebastian Heilpern<sup>1</sup>, Pooja Choksi<sup>1</sup>, Jared Meek<sup>1</sup>, Rochelle Thomas<sup>1</sup>, Don J Melnick<sup>1</sup>, Sara Kross<sup>1</sup>"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 output: 
@@ -46,4 +46,6 @@ The data processing for this project is described in the following sections. Nav
 <sup>2</sup>Department of Computer Science, Columbia University, New York, NY 10027.
 
 <sup>*</sup>Corresponding author. Email: vr2352@columbia.edu 
+
+<sup>^</sup>Equal contribution
 

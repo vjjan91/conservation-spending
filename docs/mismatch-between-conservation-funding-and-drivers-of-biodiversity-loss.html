@@ -21,10 +21,10 @@
   <meta name="twitter:description" content="Section 6 Mismatch between conservation funding and drivers of biodiversity loss | Conservation funding does not track drivers of biodiversity loss" />
   
 
-<meta name="author" content="Vijay Ramesh1*, Jay Schoen1, Michael Levin1, Pratik Dubal2, Sebastian Heilpern1, Pooja Choksi1, Jared Meek1, Rochelle Thomas1, Don J Melnick1, Sara Kross1&quot;" />
+<meta name="author" content="Vijay Ramesh1*^, Jay Schoen1^, Michael Levin1, Pratik Dubal2, Sebastian Heilpern1, Pooja Choksi1, Jared Meek1, Rochelle Thomas1, Don J Melnick1, Sara Kross1&quot;" />
 
 
-<meta name="date" content="2020-09-28" />
+<meta name="date" content="2020-09-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -163,102 +163,110 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="mismatch-between-conservation-funding-and-drivers-of-biodiversity-loss" class="section level1">
 <h1><span class="header-section-number">Section 6</span> Mismatch between conservation funding and drivers of biodiversity loss</h1>
 <p>We estimate if the amount of funding to drivers of biodiversity loss tracks the number of species threatened by each of these drivers</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="co"># Load libraries</span></a>
-<a class="sourceLine" id="cb19-2" title="2"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb19-3" title="3"><span class="kw">library</span>(scales)</a>
-<a class="sourceLine" id="cb19-4" title="4"><span class="kw">library</span>(ggsci)</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="co"># Load libraries</span></a>
+<a class="sourceLine" id="cb22-2" title="2"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb22-3" title="3"><span class="kw">library</span>(scales)</a>
+<a class="sourceLine" id="cb22-4" title="4"><span class="kw">library</span>(ggsci)</a></code></pre></div>
 <p>Importing data</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="co"># Read in data of post-processed grants</span></a>
-<a class="sourceLine" id="cb20-2" title="2">data &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data</span><span class="ch">\\</span><span class="st">post-processed-grants-for-analysis-unique.csv&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb20-3" title="3"><span class="st">   </span><span class="kw">as.data.frame</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb20-4" title="4"><span class="st">   </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">42</span>, <span class="dv">49</span><span class="op">:</span><span class="dv">109</span>, <span class="dv">43</span><span class="op">:</span><span class="dv">48</span>))</a>
-<a class="sourceLine" id="cb20-5" title="5"></a>
-<a class="sourceLine" id="cb20-6" title="6"><span class="co"># Read in data on the number of species threatened (Maxwell et al. 2016)</span></a>
-<a class="sourceLine" id="cb20-7" title="7">maxwell.tab.s2 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data</span><span class="ch">\\</span><span class="st">maxwell-tab-s2.csv&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb20-8" title="8"><span class="st">  </span><span class="kw">as.data.frame</span>()</a></code></pre></div>
-<p>Preparing data to match our list of threat categories</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">maxwell.tab.s2<span class="op">$</span>Abbreviated_clasfication</a>
-<a class="sourceLine" id="cb21-2" title="2"></a>
-<a class="sourceLine" id="cb21-3" title="3"><span class="co"># Our threat categories: Climate Change, Habitat Loss, Overexploitation, Energy/Transportation, Pollution, Invasive Species</span></a>
-<a class="sourceLine" id="cb21-4" title="4"></a>
-<a class="sourceLine" id="cb21-5" title="5">maxwell.data_threats &lt;-<span class="st"> </span>maxwell.tab.s2 <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb21-6" title="6"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="dv">3</span><span class="op">:</span><span class="dv">4</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb21-7" title="7"><span class="st">  </span><span class="kw">group_by</span>(Category) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb21-8" title="8"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Total =</span> <span class="kw">sum</span>(n_species_threatened)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb21-9" title="9"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Total.adjusted =</span> <span class="kw">replace</span>(Total, Total <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">2132</span>,<span class="dv">11509</span>), <span class="kw">c</span>(<span class="dv">1910</span>,<span class="dv">7406</span>)),</a>
-<a class="sourceLine" id="cb21-10" title="10">         <span class="dt">adj.prop =</span> Total.adjusted<span class="op">/</span>Total,</a>
-<a class="sourceLine" id="cb21-11" title="11">         <span class="dt">prop.total =</span> Total.adjusted<span class="op">/</span><span class="kw">sum</span>(Total.adjusted))</a>
-<a class="sourceLine" id="cb21-12" title="12"></a>
-<a class="sourceLine" id="cb21-13" title="13"><span class="co"># Habitat Loss and Energy/Transportation adjusted for compilation of multiple threats from Maxwell et al 2016. To do so, we looked at the number of species shared between threats and derived a conservative estimate accounting for overlap (species threatened by multiple threats).</span></a></code></pre></div>
-<p>Data on funding</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="co"># Single Category Data</span></a>
-<a class="sourceLine" id="cb22-2" title="2">money.data &lt;-<span class="st"> </span>data[,<span class="dv">11</span><span class="op">:</span>(<span class="kw">length</span>(data)<span class="op">-</span><span class="dv">6</span>)]<span class="op">*</span>data[,<span class="dv">7</span>]</a>
-<a class="sourceLine" id="cb22-3" title="3">money.data &lt;-<span class="st"> </span><span class="kw">mutate</span>(money.data,</a>
-<a class="sourceLine" id="cb22-4" title="4">                         <span class="dt">Year.Authorized =</span> data<span class="op">$</span>Year.Authorized,</a>
-<a class="sourceLine" id="cb22-5" title="5">                         <span class="dt">Num.Thr =</span> data<span class="op">$</span>Num.Thr,</a>
-<a class="sourceLine" id="cb22-6" title="6">                         <span class="dt">Num.Tax =</span> data<span class="op">$</span>Num.Tax)</a>
-<a class="sourceLine" id="cb22-7" title="7"></a>
-<a class="sourceLine" id="cb22-8" title="8">by.year.money &lt;-<span class="st"> </span>money.data <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb22-9" title="9"><span class="st">  </span><span class="kw">group_by</span>(Year.Authorized) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb22-10" title="10"><span class="st">  </span><span class="kw">summarize_at</span>(<span class="kw">vars</span>(cat_act_area<span class="op">:</span>cat_taxa_other), sum, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb22-11" title="11"><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="op">-</span>Year.Authorized, <span class="dt">names_to =</span> <span class="st">&quot;Category&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;Amount&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb22-12" title="12"><span class="st">  </span><span class="kw">group_by</span>(Year.Authorized) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb22-13" title="13"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ann.percent =</span> Amount<span class="op">/</span><span class="kw">sum</span>(Amount)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb22-14" title="14"><span class="st">  </span><span class="kw">group_by</span>(Category) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb22-15" title="15"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">percent =</span> Amount<span class="op">/</span><span class="kw">sum</span>(Amount))</a></code></pre></div>
-<p>Categories used for analysis</p>
-<p>Fig. 1: Mismatch between conservation funding and threats to biodiversity</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1">fig.<span class="fl">1.</span>money &lt;-<span class="st"> </span>by.year.money <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb23-2" title="2"><span class="st">  </span><span class="kw">filter</span>(Category <span class="op">%in%</span><span class="st"> </span>u.threat_cat) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb23-3" title="3"><span class="st">  </span><span class="kw">group_by</span>(Category) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb23-4" title="4"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Total =</span> <span class="kw">sum</span>(Amount))</a>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1"><span class="co"># Read in data of post-processed grants</span></a>
+<a class="sourceLine" id="cb23-2" title="2">data &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data</span><span class="ch">\\</span><span class="st">post-processed-grants-for-analysis-unique.csv&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb23-3" title="3"><span class="st">   </span><span class="kw">as.data.frame</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb23-4" title="4"><span class="st">   </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">42</span>, <span class="dv">49</span><span class="op">:</span><span class="dv">109</span>, <span class="dv">43</span><span class="op">:</span><span class="dv">48</span>))</a>
 <a class="sourceLine" id="cb23-5" title="5"></a>
-<a class="sourceLine" id="cb23-6" title="6">rawFrame &lt;-<span class="st"> </span><span class="kw">left_join</span>(fig.<span class="fl">1.</span>money, maxwell.data_threats, <span class="dt">by =</span> <span class="st">&quot;Category&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb23-7" title="7"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">rawMoney =</span> Total.x) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># Total Money</span></a>
-<a class="sourceLine" id="cb23-8" title="8"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">rawSpecies =</span> Total.adjusted) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Total Species</span></a>
-<a class="sourceLine" id="cb23-9" title="9"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(Category, rawMoney, rawSpecies)</a>
-<a class="sourceLine" id="cb23-10" title="10"></a>
-<a class="sourceLine" id="cb23-11" title="11">fig.<span class="fl">1.</span>data &lt;-<span class="st"> </span><span class="kw">left_join</span>(fig.<span class="fl">1.</span>money, maxwell.data_threats, <span class="dt">by =</span> <span class="st">&quot;Category&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb23-12" title="12"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Money =</span> (Total.x<span class="op">/</span><span class="kw">sum</span>(Total.x))<span class="op">*</span><span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># Percentage of Total Money</span></a>
-<a class="sourceLine" id="cb23-13" title="13"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Species =</span> (Total.adjusted<span class="op">/</span><span class="kw">sum</span>(Total.adjusted))<span class="op">*</span><span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Percentage of Total Species</span></a>
-<a class="sourceLine" id="cb23-14" title="14"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(Category, Money, Species) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb23-15" title="15"><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="kw">c</span>(Money, Species), <span class="dt">names_to =</span> <span class="st">&quot;is.Money&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;Amount&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb23-16" title="16"><span class="st">  </span><span class="kw">left_join</span>(rawFrame, <span class="dt">by =</span> <span class="st">&quot;Category&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb23-17" title="17"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">rawMoney =</span> <span class="kw">ifelse</span>(is.Money <span class="op">==</span><span class="st"> &quot;Species&quot;</span>, <span class="ot">NA</span>, rawMoney)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb23-18" title="18"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">rawSpecies=</span> <span class="kw">ifelse</span>(is.Money <span class="op">==</span><span class="st"> &quot;Money&quot;</span>, <span class="ot">NA</span>, rawSpecies)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb23-19" title="19"><span class="st">  </span><span class="kw">replace_na</span>(<span class="kw">list</span>(<span class="dt">rawMoney =</span> <span class="st">&quot;&quot;</span>, <span class="dt">rawSpecies =</span> <span class="st">&quot;&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb23-20" title="20"><span class="st">  </span><span class="kw">unite</span>(<span class="st">&quot;rawValue&quot;</span>, rawMoney<span class="op">:</span>rawSpecies, <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>, <span class="dt">remove =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb23-21" title="21"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">rawValue =</span> <span class="kw">as.numeric</span>(rawValue),</a>
-<a class="sourceLine" id="cb23-22" title="22">         <span class="dt">rawLabels =</span> <span class="kw">comma</span>(rawValue))</a>
-<a class="sourceLine" id="cb23-23" title="23">fig.<span class="fl">1.</span>data<span class="op">$</span>rawLabels[<span class="kw">c</span>(<span class="kw">seq</span>(<span class="dv">1</span>,<span class="dv">11</span>,<span class="dv">2</span>))] &lt;-<span class="st"> </span><span class="kw">str_glue</span>(<span class="st">&quot;${round(rawFrame$rawMoney/1e6)}mil&quot;</span>)</a>
-<a class="sourceLine" id="cb23-24" title="24">fig.<span class="fl">1.</span>data<span class="op">$</span>rawLabels[<span class="kw">c</span>(<span class="kw">seq</span>(<span class="dv">2</span>,<span class="dv">12</span>,<span class="dv">2</span>))] &lt;-<span class="st"> </span><span class="kw">str_glue</span>(<span class="st">&quot;n = {rawFrame$rawSpecies}&quot;</span>)</a>
-<a class="sourceLine" id="cb23-25" title="25"></a>
-<a class="sourceLine" id="cb23-26" title="26">fig_threats_funding&lt;-<span class="st"> </span><span class="kw">ggplot</span>(fig.<span class="fl">1.</span>data, </a>
-<a class="sourceLine" id="cb23-27" title="27">                      <span class="kw">aes</span>(<span class="dt">fill=</span>is.Money, </a>
-<a class="sourceLine" id="cb23-28" title="28">                          <span class="dt">y=</span>Amount, </a>
-<a class="sourceLine" id="cb23-29" title="29">                          <span class="dt">x=</span>Category)) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb23-30" title="30"><span class="st">  </span><span class="kw">geom_col</span>(<span class="dt">position=</span><span class="st">&quot;dodge&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb23-31" title="31"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&quot;Threat Category&quot;</span>, </a>
-<a class="sourceLine" id="cb23-32" title="32">       <span class="dt">y=</span><span class="st">&quot;Proportion&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb23-33" title="33"><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels=</span>u.threat_list) <span class="op">+</span></a>
-<a class="sourceLine" id="cb23-34" title="34"><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;slategray4&quot;</span>, <span class="kw">alpha</span>(<span class="st">&quot;orangered4&quot;</span>,.<span class="dv">9</span>)),</a>
-<a class="sourceLine" id="cb23-35" title="35">                    <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;Money (USD Million)&quot;</span>, <span class="st">&quot;Threatened Species&quot;</span>)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb23-36" title="36"><span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">position =</span> <span class="kw">position_dodge</span>(<span class="dt">width=</span> <span class="dv">1</span>), </a>
-<a class="sourceLine" id="cb23-37" title="37">            <span class="kw">aes</span>(<span class="dt">label =</span> rawLabels, <span class="dt">hjust =</span> <span class="fl">0.55</span>, <span class="dt">vjust =</span> <span class="fl">-0.5</span>), <span class="dt">angle=</span><span class="dv">0</span>, <span class="dt">size=</span><span class="dv">5</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb23-38" title="38"><span class="st">  </span><span class="kw">ylim</span>(<span class="dv">0</span>, <span class="dv">40</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb23-39" title="39"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb23-40" title="40"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">16</span>, <span class="dt">face =</span> <span class="st">&quot;bold&quot;</span>), </a>
-<a class="sourceLine" id="cb23-41" title="41">        <span class="dt">axis.ticks.length.x =</span> <span class="kw">unit</span>(.<span class="dv">5</span>, <span class="st">&quot;cm&quot;</span>),</a>
-<a class="sourceLine" id="cb23-42" title="42">        <span class="dt">axis.text =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">14</span>),</a>
-<a class="sourceLine" id="cb23-43" title="43">        <span class="dt">legend.title =</span> <span class="kw">element_blank</span>(),</a>
-<a class="sourceLine" id="cb23-44" title="44">        <span class="dt">legend.key.size =</span> <span class="kw">unit</span>(<span class="dv">1</span>,<span class="st">&quot;cm&quot;</span>),</a>
-<a class="sourceLine" id="cb23-45" title="45">        <span class="dt">legend.text =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">12</span>))</a>
-<a class="sourceLine" id="cb23-46" title="46"></a>
-<a class="sourceLine" id="cb23-47" title="47"><span class="kw">ggsave</span>(fig_threats_funding, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">Figure1.png&quot;</span>, <span class="dt">width=</span><span class="dv">17</span>, <span class="dt">height=</span><span class="dv">7</span>,</a>
-<a class="sourceLine" id="cb23-48" title="48">       <span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>, <span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1"><span class="co"># show exported image</span></a>
-<a class="sourceLine" id="cb24-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/Figure1.png&quot;</span>)</a></code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-29"></span>
+<a class="sourceLine" id="cb23-6" title="6"><span class="co"># Read in data on the number of species threatened (Maxwell et al. 2016)</span></a>
+<a class="sourceLine" id="cb23-7" title="7">maxwell.tab.s2 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data</span><span class="ch">\\</span><span class="st">maxwell-tab-s2.csv&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb23-8" title="8"><span class="st">  </span><span class="kw">as.data.frame</span>()</a></code></pre></div>
+<p>Preparing data to match our list of threat categories</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1">maxwell.tab.s2<span class="op">$</span>Abbreviated_clasfication</a>
+<a class="sourceLine" id="cb24-2" title="2"></a>
+<a class="sourceLine" id="cb24-3" title="3"><span class="co"># Our threat categories: Climate Change, Habitat Loss, Overexploitation, Energy/Transportation, Pollution, Invasive Species</span></a>
+<a class="sourceLine" id="cb24-4" title="4"></a>
+<a class="sourceLine" id="cb24-5" title="5">maxwell.data_threats &lt;-<span class="st"> </span>maxwell.tab.s2 <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb24-6" title="6"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="dv">3</span><span class="op">:</span><span class="dv">4</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb24-7" title="7"><span class="st">  </span><span class="kw">group_by</span>(Category) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb24-8" title="8"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Total =</span> <span class="kw">sum</span>(n_species_threatened)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb24-9" title="9"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Total.adjusted =</span> <span class="kw">replace</span>(Total, Total <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">2132</span>,<span class="dv">11509</span>), <span class="kw">c</span>(<span class="dv">1910</span>,<span class="dv">7406</span>)),</a>
+<a class="sourceLine" id="cb24-10" title="10">         <span class="dt">adj.prop =</span> Total.adjusted<span class="op">/</span>Total,</a>
+<a class="sourceLine" id="cb24-11" title="11">         <span class="dt">prop.total =</span> Total.adjusted<span class="op">/</span><span class="kw">sum</span>(Total.adjusted))</a>
+<a class="sourceLine" id="cb24-12" title="12"></a>
+<a class="sourceLine" id="cb24-13" title="13"><span class="co"># Habitat Loss and Energy/Transportation adjusted for compilation of multiple threats from Maxwell et al 2016. To do so, we looked at the number of species shared between threats and derived a conservative estimate accounting for overlap (species threatened by multiple threats).</span></a></code></pre></div>
+<p>Data on funding</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1"><span class="co"># Single Category Data</span></a>
+<a class="sourceLine" id="cb25-2" title="2">money.data &lt;-<span class="st"> </span>data[,<span class="dv">11</span><span class="op">:</span>(<span class="kw">length</span>(data)<span class="op">-</span><span class="dv">6</span>)]<span class="op">*</span>data[,<span class="dv">7</span>]</a>
+<a class="sourceLine" id="cb25-3" title="3">money.data &lt;-<span class="st"> </span><span class="kw">mutate</span>(money.data,</a>
+<a class="sourceLine" id="cb25-4" title="4">                         <span class="dt">Year.Authorized =</span> data<span class="op">$</span>Year.Authorized,</a>
+<a class="sourceLine" id="cb25-5" title="5">                         <span class="dt">Num.Thr =</span> data<span class="op">$</span>Num.Thr,</a>
+<a class="sourceLine" id="cb25-6" title="6">                         <span class="dt">Num.Tax =</span> data<span class="op">$</span>Num.Tax)</a>
+<a class="sourceLine" id="cb25-7" title="7"></a>
+<a class="sourceLine" id="cb25-8" title="8">by.year.money &lt;-<span class="st"> </span>money.data <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb25-9" title="9"><span class="st">  </span><span class="kw">group_by</span>(Year.Authorized) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb25-10" title="10"><span class="st">  </span><span class="kw">summarize_at</span>(<span class="kw">vars</span>(cat_act_area<span class="op">:</span>cat_taxa_other), sum, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb25-11" title="11"><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="op">-</span>Year.Authorized, <span class="dt">names_to =</span> <span class="st">&quot;Category&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;Amount&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb25-12" title="12"><span class="st">  </span><span class="kw">group_by</span>(Year.Authorized) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb25-13" title="13"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ann.percent =</span> Amount<span class="op">/</span><span class="kw">sum</span>(Amount)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb25-14" title="14"><span class="st">  </span><span class="kw">group_by</span>(Category) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb25-15" title="15"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">percent =</span> Amount<span class="op">/</span><span class="kw">sum</span>(Amount))</a></code></pre></div>
+<p>Categories used for analysis</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1">u.threat_cat &lt;-<span class="st"> </span><span class="kw">names</span>(data)[<span class="dv">37</span><span class="op">:</span><span class="dv">42</span>]</a>
+<a class="sourceLine" id="cb26-2" title="2"></a>
+<a class="sourceLine" id="cb26-3" title="3">u.threat_list &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Climate Change&quot;</span>, </a>
+<a class="sourceLine" id="cb26-4" title="4">                   <span class="st">&quot;Energy/Transportation&quot;</span>,</a>
+<a class="sourceLine" id="cb26-5" title="5">                   <span class="st">&quot;Habitat Loss&quot;</span>,</a>
+<a class="sourceLine" id="cb26-6" title="6">                   <span class="st">&quot;Invasive Species&quot;</span>,</a>
+<a class="sourceLine" id="cb26-7" title="7">                   <span class="st">&quot;Overexploitation&quot;</span>,</a>
+<a class="sourceLine" id="cb26-8" title="8">                   <span class="st">&quot;Pollution&quot;</span>)</a></code></pre></div>
+<p>Fig. 1: Mismatch between conservation funding and threats to biodiversity</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1">fig.<span class="fl">1.</span>money &lt;-<span class="st"> </span>by.year.money <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb27-2" title="2"><span class="st">  </span><span class="kw">filter</span>(Category <span class="op">%in%</span><span class="st"> </span>u.threat_cat) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb27-3" title="3"><span class="st">  </span><span class="kw">group_by</span>(Category) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb27-4" title="4"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">Total =</span> <span class="kw">sum</span>(Amount))</a>
+<a class="sourceLine" id="cb27-5" title="5"></a>
+<a class="sourceLine" id="cb27-6" title="6">rawFrame &lt;-<span class="st"> </span><span class="kw">left_join</span>(fig.<span class="fl">1.</span>money, maxwell.data_threats, <span class="dt">by =</span> <span class="st">&quot;Category&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb27-7" title="7"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">rawMoney =</span> Total.x) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># Total Money</span></a>
+<a class="sourceLine" id="cb27-8" title="8"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">rawSpecies =</span> Total.adjusted) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Total Species</span></a>
+<a class="sourceLine" id="cb27-9" title="9"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(Category, rawMoney, rawSpecies)</a>
+<a class="sourceLine" id="cb27-10" title="10"></a>
+<a class="sourceLine" id="cb27-11" title="11">fig.<span class="fl">1.</span>data &lt;-<span class="st"> </span><span class="kw">left_join</span>(fig.<span class="fl">1.</span>money, maxwell.data_threats, <span class="dt">by =</span> <span class="st">&quot;Category&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb27-12" title="12"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Money =</span> (Total.x<span class="op">/</span><span class="kw">sum</span>(Total.x))<span class="op">*</span><span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># Percentage of Total Money</span></a>
+<a class="sourceLine" id="cb27-13" title="13"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Species =</span> (Total.adjusted<span class="op">/</span><span class="kw">sum</span>(Total.adjusted))<span class="op">*</span><span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Percentage of Total Species</span></a>
+<a class="sourceLine" id="cb27-14" title="14"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(Category, Money, Species) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb27-15" title="15"><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="kw">c</span>(Money, Species), <span class="dt">names_to =</span> <span class="st">&quot;is.Money&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;Amount&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb27-16" title="16"><span class="st">  </span><span class="kw">left_join</span>(rawFrame, <span class="dt">by =</span> <span class="st">&quot;Category&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb27-17" title="17"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">rawMoney =</span> <span class="kw">ifelse</span>(is.Money <span class="op">==</span><span class="st"> &quot;Species&quot;</span>, <span class="ot">NA</span>, rawMoney)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb27-18" title="18"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">rawSpecies=</span> <span class="kw">ifelse</span>(is.Money <span class="op">==</span><span class="st"> &quot;Money&quot;</span>, <span class="ot">NA</span>, rawSpecies)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb27-19" title="19"><span class="st">  </span><span class="kw">replace_na</span>(<span class="kw">list</span>(<span class="dt">rawMoney =</span> <span class="st">&quot;&quot;</span>, <span class="dt">rawSpecies =</span> <span class="st">&quot;&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb27-20" title="20"><span class="st">  </span><span class="kw">unite</span>(<span class="st">&quot;rawValue&quot;</span>, rawMoney<span class="op">:</span>rawSpecies, <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>, <span class="dt">remove =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb27-21" title="21"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">rawValue =</span> <span class="kw">as.numeric</span>(rawValue),</a>
+<a class="sourceLine" id="cb27-22" title="22">         <span class="dt">rawLabels =</span> <span class="kw">comma</span>(rawValue))</a>
+<a class="sourceLine" id="cb27-23" title="23">fig.<span class="fl">1.</span>data<span class="op">$</span>rawLabels[<span class="kw">c</span>(<span class="kw">seq</span>(<span class="dv">1</span>,<span class="dv">11</span>,<span class="dv">2</span>))] &lt;-<span class="st"> </span><span class="kw">str_glue</span>(<span class="st">&quot;${round(rawFrame$rawMoney/1e6)}mil&quot;</span>)</a>
+<a class="sourceLine" id="cb27-24" title="24">fig.<span class="fl">1.</span>data<span class="op">$</span>rawLabels[<span class="kw">c</span>(<span class="kw">seq</span>(<span class="dv">2</span>,<span class="dv">12</span>,<span class="dv">2</span>))] &lt;-<span class="st"> </span><span class="kw">str_glue</span>(<span class="st">&quot;n = {rawFrame$rawSpecies}&quot;</span>)</a>
+<a class="sourceLine" id="cb27-25" title="25"></a>
+<a class="sourceLine" id="cb27-26" title="26">fig_threats_funding&lt;-<span class="st"> </span><span class="kw">ggplot</span>(fig.<span class="fl">1.</span>data, </a>
+<a class="sourceLine" id="cb27-27" title="27">                      <span class="kw">aes</span>(<span class="dt">fill=</span>is.Money, </a>
+<a class="sourceLine" id="cb27-28" title="28">                          <span class="dt">y=</span>Amount, </a>
+<a class="sourceLine" id="cb27-29" title="29">                          <span class="dt">x=</span>Category)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb27-30" title="30"><span class="st">  </span><span class="kw">geom_col</span>(<span class="dt">position=</span><span class="st">&quot;dodge&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb27-31" title="31"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&quot;Threat Category&quot;</span>, </a>
+<a class="sourceLine" id="cb27-32" title="32">       <span class="dt">y=</span><span class="st">&quot;Proportion&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb27-33" title="33"><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels=</span>u.threat_list) <span class="op">+</span></a>
+<a class="sourceLine" id="cb27-34" title="34"><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;slategray4&quot;</span>, <span class="kw">alpha</span>(<span class="st">&quot;orangered4&quot;</span>,.<span class="dv">9</span>)),</a>
+<a class="sourceLine" id="cb27-35" title="35">                    <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;Money (USD Million)&quot;</span>, <span class="st">&quot;Threatened Species&quot;</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb27-36" title="36"><span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">position =</span> <span class="kw">position_dodge</span>(<span class="dt">width=</span> <span class="dv">1</span>), </a>
+<a class="sourceLine" id="cb27-37" title="37">            <span class="kw">aes</span>(<span class="dt">label =</span> rawLabels, <span class="dt">hjust =</span> <span class="fl">0.55</span>, <span class="dt">vjust =</span> <span class="fl">-0.5</span>), <span class="dt">angle=</span><span class="dv">0</span>, <span class="dt">size=</span><span class="dv">5</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb27-38" title="38"><span class="st">  </span><span class="kw">ylim</span>(<span class="dv">0</span>, <span class="dv">40</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb27-39" title="39"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb27-40" title="40"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">16</span>, <span class="dt">face =</span> <span class="st">&quot;bold&quot;</span>), </a>
+<a class="sourceLine" id="cb27-41" title="41">        <span class="dt">axis.ticks.length.x =</span> <span class="kw">unit</span>(.<span class="dv">5</span>, <span class="st">&quot;cm&quot;</span>),</a>
+<a class="sourceLine" id="cb27-42" title="42">        <span class="dt">axis.text =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">14</span>),</a>
+<a class="sourceLine" id="cb27-43" title="43">        <span class="dt">legend.title =</span> <span class="kw">element_blank</span>(),</a>
+<a class="sourceLine" id="cb27-44" title="44">        <span class="dt">legend.key.size =</span> <span class="kw">unit</span>(<span class="dv">1</span>,<span class="st">&quot;cm&quot;</span>),</a>
+<a class="sourceLine" id="cb27-45" title="45">        <span class="dt">legend.text =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">12</span>))</a>
+<a class="sourceLine" id="cb27-46" title="46"></a>
+<a class="sourceLine" id="cb27-47" title="47"><span class="kw">ggsave</span>(fig_threats_funding, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">Figure1.png&quot;</span>, <span class="dt">width=</span><span class="dv">17</span>, <span class="dt">height=</span><span class="dv">7</span>,</a>
+<a class="sourceLine" id="cb27-48" title="48">       <span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>, <span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1"><span class="co"># show exported image</span></a>
+<a class="sourceLine" id="cb28-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/Figure1.png&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-31"></span>
 <img src="figs/Figure1.png" alt="Mismatch between conservation funding and drivers of biodiversity loss" width="\textwidth" />
 <p class="caption">
 Figure 6.1: Mismatch between conservation funding and drivers of biodiversity loss

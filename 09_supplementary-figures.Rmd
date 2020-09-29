@@ -160,7 +160,7 @@ plot.pie.Ntaxa_amphibian <- ggplot(pie.Ntaxa_amphibian,
   theme_bw() +
   scale_fill_manual(values = seq_gradient_pal(cat_colors22[9], "white",
                                               "Lab")(seq(0,1, length.out = 5))) +
-  labs(title="Proportion of funding for amphibians that were shared between multiple taxonomic groups") +
+  labs(title="Proportion of funding for amphibians that was shared between multiple taxonomic groups") +
   coord_polar("y", start=0, direction = -1) +
   theme_void() +
   theme(axis.text.x = element_blank()) +
@@ -196,7 +196,7 @@ plot.pie.Ntaxa_bird <- ggplot(pie.Ntaxa_bird,
   theme_bw() +
   scale_fill_manual(values = seq_gradient_pal(cat_colors22[19], "white",
                                               "Lab")(seq(0,1, length.out = 5))) +
-  labs(title="Proportion of funding for birds that were shared between multiple taxonomic groups") +
+  labs(title="Proportion of funding for birds that was shared between multiple taxonomic groups") +
   coord_polar("y", start=0, direction = -1) +
   theme_void()+
   theme(axis.text.x = element_blank()) +
@@ -232,7 +232,7 @@ plot.pie.Ntaxa_invertebrate <- ggplot(pie.Ntaxa_invertebrate,
   theme_bw() +
   scale_fill_manual(values = seq_gradient_pal(cat_colors22[20], "white",
                                               "Lab")(seq(0,1, length.out = 5))) +
-  labs(title="Proportion of funding for invertebrates that were shared between multiple taxonomic groups") +
+  labs(title="Proportion of funding for invertebrates that was shared between multiple taxonomic groups") +
   coord_polar("y", start=0, direction = -1) +
   theme_void() +
   theme(axis.text.x = element_blank()) +
@@ -268,7 +268,7 @@ plot.pie.Ntaxa_fish <- ggplot(pie.Ntaxa_fish,
   theme_bw() +
   scale_fill_manual(values = seq_gradient_pal(cat_colors22[7], "white",
                                               "Lab")(seq(0,1, length.out = 5))) +
-  labs(title="Proportion of funding for fish that were shared between multiple taxonomic groups") +
+  labs(title="Proportion of funding for fish that was shared between multiple taxonomic groups") +
   coord_polar("y", start=0, direction = -1) +
   theme_void()+
   theme(axis.text.x = element_blank()) +
@@ -304,7 +304,7 @@ plot.pie.Ntaxa_mammal <- ggplot(pie.Ntaxa_mammal,
   theme_bw() +
   scale_fill_manual(values = seq_gradient_pal(cat_colors22[15], "white",
                                               "Lab")(seq(0,1, length.out = 5))) +
-  labs(title="Proportion of funding for mammals that were shared between multiple taxonomic groups") +
+  labs(title="Proportion of funding for mammals that was shared between multiple taxonomic groups") +
   coord_polar("y", start=0, direction = -1) +
   theme_void()+
   theme(axis.text.x = element_blank()) +
@@ -340,7 +340,7 @@ plot.pie.Ntaxa_plant <- ggplot(pie.Ntaxa_plant,
   theme_bw() +
   scale_fill_manual(values = seq_gradient_pal(cat_colors22[11], "white",
                                               "Lab")(seq(0,1, length.out = 5))) +
-  labs(title="Proportion of funding for plants that were shared between multiple taxonomic groups") +
+  labs(title="Proportion of funding for plants that was shared between multiple taxonomic groups") +
   coord_polar("y", start=0, direction = -1) +
   theme_void()+
   theme(axis.text.x = element_blank()) +
@@ -376,7 +376,7 @@ plot.pie.Ntaxa_reptile <- ggplot(pie.Ntaxa_reptile,
   theme_bw() +
   scale_fill_manual(values = seq_gradient_pal(cat_colors22[17], "white",
                                               "Lab")(seq(0,1, length.out = 5))) +
-  labs(title="Proportion of funding for reptiles that were shared between multiple taxonomic groups") +
+  labs(title="Proportion of funding for reptiles that was shared between multiple taxonomic groups") +
   coord_polar("y", start=0, direction = -1) +
   theme_void()+
   theme(axis.text.x = element_blank()) +

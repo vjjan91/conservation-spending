@@ -6,6 +6,12 @@ editor_options:
 # Exploratory data analysis
 
 Here, we will carry out exploratory data analysis of grants to obtain a sense of how money has been allocated across threats and taxonomic groups
+```{r eval=TRUE}
+# Load libraries
+library(tidyverse)
+library(scales)
+library(ggsci)
+```
 
 Read in excel sheets for grants awarded by the top 1000 foundations and the list of classified grants for exploratory data analysis
 ```{r}
@@ -42,9 +48,6 @@ fig_top_funders <- ggplot(top_funders, aes(x = n_funders,
   ylab("Cumulative total in millions of USD") +
   scale_x_discrete(limits = rank[-2])+
   theme(plot.margin = margin(10,20,10,10))
-
-
-fig_top_funders
 
 # % Money captured by top 500 funders = 95.5%
 top500 <- money[7]/money[12]
@@ -110,8 +113,6 @@ fig_threats_grants <- ggplot(threats, aes(x = n_threats, y = n_threat_grants)) +
   geom_line() + theme_bw() +
   labs(title = "Number of grants across multiple Threat Categories",
        x="Number of threat categories", y="Number of grants")
-
-plot(fig_threats_grants)
 
 # save as png
 ggsave(fig_threats_grants, filename = "figs/fig_threats_grants.png", 

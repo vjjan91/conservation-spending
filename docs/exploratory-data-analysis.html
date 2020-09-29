@@ -21,10 +21,10 @@
   <meta name="twitter:description" content="Section 4 Exploratory data analysis | Conservation funding does not track drivers of biodiversity loss" />
   
 
-<meta name="author" content="Vijay Ramesh1*, Jay Schoen1, Michael Levin1, Pratik Dubal2, Sebastian Heilpern1, Pooja Choksi1, Jared Meek1, Rochelle Thomas1, Don J Melnick1, Sara Kross1&quot;" />
+<meta name="author" content="Vijay Ramesh1*^, Jay Schoen1^, Michael Levin1, Pratik Dubal2, Sebastian Heilpern1, Pooja Choksi1, Jared Meek1, Rochelle Thomas1, Don J Melnick1, Sara Kross1&quot;" />
 
 
-<meta name="date" content="2020-09-28" />
+<meta name="date" content="2020-09-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -163,110 +163,109 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="exploratory-data-analysis" class="section level1">
 <h1><span class="header-section-number">Section 4</span> Exploratory data analysis</h1>
 <p>Here, we will carry out exploratory data analysis of grants to obtain a sense of how money has been allocated across threats and taxonomic groups</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="co"># Load libraries</span></a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb5-3" title="3"><span class="kw">library</span>(scales)</a>
+<a class="sourceLine" id="cb5-4" title="4"><span class="kw">library</span>(ggsci)</a></code></pre></div>
 <p>Read in excel sheets for grants awarded by the top 1000 foundations and the list of classified grants for exploratory data analysis</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">funders_top1000 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/data-list-of-top1000-donors-by-money.csv&quot;</span>)</a>
-<a class="sourceLine" id="cb5-2" title="2">data &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/classified-grants-for-analysis.csv&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">funders_top1000 &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/data-list-of-top1000-donors-by-money.csv&quot;</span>)</a>
+<a class="sourceLine" id="cb6-2" title="2">data &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/classified-grants-for-analysis.csv&quot;</span>)</a></code></pre></div>
 <p>Below we visualize overall funding provided by the top 1000 grantmakers (Supplementary Fig S1 - Accumulation of Funding Across Top Grantmakers)</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">money_accum &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</a>
-<a class="sourceLine" id="cb6-2" title="2">  funders_top1000 <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb6-3" title="3"><span class="st">    </span><span class="kw">group_by</span>(<span class="st">`</span><span class="dt">Number</span><span class="st">`</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb6-4" title="4"><span class="st">    </span><span class="kw">summarise</span>(<span class="dt">total =</span> <span class="kw">sum</span>(<span class="st">`</span><span class="dt">Amount Funded</span><span class="st">`</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb6-5" title="5"><span class="st">    </span><span class="kw">arrange</span>(<span class="kw">desc</span>(total)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb6-6" title="6"><span class="st">    </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span>x) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb6-7" title="7"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(total) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb6-8" title="8"><span class="st">    </span><span class="kw">sum</span>(<span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb6-9" title="9">}</a>
-<a class="sourceLine" id="cb6-10" title="10"></a>
-<a class="sourceLine" id="cb6-11" title="11">rank &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">50</span>,<span class="kw">seq</span>(<span class="dv">100</span>,<span class="dv">1000</span>,<span class="dv">100</span>))</a>
-<a class="sourceLine" id="cb6-12" title="12">money &lt;-<span class="st"> </span><span class="kw">sapply</span>(rank, money_accum)</a>
-<a class="sourceLine" id="cb6-13" title="13"></a>
-<a class="sourceLine" id="cb6-14" title="14">top_funders &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">n_funders =</span> rank, <span class="dt">tot_money_mil =</span> money<span class="op">/</span><span class="fl">1e6</span>)</a>
-<a class="sourceLine" id="cb6-15" title="15"></a>
-<a class="sourceLine" id="cb6-16" title="16">fig_top_funders &lt;-<span class="st"> </span><span class="kw">ggplot</span>(top_funders, <span class="kw">aes</span>(<span class="dt">x =</span> n_funders,</a>
-<a class="sourceLine" id="cb6-17" title="17">                                           <span class="dt">y =</span> tot_money_mil,</a>
-<a class="sourceLine" id="cb6-18" title="18">                                           <span class="dt">group =</span> <span class="dv">1</span>)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb6-19" title="19"><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb6-20" title="20"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb6-21" title="21"><span class="st">  </span><span class="kw">geom_area</span>(<span class="kw">aes</span>(<span class="dt">y=</span><span class="kw">ifelse</span>(tot_money_mil<span class="op">&lt;</span><span class="st"> </span>top_funders[<span class="dv">7</span>,<span class="dv">2</span>], tot_money_mil, top_funders[<span class="dv">7</span>,<span class="dv">2</span>])),</a>
-<a class="sourceLine" id="cb6-22" title="22">            <span class="dt">fill=</span><span class="st">&quot;#696969&quot;</span>, <span class="dt">alpha =</span> <span class="fl">.4</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb6-23" title="23"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb6-24" title="24"><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Number of foundations&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb6-25" title="25"><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Cumulative total in millions of USD&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb6-26" title="26"><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">limits =</span> rank[<span class="op">-</span><span class="dv">2</span>])<span class="op">+</span></a>
-<a class="sourceLine" id="cb6-27" title="27"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">margin</span>(<span class="dv">10</span>,<span class="dv">20</span>,<span class="dv">10</span>,<span class="dv">10</span>))</a>
-<a class="sourceLine" id="cb6-28" title="28"></a>
-<a class="sourceLine" id="cb6-29" title="29"></a>
-<a class="sourceLine" id="cb6-30" title="30">fig_top_funders</a>
-<a class="sourceLine" id="cb6-31" title="31"></a>
-<a class="sourceLine" id="cb6-32" title="32"><span class="co"># % Money captured by top 500 funders = 95.5%</span></a>
-<a class="sourceLine" id="cb6-33" title="33">top500 &lt;-<span class="st"> </span>money[<span class="dv">7</span>]<span class="op">/</span>money[<span class="dv">12</span>]</a>
-<a class="sourceLine" id="cb6-34" title="34">top500</a>
-<a class="sourceLine" id="cb6-35" title="35"></a>
-<a class="sourceLine" id="cb6-36" title="36"><span class="kw">ggsave</span>(fig_top_funders, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_topGrantmakers_funding.png&quot;</span>, </a>
-<a class="sourceLine" id="cb6-37" title="37">       <span class="dt">height =</span> <span class="dv">7</span>, <span class="dt">width =</span> <span class="dv">14</span>, <span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>, <span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="co"># show exported image</span></a>
-<a class="sourceLine" id="cb7-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_topGrantmakers_funding.png&quot;</span>)</a></code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-10"></span>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">money_accum &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</a>
+<a class="sourceLine" id="cb7-2" title="2">  funders_top1000 <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-3" title="3"><span class="st">    </span><span class="kw">group_by</span>(<span class="st">`</span><span class="dt">Number</span><span class="st">`</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-4" title="4"><span class="st">    </span><span class="kw">summarise</span>(<span class="dt">total =</span> <span class="kw">sum</span>(<span class="st">`</span><span class="dt">Amount Funded</span><span class="st">`</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-5" title="5"><span class="st">    </span><span class="kw">arrange</span>(<span class="kw">desc</span>(total)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-6" title="6"><span class="st">    </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span>x) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-7" title="7"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(total) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-8" title="8"><span class="st">    </span><span class="kw">sum</span>(<span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb7-9" title="9">}</a>
+<a class="sourceLine" id="cb7-10" title="10"></a>
+<a class="sourceLine" id="cb7-11" title="11">rank &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">50</span>,<span class="kw">seq</span>(<span class="dv">100</span>,<span class="dv">1000</span>,<span class="dv">100</span>))</a>
+<a class="sourceLine" id="cb7-12" title="12">money &lt;-<span class="st"> </span><span class="kw">sapply</span>(rank, money_accum)</a>
+<a class="sourceLine" id="cb7-13" title="13"></a>
+<a class="sourceLine" id="cb7-14" title="14">top_funders &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">n_funders =</span> rank, <span class="dt">tot_money_mil =</span> money<span class="op">/</span><span class="fl">1e6</span>)</a>
+<a class="sourceLine" id="cb7-15" title="15"></a>
+<a class="sourceLine" id="cb7-16" title="16">fig_top_funders &lt;-<span class="st"> </span><span class="kw">ggplot</span>(top_funders, <span class="kw">aes</span>(<span class="dt">x =</span> n_funders,</a>
+<a class="sourceLine" id="cb7-17" title="17">                                           <span class="dt">y =</span> tot_money_mil,</a>
+<a class="sourceLine" id="cb7-18" title="18">                                           <span class="dt">group =</span> <span class="dv">1</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb7-19" title="19"><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb7-20" title="20"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb7-21" title="21"><span class="st">  </span><span class="kw">geom_area</span>(<span class="kw">aes</span>(<span class="dt">y=</span><span class="kw">ifelse</span>(tot_money_mil<span class="op">&lt;</span><span class="st"> </span>top_funders[<span class="dv">7</span>,<span class="dv">2</span>], tot_money_mil, top_funders[<span class="dv">7</span>,<span class="dv">2</span>])),</a>
+<a class="sourceLine" id="cb7-22" title="22">            <span class="dt">fill=</span><span class="st">&quot;#696969&quot;</span>, <span class="dt">alpha =</span> <span class="fl">.4</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb7-23" title="23"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb7-24" title="24"><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Number of foundations&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb7-25" title="25"><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Cumulative total in millions of USD&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb7-26" title="26"><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">limits =</span> rank[<span class="op">-</span><span class="dv">2</span>])<span class="op">+</span></a>
+<a class="sourceLine" id="cb7-27" title="27"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">margin</span>(<span class="dv">10</span>,<span class="dv">20</span>,<span class="dv">10</span>,<span class="dv">10</span>))</a>
+<a class="sourceLine" id="cb7-28" title="28"></a>
+<a class="sourceLine" id="cb7-29" title="29"><span class="co"># % Money captured by top 500 funders = 95.5%</span></a>
+<a class="sourceLine" id="cb7-30" title="30">top500 &lt;-<span class="st"> </span>money[<span class="dv">7</span>]<span class="op">/</span>money[<span class="dv">12</span>]</a>
+<a class="sourceLine" id="cb7-31" title="31">top500</a>
+<a class="sourceLine" id="cb7-32" title="32"></a>
+<a class="sourceLine" id="cb7-33" title="33"><span class="kw">ggsave</span>(fig_top_funders, <span class="dt">filename =</span> <span class="st">&quot;figs</span><span class="ch">\\</span><span class="st">fig_topGrantmakers_funding.png&quot;</span>, </a>
+<a class="sourceLine" id="cb7-34" title="34">       <span class="dt">height =</span> <span class="dv">7</span>, <span class="dt">width =</span> <span class="dv">14</span>, <span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">units=</span><span class="st">&quot;in&quot;</span>, <span class="dt">dpi =</span> <span class="dv">300</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="co"># show exported image</span></a>
+<a class="sourceLine" id="cb8-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_topGrantmakers_funding.png&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-11"></span>
 <img src="figs/fig_topGrantmakers_funding.png" alt="Accumulation curve of the funding in our dataset across the top 1000 grantmakers. The shaded region encompasses the amount of funding captured by the top 500 grantmakers, which represents more than 95.5% of the total amount of funding." width="\textwidth" />
 <p class="caption">
 Figure 4.1: Accumulation curve of the funding in our dataset across the top 1000 grantmakers. The shaded region encompasses the amount of funding captured by the top 500 grantmakers, which represents more than 95.5% of the total amount of funding.
 </p>
 </div>
 <p>Now, let’s look at how many grants were classified across multiple threat categories and what proportion of money they retained</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">threat &lt;-<span class="st"> </span>data[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dv">37</span><span class="op">:</span><span class="dv">42</span>)] <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb8-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sumAcross =</span> cat_threat_climate <span class="op">+</span><span class="st"> </span>cat_threat_energytransport <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb8-3" title="3"><span class="st">           </span>cat_threat_habitat <span class="op">+</span><span class="st"> </span>cat_threat_inv_spec <span class="op">+</span><span class="st"> </span>cat_threat_overexp <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb8-4" title="4"><span class="st">           </span>cat_threat_pollution) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb8-5" title="5"><span class="st">  </span><span class="kw">filter</span>(sumAcross <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb8-6" title="6"></a>
-<a class="sourceLine" id="cb8-7" title="7"><span class="co"># Checking number of grants/money for multiple threat category grants</span></a>
-<a class="sourceLine" id="cb8-8" title="8">tot_threat &lt;-<span class="st"> </span><span class="kw">sum</span>(threat<span class="op">$</span>Grant.Amount, <span class="dt">na.rm =</span> T) </a>
-<a class="sourceLine" id="cb8-9" title="9"></a>
-<a class="sourceLine" id="cb8-10" title="10"><span class="co"># Four or more threats retained 99.99% of money</span></a>
-<a class="sourceLine" id="cb8-11" title="11">threat4 &lt;-<span class="st"> </span>threat <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb8-12" title="12"><span class="st">  </span><span class="kw">filter</span>(sumAcross <span class="op">&lt;=</span><span class="st"> </span><span class="dv">4</span>)</a>
-<a class="sourceLine" id="cb8-13" title="13"><span class="kw">nrow</span>(threat4)<span class="op">/</span><span class="kw">nrow</span>(threat)</a>
-<a class="sourceLine" id="cb8-14" title="14"><span class="kw">sum</span>(threat4<span class="op">$</span>Grant.Amount,<span class="dt">na.rm =</span> T)<span class="op">/</span>tot_threat</a>
-<a class="sourceLine" id="cb8-15" title="15"></a>
-<a class="sourceLine" id="cb8-16" title="16"><span class="co"># Three threats retains 99.3% of the money</span></a>
-<a class="sourceLine" id="cb8-17" title="17">threat3 &lt;-<span class="st"> </span>threat <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb8-18" title="18"><span class="st">  </span><span class="kw">filter</span>(sumAcross <span class="op">&lt;=</span><span class="st"> </span><span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb8-19" title="19"><span class="kw">nrow</span>(threat3)<span class="op">/</span><span class="kw">nrow</span>(threat)</a>
-<a class="sourceLine" id="cb8-20" title="20"><span class="kw">sum</span>(threat3<span class="op">$</span>Grant.Amount,<span class="dt">na.rm =</span> T)<span class="op">/</span>tot_threat</a>
-<a class="sourceLine" id="cb8-21" title="21"></a>
-<a class="sourceLine" id="cb8-22" title="22"><span class="co"># Two threats retained 96% of the money</span></a>
-<a class="sourceLine" id="cb8-23" title="23">threat2 &lt;-<span class="st"> </span>threat <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb8-24" title="24"><span class="st">  </span><span class="kw">filter</span>(sumAcross <span class="op">&lt;=</span><span class="st"> </span><span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb8-25" title="25"><span class="kw">nrow</span>(threat2)<span class="op">/</span><span class="kw">nrow</span>(threat)</a>
-<a class="sourceLine" id="cb8-26" title="26"><span class="kw">sum</span>(threat2<span class="op">$</span>Grant.Amount, <span class="dt">na.rm =</span> T)<span class="op">/</span>tot_threat</a>
-<a class="sourceLine" id="cb8-27" title="27"></a>
-<a class="sourceLine" id="cb8-28" title="28"><span class="co"># Unique threat categories retained 80.3% of the money</span></a>
-<a class="sourceLine" id="cb8-29" title="29">threat1 &lt;-<span class="st"> </span>threat <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb8-30" title="30"><span class="st">  </span><span class="kw">filter</span>(sumAcross <span class="op">&lt;=</span><span class="st"> </span><span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb8-31" title="31"><span class="kw">nrow</span>(threat1)<span class="op">/</span><span class="kw">nrow</span>(threat)</a>
-<a class="sourceLine" id="cb8-32" title="32"><span class="kw">sum</span>(threat1<span class="op">$</span>Grant.Amount,<span class="dt">na.rm =</span> T)<span class="op">/</span>tot_threat</a></code></pre></div>
-<p>Plot multiple threat categories and grants</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">n_threats &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">4</span></a>
-<a class="sourceLine" id="cb9-2" title="2">n_threat_grants &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">nrow</span>(threat1), </a>
-<a class="sourceLine" id="cb9-3" title="3">                     <span class="kw">nrow</span>(threat2) <span class="op">-</span><span class="st"> </span><span class="kw">nrow</span>(threat1), </a>
-<a class="sourceLine" id="cb9-4" title="4">                     <span class="kw">nrow</span>(threat3) <span class="op">-</span><span class="st"> </span><span class="kw">nrow</span>(threat2),</a>
-<a class="sourceLine" id="cb9-5" title="5">                     <span class="kw">nrow</span>(threat4) <span class="op">-</span><span class="st"> </span><span class="kw">nrow</span>(threat3))</a>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">threat &lt;-<span class="st"> </span>data[,<span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dv">37</span><span class="op">:</span><span class="dv">42</span>)] <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb9-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sumAcross =</span> cat_threat_climate <span class="op">+</span><span class="st"> </span>cat_threat_energytransport <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb9-3" title="3"><span class="st">           </span>cat_threat_habitat <span class="op">+</span><span class="st"> </span>cat_threat_inv_spec <span class="op">+</span><span class="st"> </span>cat_threat_overexp <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb9-4" title="4"><span class="st">           </span>cat_threat_pollution) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb9-5" title="5"><span class="st">  </span><span class="kw">filter</span>(sumAcross <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)</a>
 <a class="sourceLine" id="cb9-6" title="6"></a>
-<a class="sourceLine" id="cb9-7" title="7">threats &lt;-<span class="st"> </span><span class="kw">data.frame</span>(n_threats, n_threat_grants)</a>
-<a class="sourceLine" id="cb9-8" title="8"></a>
-<a class="sourceLine" id="cb9-9" title="9">fig_threats_grants &lt;-<span class="st"> </span><span class="kw">ggplot</span>(threats, <span class="kw">aes</span>(<span class="dt">x =</span> n_threats, <span class="dt">y =</span> n_threat_grants)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb9-10" title="10"><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme_bw</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb9-11" title="11"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Number of grants across multiple Threat Categories&quot;</span>,</a>
-<a class="sourceLine" id="cb9-12" title="12">       <span class="dt">x=</span><span class="st">&quot;Number of threat categories&quot;</span>, <span class="dt">y=</span><span class="st">&quot;Number of grants&quot;</span>)</a>
-<a class="sourceLine" id="cb9-13" title="13"></a>
-<a class="sourceLine" id="cb9-14" title="14"><span class="kw">plot</span>(fig_threats_grants)</a>
+<a class="sourceLine" id="cb9-7" title="7"><span class="co"># Checking number of grants/money for multiple threat category grants</span></a>
+<a class="sourceLine" id="cb9-8" title="8">tot_threat &lt;-<span class="st"> </span><span class="kw">sum</span>(threat<span class="op">$</span>Grant.Amount, <span class="dt">na.rm =</span> T) </a>
+<a class="sourceLine" id="cb9-9" title="9"></a>
+<a class="sourceLine" id="cb9-10" title="10"><span class="co"># Four or more threats retained 99.99% of money</span></a>
+<a class="sourceLine" id="cb9-11" title="11">threat4 &lt;-<span class="st"> </span>threat <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb9-12" title="12"><span class="st">  </span><span class="kw">filter</span>(sumAcross <span class="op">&lt;=</span><span class="st"> </span><span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb9-13" title="13"><span class="kw">nrow</span>(threat4)<span class="op">/</span><span class="kw">nrow</span>(threat)</a>
+<a class="sourceLine" id="cb9-14" title="14"><span class="kw">sum</span>(threat4<span class="op">$</span>Grant.Amount,<span class="dt">na.rm =</span> T)<span class="op">/</span>tot_threat</a>
 <a class="sourceLine" id="cb9-15" title="15"></a>
-<a class="sourceLine" id="cb9-16" title="16"><span class="co"># save as png</span></a>
-<a class="sourceLine" id="cb9-17" title="17"><span class="kw">ggsave</span>(fig_threats_grants, <span class="dt">filename =</span> <span class="st">&quot;figs/fig_threats_grants.png&quot;</span>, </a>
-<a class="sourceLine" id="cb9-18" title="18">       <span class="dt">height =</span> <span class="dv">7</span>, <span class="dt">width =</span> <span class="dv">12</span>, <span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">dpi =</span> <span class="dv">300</span>); <span class="kw">dev.off</span>()</a></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="co"># show exported image</span></a>
-<a class="sourceLine" id="cb10-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_threats_grants.png&quot;</span>)</a></code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-12"></span>
+<a class="sourceLine" id="cb9-16" title="16"><span class="co"># Three threats retains 99.3% of the money</span></a>
+<a class="sourceLine" id="cb9-17" title="17">threat3 &lt;-<span class="st"> </span>threat <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb9-18" title="18"><span class="st">  </span><span class="kw">filter</span>(sumAcross <span class="op">&lt;=</span><span class="st"> </span><span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb9-19" title="19"><span class="kw">nrow</span>(threat3)<span class="op">/</span><span class="kw">nrow</span>(threat)</a>
+<a class="sourceLine" id="cb9-20" title="20"><span class="kw">sum</span>(threat3<span class="op">$</span>Grant.Amount,<span class="dt">na.rm =</span> T)<span class="op">/</span>tot_threat</a>
+<a class="sourceLine" id="cb9-21" title="21"></a>
+<a class="sourceLine" id="cb9-22" title="22"><span class="co"># Two threats retained 96% of the money</span></a>
+<a class="sourceLine" id="cb9-23" title="23">threat2 &lt;-<span class="st"> </span>threat <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb9-24" title="24"><span class="st">  </span><span class="kw">filter</span>(sumAcross <span class="op">&lt;=</span><span class="st"> </span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb9-25" title="25"><span class="kw">nrow</span>(threat2)<span class="op">/</span><span class="kw">nrow</span>(threat)</a>
+<a class="sourceLine" id="cb9-26" title="26"><span class="kw">sum</span>(threat2<span class="op">$</span>Grant.Amount, <span class="dt">na.rm =</span> T)<span class="op">/</span>tot_threat</a>
+<a class="sourceLine" id="cb9-27" title="27"></a>
+<a class="sourceLine" id="cb9-28" title="28"><span class="co"># Unique threat categories retained 80.3% of the money</span></a>
+<a class="sourceLine" id="cb9-29" title="29">threat1 &lt;-<span class="st"> </span>threat <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb9-30" title="30"><span class="st">  </span><span class="kw">filter</span>(sumAcross <span class="op">&lt;=</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb9-31" title="31"><span class="kw">nrow</span>(threat1)<span class="op">/</span><span class="kw">nrow</span>(threat)</a>
+<a class="sourceLine" id="cb9-32" title="32"><span class="kw">sum</span>(threat1<span class="op">$</span>Grant.Amount,<span class="dt">na.rm =</span> T)<span class="op">/</span>tot_threat</a></code></pre></div>
+<p>Plot multiple threat categories and grants</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">n_threats &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">4</span></a>
+<a class="sourceLine" id="cb10-2" title="2">n_threat_grants &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">nrow</span>(threat1), </a>
+<a class="sourceLine" id="cb10-3" title="3">                     <span class="kw">nrow</span>(threat2) <span class="op">-</span><span class="st"> </span><span class="kw">nrow</span>(threat1), </a>
+<a class="sourceLine" id="cb10-4" title="4">                     <span class="kw">nrow</span>(threat3) <span class="op">-</span><span class="st"> </span><span class="kw">nrow</span>(threat2),</a>
+<a class="sourceLine" id="cb10-5" title="5">                     <span class="kw">nrow</span>(threat4) <span class="op">-</span><span class="st"> </span><span class="kw">nrow</span>(threat3))</a>
+<a class="sourceLine" id="cb10-6" title="6"></a>
+<a class="sourceLine" id="cb10-7" title="7">threats &lt;-<span class="st"> </span><span class="kw">data.frame</span>(n_threats, n_threat_grants)</a>
+<a class="sourceLine" id="cb10-8" title="8"></a>
+<a class="sourceLine" id="cb10-9" title="9">fig_threats_grants &lt;-<span class="st"> </span><span class="kw">ggplot</span>(threats, <span class="kw">aes</span>(<span class="dt">x =</span> n_threats, <span class="dt">y =</span> n_threat_grants)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb10-10" title="10"><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme_bw</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb10-11" title="11"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Number of grants across multiple Threat Categories&quot;</span>,</a>
+<a class="sourceLine" id="cb10-12" title="12">       <span class="dt">x=</span><span class="st">&quot;Number of threat categories&quot;</span>, <span class="dt">y=</span><span class="st">&quot;Number of grants&quot;</span>)</a>
+<a class="sourceLine" id="cb10-13" title="13"></a>
+<a class="sourceLine" id="cb10-14" title="14"><span class="co"># save as png</span></a>
+<a class="sourceLine" id="cb10-15" title="15"><span class="kw">ggsave</span>(fig_threats_grants, <span class="dt">filename =</span> <span class="st">&quot;figs/fig_threats_grants.png&quot;</span>, </a>
+<a class="sourceLine" id="cb10-16" title="16">       <span class="dt">height =</span> <span class="dv">7</span>, <span class="dt">width =</span> <span class="dv">12</span>, <span class="dt">device =</span> <span class="kw">png</span>(), <span class="dt">dpi =</span> <span class="dv">300</span>); <span class="kw">dev.off</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="co"># show exported image</span></a>
+<a class="sourceLine" id="cb11-2" title="2">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;figs/fig_threats_grants.png&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-13"></span>
 <img src="figs/fig_threats_grants.png" alt="Number of grants that were classified into one or more categories of threat" width="\textwidth" />
 <p class="caption">
 Figure 4.2: Number of grants that were classified into one or more categories of threat

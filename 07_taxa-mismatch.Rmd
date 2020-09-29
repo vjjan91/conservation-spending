@@ -50,7 +50,6 @@ cat_colors22 <- c("#990000", "#BF1E1E", "#993399", "#4C0099", "#000099",
                   "#006400", "#FFF928", "#C6C600", "#FFA200", "#CE8300", 
                   "#D0471E", "#9F8109", "#835506", "#317575", "#808080",
                   "black", "white")
-barplot(1:22, col = cat_colors22, names.arg = 1:22)
 ```
 
 Data on funding
@@ -92,7 +91,6 @@ maxwell.data_species_threats <- maxwell.tab.s4 %>%
   mutate(Threat = u.threat_list)
 ```
 
-Figure 3
 ```{r}
 # Preparing maxwell data
 fig.3.maxwell_data <- maxwell.data_species_threats %>%
@@ -232,4 +230,3 @@ ggsave(fig.3.plot, filename = "figs\\Figure3.png", width=12, height=7,device = p
 # show exported image
 knitr::include_graphics("figs\\Figure3.png")
 ```
-

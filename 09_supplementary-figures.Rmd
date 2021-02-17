@@ -13,8 +13,13 @@ library(scales)
 library(ggsci)
 ```
 
-Read in the dataframe associated with grants classified under multiple categories
+## Import Data
 ```{r}
+# Read in data of post-processed grants
+data <- read_csv("data\\post-processed-grants-for-analysis-unique.csv") %>%
+   as.data.frame() %>%
+   dplyr::select(c(1:42, 49:109, 43:48))
+
 data.multi <- read_csv("data\\post-processed-grants-for-analysis-multi.csv") %>%
   as.data.frame()
 ```
@@ -42,6 +47,14 @@ maxwell.data_threats <- maxwell.tab.s2 %>%
 
 Data on funding
 ```{r}
+# Single-category Data
+money.data <- data[,11:(length(data)-6)]*data[,7]
+money.data <- mutate(money.data,
+                         Year.Authorized = data$Year.Authorized,
+                         Num.Thr = data$Num.Thr,
+                         Num.Tax = data$Num.Tax)
+
+
 # Multi-category Data
 money.data.multi <- data.multi[,11:(length(data.multi)-6)]*data.multi[,7]
 money.data.multi <- mutate(money.data.multi, 
@@ -392,5 +405,49 @@ ggsave(plot.pie.Ntaxa_reptile, filename = "figs\\fig_pie_reptile.png", width=12,
 ```{r, eval=TRUE, fig.cap='Proportion of funding for reptiles that were shared between multiple taxonomic groups'}
 # show exported image
 knitr::include_graphics("figs/fig_pie_reptile.png")
+```
+
+## Threat Summary Figure (Fig. S4)
+```{r}
+unique_threat <- money.data %>%
+  filter_at(vars(u.threat_cat), any_vars(.>0)) %>%
+  dplyr::select(cat_threat_climate:cat_threat_pollution) %>%
+  pivot_longer(1:6, names_to = "Category", values_to = "Money") %>%
+  filter(Money > 0)
+
+threats_violin <- ggplot(unique_threat, aes(x = Category, y = Money)) + 
+  geom_violin(aes(col = Category, fill = Category)) + 
+  geom_boxplot(width = 0.2) + 
+  scale_color_manual(values = cat_colors22[c(1,13,11,20,5,18)]) +
+  scale_fill_manual(values = cat_colors22[c(1,13,11,20,5,18)]) +
+  scale_x_discrete(labels = u.threat_list) +
+  scale_y_log10(labels = comma) +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  labs(x="Threat Category", 
+       y="Grant Amount in USD (Log Scale)", 
+       title="Distributions of Unique Threat Grant Amounts") 
+
+# ggsave(threats_violin, filename = "figs\\threats_violin.png", width=12, height=7, dpi = 300)
+```
+
+```{r, eval=TRUE, fig.cap='Box and violin plots of the distributions of grant amounts for six drivers'}
+# show exported image
+knitr::include_graphics("figs/threats_violin.png")
+```
+
+### Summary statistics
+```{r}
+sum_table_threats <- money.data %>%
+  select(u.threat_cat) %>%
+  filter_all(any_vars(.>0)) %>%
+  pivot_longer(1:6, names_to = "Category", values_to = "Money") %>%
+  filter(Money > 0) %>%
+  group_by(Category) %>%
+  summarize(mn = mean(Money), 
+            medn = median(Money),
+            se = sd(Money)/sqrt(length(Money)))
+
+sum_table_threats
 ```
 
